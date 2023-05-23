@@ -1,7 +1,7 @@
 package com.denielle.api.restapi.service;
 
 import com.denielle.api.restapi.dto.GenreDTO;
-import com.denielle.api.restapi.exception.GenreNameAlreadyExistsException;
+import com.denielle.api.restapi.exception.NameAlreadyExistsException;
 import com.denielle.api.restapi.exception.NotFoundException;
 import com.denielle.api.restapi.model.Genre;
 import com.denielle.api.restapi.repository.GenreRepository;
@@ -52,8 +52,8 @@ public class GenreService {
     }
 
     @Transactional
-    public int save(String genreName) throws GenreNameAlreadyExistsException {
-        if (isNameAlreadyExists(genreName)) throw new GenreNameAlreadyExistsException("Genre name already exists");
+    public int save(String genreName) throws NameAlreadyExistsException {
+        if (isNameAlreadyExists(genreName)) throw new NameAlreadyExistsException("Genre name already exists");
         Genre genre = Genre.builder()
                 .name(genreName)
                 .build();
