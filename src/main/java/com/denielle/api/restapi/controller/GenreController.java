@@ -4,6 +4,7 @@ import com.denielle.api.restapi.dto.GenreDTO;
 import com.denielle.api.restapi.service.GenreService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,9 +18,18 @@ import java.util.List;
 public class GenreController {
 
     private final GenreService genreService;
-    @GetMapping
-    public List<GenreDTO> getAll() {
+    @GetMapping("/{pageNumber}/{pageSize}")
+    public List<GenreDTO> getAll(@PathVariable int pageNumber,
+                                 @PathVariable int pageSize) {
+        return genreService.getAll(pageNumber, pageSize);
+    }
 
+    @GetMapping("/{pageNumber}/{pageSize}/{sortProperty}")
+    public List<GenreDTO> getAll(@PathVariable int pageNumber,
+                                 @PathVariable int pageSize,
+                                 @PathVariable String sortProperty) {
+
+        return genreService.getAll(pageNumber, pageSize, Sort.Direction.ASC, sortProperty);
     }
 
     @PostMapping
