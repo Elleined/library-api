@@ -1,6 +1,7 @@
 package com.denielle.api.restapi.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Data;
 
@@ -12,6 +13,6 @@ public class GenreDTO {
     private int id;
     private String name;
 
-    @JsonIgnore
+    private LocalDateTime updatedAt;
     private LocalDateTime createdAt;
 }

@@ -25,6 +25,11 @@ public class GenreController {
         return genreService.getAll();
     }
 
+    @GetMapping("/{id}")
+    public GenreDTO getById(@PathVariable("id") int genreId) {
+        return genreService.getById(genreId);
+    }
+
     @GetMapping("/{pageNumber}/{pageSize}")
     public List<GenreDTO> getAll(@PathVariable int pageNumber,
                                  @PathVariable int pageSize) {
@@ -50,18 +55,21 @@ public class GenreController {
         return new ResponseEntity<>(genreDTO, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{id}")
-    public GenreDTO getById(@PathVariable("id") int genreId) {
-        return genreService.getById(genreId);
-    }
-
     @PatchMapping("/{id}")
     public ResponseEntity<GenreDTO> update(@PathVariable("id") int genreId,
-                                           @RequestParam String newGenreName) {
+                                           @RequestParam("name") String newGenreName) {
 
         genreService.update(genreId, newGenreName);
+
         GenreDTO genreDTO = getById(genreId);
+        genreDTO.setUpdatedAt(LocalDateTime.now());
+
         return new ResponseEntity<>(genreDTO, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<GenreDTO> delete(@PathVariable("id") int genreId) {
+        
     }
 
 }
