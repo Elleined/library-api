@@ -30,6 +30,5 @@ public class Author {
 
     // author id reference is in book table
     @OneToMany(mappedBy = "author")
-    @Setter(AccessLevel.NONE)
     private List<Book> bookList;
 }

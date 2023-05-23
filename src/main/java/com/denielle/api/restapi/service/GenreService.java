@@ -21,16 +21,16 @@ public class GenreService {
 
     private final GenreRepository genreRepository;
 
+    public GenreDTO getById(int genreId) {
+        Genre genre = genreRepository.findById(genreId).orElseThrow(() -> new NotFoundException("Genre does not exists"));
+        return this.convertToDTO(genre);
+    }
+
     public List<GenreDTO> getAll() {
         return genreRepository.findAll()
                 .stream()
                 .map(this::convertToDTO)
                 .toList();
-    }
-
-    public GenreDTO getById(int genreId) {
-        Genre genre = genreRepository.findById(genreId).orElseThrow(() -> new NotFoundException("Genre does not exists"));
-        return this.convertToDTO(genre);
     }
 
     public List<GenreDTO> getAll(int pageNumber, int pageSize) {
