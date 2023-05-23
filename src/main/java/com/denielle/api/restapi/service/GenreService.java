@@ -40,6 +40,13 @@ public class GenreService {
                 .anyMatch(genreName::equalsIgnoreCase);
     }
 
+    public List<GenreDTO> getAll() {
+        return genreRepository.findAll()
+                .stream()
+                .map(this::convertToDTO)
+                .toList();
+    }
+
     public List<GenreDTO> getAll(int pageNumber, int pageSize) {
         Pageable pageable = PageSorter.getPage(pageNumber, pageSize);
 

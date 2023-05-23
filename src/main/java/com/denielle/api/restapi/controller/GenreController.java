@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -18,9 +19,16 @@ import java.util.List;
 public class GenreController {
 
     private final GenreService genreService;
+
+    @GetMapping
+    public List<GenreDTO> getAll() {
+        return genreService.getAll();
+    }
+
     @GetMapping("/{pageNumber}/{pageSize}")
     public List<GenreDTO> getAll(@PathVariable int pageNumber,
                                  @PathVariable int pageSize) {
+
         return genreService.getAll(pageNumber, pageSize);
     }
 
@@ -35,7 +43,10 @@ public class GenreController {
     @PostMapping
     public ResponseEntity<GenreDTO> save(@RequestParam("name") String genreName) {
         int genreId = genreService.save(genreName);
+
         GenreDTO genreDTO = genreService.getById(genreId);
+        genreDTO.setCreatedAt(LocalDateTime.now());
+
         return new ResponseEntity<>(genreDTO, HttpStatus.CREATED);
     }
 
@@ -44,7 +55,7 @@ public class GenreController {
         return genreService.getById(genreId);
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<GenreDTO> update(@PathVariable("id") int genreId,
                                            @RequestParam String newGenreName) {
 
@@ -52,4 +63,5 @@ public class GenreController {
         GenreDTO genreDTO = getById(genreId);
         return new ResponseEntity<>(genreDTO, HttpStatus.OK);
     }
+
 }
