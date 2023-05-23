@@ -19,7 +19,7 @@ public class GenreController {
     private final GenreService genreService;
     @GetMapping
     public List<GenreDTO> getAll() {
-        return genreService.getAll();
+
     }
 
     @PostMapping
@@ -34,7 +34,7 @@ public class GenreController {
         return genreService.getById(genreId);
     }
 
-    @GetMapping("/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<GenreDTO> update(@PathVariable("id") int genreId,
                                            @RequestParam String newGenreName) {
 

@@ -7,10 +7,11 @@ import com.denielle.api.restapi.model.Genre;
 import com.denielle.api.restapi.repository.GenreRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -39,8 +40,19 @@ public class GenreService {
                 .anyMatch(genreName::equalsIgnoreCase);
     }
 
-    public List<GenreDTO> getAll() {
-        return genreRepository.findAll()
+    public List<GenreDTO> getAll(int pageNumber, int pageSize) {
+        Pageable pageable = PageSorter.getPage(pageNumber, pageSize);
+
+        return genreRepository.findAll(pageable)
+                .stream()
+                .map(this::convertToDTO)
+                .toList();
+    }
+
+    public List<GenreDTO> getAll(int pageNumber, int pageSize, Sort.Direction direction, String sortProperty) {
+        Pageable pageable = PageSorter.getPage(pageNumber, pageSize, direction, sortProperty);
+
+        return genreRepository.findAll(pageable)
                 .stream()
                 .map(this::convertToDTO)
                 .toList();
@@ -66,8 +78,6 @@ public class GenreService {
         return GenreDTO.builder()
                 .id(genre.getId())
                 .name(genre.getName())
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
                 .build();
     }
 }
