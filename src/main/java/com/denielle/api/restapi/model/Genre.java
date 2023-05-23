@@ -3,6 +3,7 @@ package com.denielle.api.restapi.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
@@ -24,6 +25,12 @@ public class Genre {
 
     @Column(name = "name", unique = true)
     private String name;
+
+    @Column(name = "date_created")
+    private LocalDateTime createdAt;
+
+    @Column(name = "date_updated")
+    private LocalDateTime updatedAt;
 
     @ManyToMany(mappedBy = "genres")
     @Setter(AccessLevel.NONE)

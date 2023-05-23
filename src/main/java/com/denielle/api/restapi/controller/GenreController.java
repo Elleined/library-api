@@ -48,9 +48,7 @@ public class GenreController {
     @PostMapping
     public ResponseEntity<GenreDTO> save(@RequestParam("name") String genreName) {
         int genreId = genreService.save(genreName);
-
         GenreDTO genreDTO = genreService.getById(genreId);
-        genreDTO.setCreatedAt(LocalDateTime.now());
 
         return new ResponseEntity<>(genreDTO, HttpStatus.CREATED);
     }
@@ -60,9 +58,7 @@ public class GenreController {
                                            @RequestParam("name") String newGenreName) {
 
         genreService.update(genreId, newGenreName);
-
         GenreDTO genreDTO = getById(genreId);
-        genreDTO.setUpdatedAt(LocalDateTime.now());
 
         return new ResponseEntity<>(genreDTO, HttpStatus.OK);
     }

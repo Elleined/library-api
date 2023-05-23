@@ -1,6 +1,7 @@
 package com.denielle.api.restapi.controller;
 
 import com.denielle.api.restapi.dto.AuthorDTO;
+import com.denielle.api.restapi.model.Book;
 import com.denielle.api.restapi.service.AuthorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,13 +26,18 @@ public class AuthorController {
     }
 
     @GetMapping("/{id}")
-    public AuthorDTO getById(@PathVariable("id") int genreId) {
-        return authorService.getById(genreId);
+    public AuthorDTO getById(@PathVariable("id") int authorId) {
+        return authorService.getById(authorId);
     }
 
     @GetMapping("/name/{name}")
-    public AuthorDTO getByName(@PathVariable("name") String genreName) {
-        return authorService.getByName(genreName);
+    public AuthorDTO getByName(@PathVariable("name") String authorName) {
+        return authorService.getByName(authorName);
+    }
+
+    @GetMapping("/{id}/books")
+    public List<Book> getAllBooks(@PathVariable("id") int authorId) {
+        return null;
     }
 
     @GetMapping("/{pageNumber}/{pageSize}")
@@ -43,30 +49,26 @@ public class AuthorController {
 
     @GetMapping("/{pageNumber}/{pageSize}/{sortProperty}")
     public List<AuthorDTO> getAll(@PathVariable int pageNumber,
-                                 @PathVariable int pageSize,
-                                 @PathVariable String sortProperty) {
+                                  @PathVariable int pageSize,
+                                  @PathVariable String sortProperty) {
 
         return authorService.getAll(pageNumber, pageSize, Sort.Direction.ASC, sortProperty);
     }
 
     @PostMapping
-    public ResponseEntity<AuthorDTO> save(AuthorDTO authorDTO) {
+    public ResponseEntity<AuthorDTO> save(@RequestBody AuthorDTO authorDTO) {
         int authorId = authorService.save(authorDTO);
-
         AuthorDTO fetchAuthor = authorService.getById(authorId);
-        authorDTO.setCreatedAt(LocalDateTime.now());
 
         return new ResponseEntity<>(fetchAuthor, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<AuthorDTO> update(@PathVariable("id") int authorId,
-                                           @RequestBody AuthorDTO authorDTO) {
+                                            @RequestBody AuthorDTO authorDTO) {
 
         authorService.update(authorId, authorDTO);
-
         AuthorDTO fetchAuthorDTO = getById(authorId);
-        fetchAuthorDTO.setUpdatedAt(LocalDateTime.now());
 
         return new ResponseEntity<>(fetchAuthorDTO, HttpStatus.OK);
     }

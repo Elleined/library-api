@@ -12,6 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -56,6 +57,7 @@ public class GenreService {
         if (isNameAlreadyExists(genreName)) throw new NameAlreadyExistsException("Genre name already exists");
         Genre genre = Genre.builder()
                 .name(genreName)
+                .createdAt(LocalDateTime.now())
                 .build();
 
         genreRepository.save(genre);
@@ -81,6 +83,8 @@ public class GenreService {
         Genre genre = genreRepository.findById(genreId).orElseThrow(() -> new NotFoundException("Genre does not exists"));
 
         genre.setName(newGenreName);
+        genre.setUpdatedAt(LocalDateTime.now());
+
         genreRepository.save(genre);
         log.debug("Genre with id of {} updated successfully", genreId);
     }
@@ -89,6 +93,8 @@ public class GenreService {
         return GenreDTO.builder()
                 .id(genre.getId())
                 .name(genre.getName())
+                .createdAt(genre.getCreatedAt())
+                .updatedAt(genre.getUpdatedAt())
                 .build();
     }
 }
