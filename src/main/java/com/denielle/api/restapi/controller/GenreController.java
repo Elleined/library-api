@@ -69,7 +69,7 @@ public class GenreController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<GenreDTO> delete(@PathVariable("id") int genreId) {
-        
+        genreService.delete(genreId);
+        return ResponseEntity.noContent().build();
     }
-
 }
