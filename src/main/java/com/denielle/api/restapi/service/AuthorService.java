@@ -53,12 +53,21 @@ public class AuthorService {
     }
 
     public AuthorDTO getByName(String name) {
-        Author author = authorRepository.fetchByName(name).orElseThrow(() -> new NameAlreadyExistsException("Author with name of " + name + " already exists"));
+        Author author = authorRepository.fetchByName(name).orElseThrow(() -> new NameAlreadyExistsException("Author with name of " + name + " does not exists"));
         return this.convertToDTO(author);
     }
 
+    public boolean isNameAlreadyExists(String authorName) {
+        return authorRepository.findAll()
+                .stream()
+                .map(Author::getName)
+                .anyMatch(authorName::equalsIgnoreCase);
+    }
+
+
     @Transactional
-    public int save(AuthorDTO authorDTO) {
+    public int save(AuthorDTO authorDTO) throws NameAlreadyExistsException {
+        if (isNameAlreadyExists(authorDTO.getName())) throw new NameAlreadyExistsException("Author with name of " + authorDTO.getName() + " already exists");
         Author author = Author.builder()
                 .name(authorDTO.getName())
                 .biography(authorDTO.getBiography())
@@ -86,7 +95,6 @@ public class AuthorService {
 
         log.debug("Author with id of {} updated successfully", id);
     }
-
 
     public AuthorDTO convertToDTO(Author author) {
         return AuthorDTO.builder()
