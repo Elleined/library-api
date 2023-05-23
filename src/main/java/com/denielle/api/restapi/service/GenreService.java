@@ -1,8 +1,8 @@
 package com.denielle.api.restapi.service;
 
 import com.denielle.api.restapi.dto.GenreDTO;
-import com.denielle.api.restapi.exception.genre.GenreNameAlreadyExistsException;
-import com.denielle.api.restapi.exception.genre.GenreNotFoundException;
+import com.denielle.api.restapi.exception.GenreNameAlreadyExistsException;
+import com.denielle.api.restapi.exception.NotFoundException;
 import com.denielle.api.restapi.model.Genre;
 import com.denielle.api.restapi.repository.GenreRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,30 +21,16 @@ public class GenreService {
 
     private final GenreRepository genreRepository;
 
-    @Transactional
-    public int save(String genreName) throws GenreNameAlreadyExistsException {
-        if (isNameAlreadyExists(genreName)) throw new GenreNameAlreadyExistsException("Genre name already exists");
-        Genre genre = Genre.builder()
-                .name(genreName)
-                .build();
-
-        genreRepository.save(genre);
-        log.debug("Genre saved successfully {}", genreName);
-        return genre.getId();
-    }
-
-    public boolean isNameAlreadyExists(String genreName) {
-        return genreRepository.findAll()
-                .stream()
-                .map(Genre::getName)
-                .anyMatch(genreName::equalsIgnoreCase);
-    }
-
     public List<GenreDTO> getAll() {
         return genreRepository.findAll()
                 .stream()
                 .map(this::convertToDTO)
                 .toList();
+    }
+
+    public GenreDTO getById(int genreId) {
+        Genre genre = genreRepository.findById(genreId).orElseThrow(() -> new NotFoundException("Genre does not exists"));
+        return this.convertToDTO(genre);
     }
 
     public List<GenreDTO> getAll(int pageNumber, int pageSize) {
@@ -65,20 +51,38 @@ public class GenreService {
                 .toList();
     }
 
-    public GenreDTO getById(int genreId) {
-        Genre genre = genreRepository.findById(genreId).orElseThrow(() -> new GenreNotFoundException("Genre does not exists"));
-        return this.convertToDTO(genre);
+    @Transactional
+    public int save(String genreName) throws GenreNameAlreadyExistsException {
+        if (isNameAlreadyExists(genreName)) throw new GenreNameAlreadyExistsException("Genre name already exists");
+        Genre genre = Genre.builder()
+                .name(genreName)
+                .build();
+
+        genreRepository.save(genre);
+        log.debug("Genre saved successfully {}", genreName);
+        return genre.getId();
     }
 
+    public boolean isNameAlreadyExists(String genreName) {
+        return genreRepository.findAll()
+                .stream()
+                .map(Genre::getName)
+                .anyMatch(genreName::equalsIgnoreCase);
+    }
+
+    @Transactional
     public void delete(int genreId) {
         genreRepository.deleteById(genreId);
+        log.debug("Genre with id of {} deleted successfully", genreId);
     }
 
+    @Transactional
     public void update(int genreId, String newGenreName) {
-        Genre genre = genreRepository.findById(genreId).orElseThrow(() -> new GenreNotFoundException("Genre does not exists"));
+        Genre genre = genreRepository.findById(genreId).orElseThrow(() -> new NotFoundException("Genre does not exists"));
 
         genre.setName(newGenreName);
         genreRepository.save(genre);
+        log.debug("Genre with id of {} updated successfully", genreId);
     }
 
     public GenreDTO convertToDTO(Genre genre) {
