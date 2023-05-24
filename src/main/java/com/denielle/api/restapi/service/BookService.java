@@ -2,6 +2,7 @@ package com.denielle.api.restapi.service;
 
 import com.denielle.api.restapi.dto.BookDTO;
 import com.denielle.api.restapi.exception.NotFoundException;
+import com.denielle.api.restapi.model.Author;
 import com.denielle.api.restapi.model.Book;
 import com.denielle.api.restapi.model.Genre;
 import com.denielle.api.restapi.repository.AuthorRepository;
@@ -12,8 +13,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -62,6 +66,34 @@ public class BookService {
                 .stream()
                 .map(this::convertToDTO)
                 .toList();
+    }
+
+    @Transactional
+    public int save(BookDTO bookDTO) {
+        Author author = authorRepository.fetchByName(bookDTO.getAuthorName()).orElseThrow(() -> new NotFoundException("Author with name of " + bookDTO.getAuthorName() + " does not exists"));
+
+        Set<Genre> genres = bookDTO.getGenres()
+                .stream()
+                .map(name -> genreRepository.fetchByName(name)
+                        .orElseThrow(() -> new NotFoundException("Genre with name of " + name + " does not exists")))
+                .collect(Collectors.toSet());
+
+        Book book = Book.builder()
+                .id(bookDTO.getId())
+                .title(bookDTO.getTitle())
+                .description(bookDTO.getDescription())
+                .isbn(bookDTO.getIsbn())
+                .pages(bookDTO.getPages())
+                .publishedDate(bookDTO.getPublishedDate())
+                .createdAt(bookDTO.getCreatedAt())
+                .updatedAt(bookDTO.getUpdatedAt())
+                .author(author)
+                .genres(genres)
+                .build();
+
+        bookRepository.save(book);
+        log.debug("Book saved successfully {}", book.getId());
+        return book.getId();
     }
 
 
