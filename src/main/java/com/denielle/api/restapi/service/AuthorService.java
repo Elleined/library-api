@@ -1,10 +1,13 @@
 package com.denielle.api.restapi.service;
 
 import com.denielle.api.restapi.dto.AuthorDTO;
+import com.denielle.api.restapi.dto.BookDTO;
 import com.denielle.api.restapi.exception.NameAlreadyExistsException;
 import com.denielle.api.restapi.exception.NotFoundException;
 import com.denielle.api.restapi.model.Author;
+import com.denielle.api.restapi.model.Book;
 import com.denielle.api.restapi.repository.AuthorRepository;
+import com.denielle.api.restapi.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -30,6 +33,14 @@ public class AuthorService {
     public AuthorDTO getByName(String name) {
         Author author = authorRepository.fetchByName(name).orElseThrow(() -> new NameAlreadyExistsException("Author with name of " + name + " does not exists"));
         return this.convertToDTO(author);
+    }
+
+    public List<String> getAllBooks(int id) {
+        Author author = authorRepository.findById(id).orElseThrow(() -> new NotFoundException("Author with id of " + id + " does not exists"));
+        return author.getBookList()
+                .stream()
+                .map(Book::getTitle)
+                .toList();
     }
 
     public List<AuthorDTO> getAll() {

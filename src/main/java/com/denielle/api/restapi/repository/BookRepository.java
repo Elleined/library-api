@@ -11,5 +11,4 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
     Optional<Book> fetchByIsbn(String isbn);
     @Query("select b from Book b where b.title = ?1")
     Optional<Book> fetchByTitle(String title);
-
 }

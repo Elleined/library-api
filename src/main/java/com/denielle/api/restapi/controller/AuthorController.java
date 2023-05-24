@@ -28,6 +28,11 @@ public class AuthorController {
         return authorService.getById(authorId);
     }
 
+    @GetMapping("/{id}/books")
+    public List<String> getAllBooks(@PathVariable("id") int authorId) {
+        return authorService.getAllBooks(authorId);
+    }
+
     @GetMapping("/name/{name}")
     public AuthorDTO getByName(@PathVariable("name") String authorName) {
         return authorService.getByName(authorName);
