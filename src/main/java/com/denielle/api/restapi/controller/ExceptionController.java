@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDateTime;
 
 @ControllerAdvice
@@ -23,5 +24,11 @@ public class ExceptionController {
     public ResponseEntity<ResponseMessage> handleGenreNameAlreadyExistsException(NameAlreadyExistsException ex) {
         var responseMessage = new ResponseMessage(HttpStatus.BAD_REQUEST, ex.getMessage(), LocalDateTime.now());
         return new ResponseEntity<>(responseMessage, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
+    public ResponseEntity<ResponseMessage> handleNotDeletableException(SQLIntegrityConstraintViolationException e) {
+        var responseMessage = new ResponseMessage(HttpStatus.CONFLICT, "You cannot delete a record associated with another record", LocalDateTime.now());
+        return new ResponseEntity<>(responseMessage, HttpStatus.CONFLICT);
     }
 }

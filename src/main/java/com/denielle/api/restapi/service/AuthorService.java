@@ -4,7 +4,6 @@ import com.denielle.api.restapi.dto.AuthorDTO;
 import com.denielle.api.restapi.exception.NameAlreadyExistsException;
 import com.denielle.api.restapi.exception.NotFoundException;
 import com.denielle.api.restapi.model.Author;
-import com.denielle.api.restapi.model.Book;
 import com.denielle.api.restapi.repository.AuthorRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,11 +44,6 @@ public class AuthorService {
                 .stream()
                 .map(this::convertToDTO)
                 .toList();
-    }
-
-    public List<Book> getAllBooks(int id) {
-        Author author = authorRepository.findById(id).orElseThrow(() -> new NotFoundException("Author with id of " + id + " does not exists"));
-        return author.getBookList();
     }
 
     public AuthorDTO getById(int id) {

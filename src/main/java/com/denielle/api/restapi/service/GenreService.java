@@ -80,7 +80,8 @@ public class GenreService {
 
     @Transactional
     public void update(int genreId, String newGenreName) {
-        Genre genre = genreRepository.findById(genreId).orElseThrow(() -> new NotFoundException("Genre does not exists"));
+        if (isNameAlreadyExists(newGenreName)) throw new NameAlreadyExistsException("Genre name already exists");
+        Genre genre = genreRepository.findById(genreId).orElseThrow(() -> new NotFoundException("Genre with id of " + genreId + " of does not exists"));
 
         genre.setName(newGenreName);
         genre.setUpdatedAt(LocalDateTime.now());

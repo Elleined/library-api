@@ -1,7 +1,6 @@
 package com.denielle.api.restapi.controller;
 
 import com.denielle.api.restapi.dto.AuthorDTO;
-import com.denielle.api.restapi.model.Book;
 import com.denielle.api.restapi.service.AuthorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -33,11 +31,6 @@ public class AuthorController {
     @GetMapping("/name/{name}")
     public AuthorDTO getByName(@PathVariable("name") String authorName) {
         return authorService.getByName(authorName);
-    }
-
-    @GetMapping("/{id}/books")
-    public List<Book> getAllBooks(@PathVariable("id") int authorId) {
-        return null;
     }
 
     @GetMapping("/{pageNumber}/{pageSize}")
