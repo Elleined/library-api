@@ -43,6 +43,11 @@ public class AuthorService {
                 .toList();
     }
 
+    public int getBookCount(int id) {
+        Author author = authorRepository.findById(id).orElseThrow(() -> new NotFoundException("Author with id of " + id + " does not exists"));
+        return author.getBookList().size();
+    }
+
     public List<AuthorDTO> getAll() {
         return authorRepository.findAll()
                 .stream()
