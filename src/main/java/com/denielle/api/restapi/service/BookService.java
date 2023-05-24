@@ -29,13 +29,13 @@ public class BookService {
     private final GenreRepository genreRepository;
     private final AuthorRepository authorRepository;
 
-    public BookDTO getById(int bookId) {
-        Book book = bookRepository.findById(bookId).orElseThrow(() -> new NotFoundException("Book with id of " + bookId + " does not exists"));
+    public BookDTO getById(int id) {
+        Book book = bookRepository.findById(id).orElseThrow(() -> new NotFoundException("Book with id of " + id + " does not exists"));
         return this.convertToDTO(book);
     }
 
-    public BookDTO getByTitle(String bookTitle) {
-        Book book = bookRepository.fetchByTitle(bookTitle).orElseThrow(() -> new NotFoundException("Book with title of " + bookTitle + " does not exits"));
+    public BookDTO getByTitle(String title) {
+        Book book = bookRepository.fetchByTitle(title).orElseThrow(() -> new NotFoundException("Book with title of " + title + " does not exits"));
         return this.convertToDTO(book);
     }
 
@@ -96,6 +96,35 @@ public class BookService {
         return book.getId();
     }
 
+    @Transactional
+    public void update(int id, BookDTO bookDTO) {
+        Author author = authorRepository.fetchByName(bookDTO.getAuthorName()).orElseThrow(() -> new NotFoundException("Author with name of " + bookDTO.getAuthorName() + " does not exists"));
+        Book book = bookRepository.findById(id).orElseThrow(() -> new NotFoundException("Book with id of " + id + " does not exists"));
+
+        Set<Genre> genres = bookDTO.getGenres()
+                .stream()
+                .map(name -> genreRepository.fetchByName(name)
+                        .orElseThrow(() -> new NotFoundException("Genre with name of " + name + " does not exists")))
+                .collect(Collectors.toSet());
+
+        book.setTitle(bookDTO.getTitle());
+        book.setDescription(bookDTO.getDescription());
+        book.setIsbn(bookDTO.getIsbn());
+        book.setPages(bookDTO.getPages());
+        book.setPublishedDate(bookDTO.getPublishedDate());
+        book.setUpdatedAt(LocalDateTime.now());
+        book.setAuthor(author);
+        book.setGenres(genres);
+
+        bookRepository.save(book);
+        log.debug("Book updated successfully");
+    }
+
+    @Transactional
+    public void delete(int id) {
+        Book book = bookRepository.findById(id).orElseThrow(() -> new NotFoundException("Book with id of " + id + " does not exists"));
+        bookRepository.delete(book);
+    }
 
     public BookDTO convertToDTO(Book book) {
         return BookDTO.builder()
