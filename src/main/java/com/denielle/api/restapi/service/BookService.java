@@ -15,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -85,8 +86,7 @@ public class BookService {
                 .isbn(bookDTO.getIsbn())
                 .pages(bookDTO.getPages())
                 .publishedDate(bookDTO.getPublishedDate())
-                .createdAt(bookDTO.getCreatedAt())
-                .updatedAt(bookDTO.getUpdatedAt())
+                .createdAt(LocalDateTime.now())
                 .author(author)
                 .genres(genres)
                 .build();

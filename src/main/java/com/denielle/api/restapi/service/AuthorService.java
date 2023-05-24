@@ -12,6 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -20,6 +21,16 @@ import java.util.List;
 public class AuthorService {
 
     private final AuthorRepository authorRepository;
+
+    public AuthorDTO getById(int id) {
+        Author author = authorRepository.findById(id).orElseThrow(() -> new NotFoundException("Author with id of " + id + " does not exists"));
+        return this.convertToDTO(author);
+    }
+
+    public AuthorDTO getByName(String name) {
+        Author author = authorRepository.fetchByName(name).orElseThrow(() -> new NameAlreadyExistsException("Author with name of " + name + " does not exists"));
+        return this.convertToDTO(author);
+    }
 
     public List<AuthorDTO> getAll() {
         return authorRepository.findAll()
@@ -46,16 +57,6 @@ public class AuthorService {
                 .toList();
     }
 
-    public AuthorDTO getById(int id) {
-        Author author = authorRepository.findById(id).orElseThrow(() -> new NotFoundException("Author with id of " + id + " does not exists"));
-        return this.convertToDTO(author);
-    }
-
-    public AuthorDTO getByName(String name) {
-        Author author = authorRepository.fetchByName(name).orElseThrow(() -> new NameAlreadyExistsException("Author with name of " + name + " does not exists"));
-        return this.convertToDTO(author);
-    }
-
     public boolean isNameAlreadyExists(String authorName) {
         return authorRepository.findAll()
                 .stream()
@@ -70,6 +71,7 @@ public class AuthorService {
         Author author = Author.builder()
                 .name(authorDTO.getName())
                 .biography(authorDTO.getBiography())
+                .createdAt(LocalDateTime.now())
                 .build();
 
         authorRepository.save(author);
@@ -89,6 +91,7 @@ public class AuthorService {
 
         author.setName(authorDTO.getName());
         author.setBiography(authorDTO.getBiography());
+        author.setUpdatedAt(LocalDateTime.now());
 
         authorRepository.save(author);
 
