@@ -1,6 +1,6 @@
 package com.denielle.api.restapi.controller;
 
-import com.denielle.api.restapi.dto.BookDTO;
+import com.denielle.api.restapi.dto.AuthorDTO;
 import com.denielle.api.restapi.dto.BookDTO;
 import com.denielle.api.restapi.service.BookService;
 import lombok.RequiredArgsConstructor;
@@ -61,5 +61,21 @@ public class BookController {
         BookDTO fetchedBook = bookService.getById(bookId);
 
         return new ResponseEntity<>(fetchedBook, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<BookDTO> update(@PathVariable("id") int bookId,
+                                          @RequestBody BookDTO bookDTO) {
+
+        bookService.update(bookId, bookDTO);
+
+        BookDTO fetchedBookDTO = bookService.getById(bookId);
+        return ResponseEntity.ok(fetchedBookDTO);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<AuthorDTO> delete(@PathVariable("id") int bookId) {
+        bookService.delete(bookId);
+        return ResponseEntity.noContent().build();
     }
 }

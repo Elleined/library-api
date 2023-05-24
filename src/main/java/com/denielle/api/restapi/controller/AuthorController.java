@@ -66,9 +66,9 @@ public class AuthorController {
                                             @RequestBody AuthorDTO authorDTO) {
 
         authorService.update(authorId, authorDTO);
-        AuthorDTO fetchAuthorDTO = getById(authorId);
 
-        return new ResponseEntity<>(fetchAuthorDTO, HttpStatus.OK);
+        AuthorDTO fetchAuthorDTO = getById(authorId);
+        return ResponseEntity.ok(fetchAuthorDTO);
     }
 
     @DeleteMapping("/{id}")

@@ -57,9 +57,9 @@ public class GenreController {
                                            @RequestParam("name") String newGenreName) {
 
         genreService.update(genreId, newGenreName);
-        GenreDTO genreDTO = getById(genreId);
 
-        return new ResponseEntity<>(genreDTO, HttpStatus.OK);
+        GenreDTO fetchedgenreDTO = getById(genreId);
+        return ResponseEntity.ok(fetchedgenreDTO);
     }
 
     @DeleteMapping("/{id}")
