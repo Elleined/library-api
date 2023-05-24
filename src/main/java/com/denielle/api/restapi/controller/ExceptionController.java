@@ -28,7 +28,7 @@ public class ExceptionController {
 
     @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
     public ResponseEntity<ResponseMessage> handleNotDeletableException(SQLIntegrityConstraintViolationException e) {
-        var responseMessage = new ResponseMessage(HttpStatus.CONFLICT, "You cannot delete a record associated with another record", LocalDateTime.now());
+        var responseMessage = new ResponseMessage(HttpStatus.CONFLICT, e.getMessage() + "You cannot delete a record associated with another record", LocalDateTime.now());
         return new ResponseEntity<>(responseMessage, HttpStatus.CONFLICT);
     }
 }

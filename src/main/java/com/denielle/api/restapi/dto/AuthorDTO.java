@@ -14,5 +14,5 @@ public class AuthorDTO {
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    // private List<BookDTO> bookList;
+    // private List<String> bookList;
 }

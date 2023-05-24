@@ -4,23 +4,20 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 @Data
 @Builder
 public class BookDTO {
     private int id;
-
     private String title;
-
     private String isbn;
-
     private String description;
-
     private LocalDate publishedDate;
-
     private int pages;
-
     private String authorName;
-
-    private Set<GenreDTO> genres;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+    private List<String> genres;
 }
