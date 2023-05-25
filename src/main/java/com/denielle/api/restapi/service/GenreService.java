@@ -22,8 +22,13 @@ public class GenreService {
 
     private final GenreRepository genreRepository;
 
-    public GenreDTO getById(int genreId) {
-        Genre genre = genreRepository.findById(genreId).orElseThrow(() -> new NotFoundException("Genre does not exists"));
+    public GenreDTO getById(int id) {
+        Genre genre = genreRepository.findById(id).orElseThrow(() -> new NotFoundException("Genre does not exists"));
+        return this.convertToDTO(genre);
+    }
+
+    public GenreDTO getByName(String name) {
+        Genre genre = genreRepository.fetchByName(name).orElseThrow(() -> new NotFoundException("Genre with name of " + name + " does not exists"));
         return this.convertToDTO(genre);
     }
 
@@ -56,6 +61,12 @@ public class GenreService {
                 .toList();
     }
 
+    // This method is only used for initially save a genre record
+    @Transactional
+    public void saveAll(List<Genre> genres) {
+        genreRepository.saveAll(genres);
+    }
+
     @Transactional
     public int save(String genreName) throws NameAlreadyExistsException {
         if (isNameAlreadyExists(genreName)) throw new NameAlreadyExistsException("Genre name already exists");
@@ -77,21 +88,21 @@ public class GenreService {
     }
 
     @Transactional
-    public void delete(int genreId) {
-        genreRepository.deleteById(genreId);
-        log.debug("Genre with id of {} deleted successfully", genreId);
+    public void delete(int id) {
+        genreRepository.deleteById(id);
+        log.debug("Genre with id of {} deleted successfully", id);
     }
 
     @Transactional
-    public void update(int genreId, String newGenreName) {
+    public void update(int id, String newGenreName) {
         if (isNameAlreadyExists(newGenreName)) throw new NameAlreadyExistsException("Genre name already exists");
-        Genre genre = genreRepository.findById(genreId).orElseThrow(() -> new NotFoundException("Genre with id of " + genreId + " of does not exists"));
+        Genre genre = genreRepository.findById(id).orElseThrow(() -> new NotFoundException("Genre with id of " + id + " of does not exists"));
 
         genre.setName(newGenreName);
         genre.setUpdatedAt(LocalDateTime.now());
 
         genreRepository.save(genre);
-        log.debug("Genre with id of {} updated successfully", genreId);
+        log.debug("Genre with id of {} updated successfully", id);
     }
 
     public GenreDTO convertToDTO(Genre genre) {

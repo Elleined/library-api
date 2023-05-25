@@ -24,6 +24,11 @@ public class GenreController {
         return genreService.getById(genreId);
     }
 
+    @GetMapping("/name/{name}")
+    public GenreDTO getBYName(@PathVariable("name") String genreName) {
+        return genreService.getByName(genreName);
+    }
+
     @GetMapping("/name")
     public List<String> searchByFirstLetter(@RequestParam("firstLetter") char firstLetter) {
         return genreService.searchByFirstLetter(firstLetter);
