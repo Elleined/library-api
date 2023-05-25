@@ -44,6 +44,10 @@ public class BookService {
         return this.convertToDTO(book);
     }
 
+    public List<String> searchByFirstLetter(char firstLetter) {
+        return bookRepository.searchByFirstLetter(firstLetter);
+    }
+
     public List<BookDTO> getAll() {
         return bookRepository.findAll()
                 .stream()
