@@ -1,9 +1,12 @@
 package com.denielle.api.restapi.repository;
 
+import com.denielle.api.restapi.model.Author;
 import com.denielle.api.restapi.model.Book;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface BookRepository extends JpaRepository<Book, Integer> {
@@ -11,4 +14,7 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
     Optional<Book> fetchByIsbn(String isbn);
     @Query("select b from Book b where b.title = ?1")
     Optional<Book> fetchByTitle(String title);
+
+    @Query(value = "SELECT * FROM book WHERE MATCH(name) AGAINST (CONCAT('+', :firstLetter, '*')) ORDER BY name ASC", nativeQuery = true)
+    List<Book> searchByFirstLetter(@Param("firstLetter") char firstLetter);
 }
