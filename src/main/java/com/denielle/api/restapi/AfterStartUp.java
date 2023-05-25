@@ -2,8 +2,6 @@ package com.denielle.api.restapi;
 
 import com.denielle.api.restapi.dto.AuthorDTO;
 import com.denielle.api.restapi.dto.BookDTO;
-import com.denielle.api.restapi.model.Author;
-import com.denielle.api.restapi.model.Book;
 import com.denielle.api.restapi.service.AuthorService;
 import com.denielle.api.restapi.service.BookService;
 import com.denielle.api.restapi.service.GenreService;
@@ -43,6 +41,9 @@ public class AfterStartUp {
 
     private List<String> genres() {
         return List.of("Drama",
+                "Sorcery",
+                "Action Adventure",
+                "Epic Fantasy",
                 "Comedy",
                 "Action",
                 "Horror",
@@ -59,6 +60,7 @@ public class AfterStartUp {
                 "Science Fiction",
                 "Literary",
                 "Suspense",
+                "Psychological Suspense",
                 "Graphic Novel",
                 "Speculative Fiction",
                 "Historical",
@@ -86,25 +88,25 @@ public class AfterStartUp {
                         .build(),
 
                 AuthorDTO.builder()
-                        .name("William Thomas Harris III")
+                        .name("Thomas Harris")
                         .biography("William Thomas Harris III is an American writer, best known for a series of suspense novels about his most famous character, Hannibal Lecter.")
                         .createdAt(now)
                         .build(),
 
                 AuthorDTO.builder()
-                        .name("Nelle Harper Lee")
+                        .name("Harper Lee")
                         .biography("Nelle Harper Lee was an American novelist. She wrote the 1960 novel To Kill a Mockingbird that won the 1961 Pulitzer Prize and became a classic of modern American literature.")
                         .createdAt(now)
                         .build(),
 
                 AuthorDTO.builder()
-                        .name("John Ronald Reuel Tolkien")
+                        .name("J.R.R. Tolkien")
                         .biography("John Ronald Reuel Tolkien CBE FRSL was an English writer and philologist. He was the author of the high fantasy works The Hobbit and The Lord of the Rings. From 1925 to 1945, Tolkien was the Rawlinson and Bosworth Professor of Anglo-Saxon and a Fellow of Pembroke College, both at the University of Oxford. ")
                         .createdAt(now)
                         .build(),
 
                 AuthorDTO.builder()
-                        .name("J.K Rowling")
+                        .name("J.K. Rowling")
                         .biography("Joanne Rowling CH OBE FRSL, best known by her pen name J. K. Rowling, is a British author and philanthropist. She wrote Harry Potter, a seven-volume children's fantasy series published from 1997 to 2007.")
                         .createdAt(now)
                         .build(),
@@ -195,18 +197,176 @@ public class AfterStartUp {
                         .createdAt(now)
                         .authorName("Mario Puzo")
                         .genres(List.of("General Fiction", "Suspense"))
+                        .build(),
+
+                BookDTO.builder()
+                        .title("Red Dragon")
+                        .description("In the realm of psychological suspense, Thomas Harris stands alone. Exploring both the nature of human evil and the nerve-racking anatomy of a forensic investigation, Harris unleashes a frightening vision of the dark side of our well-lighted world. In this extraordinary novel, which preceded The Silence of the Lambs and Hannibal, Harris introduced the unforgettable character Dr. Hannibal Lecter. And in it, Will Graham--the FBI man who hunted Lecter down--risks his sanity and his life to duel a killer called the...RED DRAGON")
+                        .isbn("9780440206156")
+                        .pages(480)
+                        .publishedDate(LocalDate.of(1981, 10, 1))
+                        .createdAt(now)
+                        .authorName("Thomas Harris")
+                        .genres(List.of("Thriller", "Suspense"))
+                        .build(),
+
+                BookDTO.builder()
+                        .title("Cari Mora")
+                        .description("Twenty-five million dollars in cartel gold lies hidden beneath a mansion on the Miami Beach waterfront. Ruthless men have tracked it for years. Leading the pack is Hans-Peter Schneider. Driven by unspeakable appetites, he makes a living fleshing out the violent fantasies of other, richer men Cari Mora, caretaker of the house, has escaped from the violence in her native country. She stays in Miami on a wobbly Temporary Protected Status, subject to the iron whim of ICE. She works at many jobs to survive. Beautiful, marked by war, Cari catches the eye of Hans-Peter as he closes in on the treasure. But Cari Mora has surprising skills, and her will to survive has been tested before.\n" + "Monsters lurk in the crevices between male desire and female survival. No other writer in the last century has conjured those monsters with more terrifying brilliance than Thomas Harris. Cari Mora, his sixth novel, is the long-awaited return of an American master.")
+                        .isbn("9781538750124")
+                        .pages(464)
+                        .publishedDate(LocalDate.of(2019, 5, 1))
+                        .createdAt(now)
+                        .authorName("Thomas Harris")
+                        .genres(List.of("Suspense", "Mystery", "Thriller", "Action", "Adventure"))
+                        .build(),
+
+                BookDTO.builder()
+                        .title("Coyote")
+                        .description("COYOTE is based on the real events of the morning I learned of my brother Chase's unexpected death -- a morning when I actually saw and rode with a coyote -- then returned home to learn that Chase was gone. Retold through the eyes of a child, COYOTE is a gentle and lyrical picture book dealing with the subject of loss. It is my hope that COYOTE will help children talk about loss and to show how art can be used to help heal the hurt of losing someone you love. In Chase's memory, my wife Krista and I will donate our share of the proceeds to help the children of Sandy Hook.")
+                        .isbn("9780615751276")
+                        .pages(32)
+                        .publishedDate(LocalDate.of(2013, 1, 1))
+                        .createdAt(now)
+                        .authorName("Harper Lee")
+                        .genres(List.of("General Fiction"))
+                        .build(),
+
+                BookDTO.builder()
+                        .title("Go Set a Watchman")
+                        .description("Maycomb, Alabama. Twenty-six-year-old Jean Louise Finch -- \"Scout\" -- returns home from New York City to visit her aging father, Atticus. Set against the backdrop of the civil rights tensions and political turmoil that were transforming the South, Jean Louise's homecoming turns bittersweet when she learns disturbing truths about her close-knit family, the town, and the people dearest to her. Memories from her childhood flood back, and her values and assumptions are thrown into doubt. Featuring many of the iconic characters from To Kill a Mockingbird, Go Set a Watchman perfectly captures a young woman, and a world, in painful yet necessary transition out of the illusions of the past -- a journey that can only be guided by one's own conscience")
+                        .isbn("9780062409874")
+                        .pages(288)
+                        .publishedDate(LocalDate.of(2015, 7, 1))
+                        .createdAt(now)
+                        .authorName("Harper Lee")
+                        .genres(List.of("Fantasy", "Literary", "Speculative Fiction", "General Fiction"))
+                        .build(),
+
+                BookDTO.builder()
+                        .title("The Hobbit: Or There and Back Again")
+                        .description("Bilbo Baggins was a hobbit who wanted to be left alone in quiet comfort. But the wizard Gandalf came along with a band of homeless dwarves. Soon Bilbo was drawn into their quest, facing evil orcs, savage wolves, giant spiders, and worse unknown dangers. Finally, it was Bilbo--alone and unaided--who had to confront the great dragon Smaug, the terror of an entire countryside!")
+                        .isbn("9780345296047")
+                        .pages(320)
+                        .publishedDate(LocalDate.of(1937, 1, 15))
+                        .createdAt(now)
+                        .authorName("J.R.R. Tolkien")
+                        .genres(List.of("Speculative Fiction", "Epic Fantasy", "Fantasy"))
+                        .build(),
+
+                BookDTO.builder()
+                        .title("The Nature of Middle-earth")
+                        .description("The first ever publication of J.R.R. Tolkien's final writings on Middle-earth, covering a wide range of subjects and perfect for those who have read and enjoyed The Silmarillion, The Lord of the Rings, Unfinished Tales, and The History of Middle-earth, and want to learn more about Tolkien's magnificent world.")
+                        .isbn("9780063269606")
+                        .pages(464)
+                        .publishedDate(LocalDate.of(2021, 9, 1))
+                        .createdAt(now)
+                        .authorName("J.R.R. Tolkien")
+                        .genres(List.of("General Fiction", "Speculative Fiction", "Action Adventure", "Epic Fantasy", "Fantasy"))
+                        .build(),
+
+                BookDTO.builder()
+                        .title("Fantastic Beasts and Where to Find Them")
+                        .description("An approved textbook at Hogwarts School of Witchcraft and Wizardry since publication, Newt Scamander''s masterpiece has entertained wizarding families through the generations. Fantastic Beasts and Where to Find Them is an indispensable introduction to the magical beasts of the Wizarding World. In this comprehensively updated edition, eagle-eyed readers will spot a number of new beasts and an intriguing new author''s note. Scamander''s years of travel and research have created a tome of unparalleled importance. Some of the beasts will be familiar to readers of the Harry Potter books - the Hippogriff, the Basilisk, the Hungarian Horntail ... Others will surprise even the most ardent amateur Magizoologist. Dip in to discover the curious habits of magical beasts across five continents .")
+                        .isbn("9780439321600")
+                        .pages(64)
+                        .publishedDate(LocalDate.of(2001, 6, 1))
+                        .createdAt(now)
+                        .authorName("J.K. Rowling")
+                        .genres(List.of("Speculative Fiction", "Fantasy"))
+                        .build(),
+
+                BookDTO.builder()
+                        .title("Fantastic Beasts: The Crimes of Grindelwald")
+                        .description("At the end of Fantastic Beasts and Where to Find Them, the powerful Dark wizard Gellert Grindelwald was captured in New York with the help of Newt Scamander. But, making good on his threat, Grindelwald escapes custody and sets about gathering followers, most unsuspecting of his true agenda: to raise pure-blood wizards up to rule over all non-magical beings.")
+                        .isbn("9781338263893")
+                        .pages(304)
+                        .publishedDate(LocalDate.of(2018, 11, 1))
+                        .createdAt(now)
+                        .authorName("J.K. Rowling")
+                        .genres(List.of("Speculative Fiction", "Fantasy", "Sorcery"))
+                        .build(),
+
+                BookDTO.builder()
+                        .title("Baum's American Fairy Tales")
+                        .description("This collection of fantasy stories was originally serialized in regional newspapers, prior to being published as a complete volume. The stories, as critics have noted, lack the high-fantasy aspect of the best of Baum's work, in Oz or out. With ironic or nonsensical morals attached to their ends, their tone is more satirical, glib, and tongue-in-cheek than is usual in children's stories; the serialization in newspapers for adult readers was appropriate for the materials.")
+                        .isbn("9781499525236")
+                        .pages(92)
+                        .publishedDate(LocalDate.of(2014, 5, 1))
+                        .createdAt(now)
+                        .authorName("L. Frank Baum")
+                        .genres(List.of("Speculative Fiction", "Fantasy"))
+                        .build(),
+
+                BookDTO.builder()
+                        .title("King Rinkitink")
+                        .description("Rinkitink in Oz is considered by many to be one of L. Frank Baum?s best books, yet Baum did not intend for it to be an Oz book at all. Written as King Rinkitink in 1905, when it saw print in 1916, it was with significant changes. Although the original manuscript is lost, the International Wizard of Oz Club has brought King Rinkitink back to life with a new ending in Baum's style and sensibility. When sea-raiders invade the peaceful island of Pingaree and carry off its inhabitants to slavery, only young Prince Inga, jolly King Rinkitink, and his grumpy goat Bilbil are left behind. Aided by three Magic Pearls, these unlikely heroes set out to rescue Inga?s people from captivity, a quest that takes them across the ocean and into the dangerous underground world of the Nome King! One of Baum?s best stories just got better with five new chapters, numerous b&w illustrations by John R. Neill and Javi Laparra, and color plates reproduced here in b&w.")
+                        .isbn("9780991199075")
+                        .pages(356)
+                        .publishedDate(LocalDate.of(2017, 12, 1))
+                        .createdAt(now)
+                        .authorName("L. Frank Baum")
+                        .genres(List.of("Speculative Fiction", "Fantasy"))
+                        .build(),
+
+                BookDTO.builder()
+                        .title("Before Scarlett")
+                        .description("Discovered one sultry summer in an Atlanta basement full of sixty years' worth of accumulated debris, the writings of a young Margaret Mitchell reveal a prodigious and inspirational talent for such a young girl. The writer, who would later pen the best-selling book of all time after the Bible (and one that still sells more than 200,000 copies annually), was a precocious, imaginative, headstrong rebel and yet as distracted by everyday concerns about parental approval and social insecurities as any child. Nevertheless, as shown in the pages of Before Scarlett, Mitchell displayed an amazing talent through her writing of letters, journals, short stories, and one-act plays (later staged in her midtown Atlanta home). ")
+                        .isbn("9781570039386")
+                        .pages(240)
+                        .publishedDate(LocalDate.of(2010, 8, 1))
+                        .createdAt(now)
+                        .authorName("Margaret Mitchell")
+                        .genres(List.of("General Fiction"))
+                        .build(),
+
+                BookDTO.builder()
+                        .title("Lost Laysen")
+                        .description("A long-lost novel by the author of Gone with the Wind provides richly romantic saga of a stormy love triangle and characters torn between passion and honor, whose lives are forever altered by a terrible catastrophe. 350,000 first printing.")
+                        .isbn("9780684824284")
+                        .pages(128)
+                        .publishedDate(LocalDate.of(1996, 5, 1))
+                        .createdAt(now)
+                        .authorName("Margaret Mitchell")
+                        .genres(List.of("General Fiction"))
+                        .build(),
+
+                BookDTO.builder()
+                        .title("The Temple of Gold")
+                        .description("Acclaimed for such Academy Award -- winning screenplays as Butch Cassidy and the Sundance Kid and such thrillers as Marathon Man, not to mention the bestselling classic The Princess Bride, William Goldman stands as one of the most beloved writers in America. But long before these triumphs, he caused a sensation with his brilliant first novel, a powerful story of reckless youth that was hailed as a worthy rival to The Catcher in the Rye.")
+                        .isbn("9780345439741")
+                        .pages(224)
+                        .publishedDate(LocalDate.of(2001, 10, 1))
+                        .createdAt(now)
+                        .authorName("William Goldman")
+                        .genres(List.of("Suspense"))
+                        .build(),
+
+                BookDTO.builder()
+                        .title("Magic")
+                        .description("One of those can't-put-it-down-until-the-last-page-is-turned monsters that has readers all over the country missing sleep. Minneapolis Tribune Corky is a brilliant entertainer with a bright future ahead of him. He has good looks, many women, and enormous talent. He also had a secret and a certainty: a secret that must be hidden from his public at all costs; and a certainty that the dark forces of magic were out to destroy him. Fascinating . . . This dazzling psychological thriller cannot be put down! . . . The most imaginative and enjoyable novel I've read since Marathon Man. . . . [A] bizarre journey into the world of illusion. St. Louis Post-Dispatch Kept me up half the night. . . . A brilliantly alarming novel! Cosmopolitan")
+                        .isbn("9780307487865")
+                        .pages(243)
+                        .publishedDate(LocalDate.of(2009, 1, 1))
+                        .createdAt(now)
+                        .authorName("William Goldman")
+                        .genres(List.of("Suspense", "Psychological Suspense"))
                         .build()
         );
     }
 }
 
-//BookDTO.builder()
-//        .title("")
-//        .description("")
-//        .isbn("")
-//        .pages()
-//        .publishedDate(LocalDate.of())
-//        .createdAt(now)
-//        .authorName("")
-//        .genres(List.of("", ""))
-//        .build();
+/*
+ * FictionDB.com. (n.d.). FictionDB API. Retrieved May 25, 2023, from https://www.fictiondb.com/
+ * You can use this template to create your own book record
+ * BookDTO.builder()
+ *        .title("")
+ *        .description("")
+ *        .isbn("")
+ *        .pages()
+ *        .publishedDate(LocalDate.of())
+ *        .createdAt(now)
+ *        .authorName("")
+ *        .genres(List.of("", ""))
+ *        .build();
+ */
