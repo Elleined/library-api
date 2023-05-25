@@ -39,4 +39,10 @@ public class Author {
     // author id reference is in book table
     @OneToMany(mappedBy = "author")
     private List<Book> bookList;
+
+    public Author(String name, String biography, LocalDateTime createdAt) {
+        this.name = name;
+        this.biography = biography;
+        this.createdAt = createdAt;
+    }
 }

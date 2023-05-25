@@ -1,7 +1,6 @@
 package com.denielle.api.restapi.repository;
 
 import com.denielle.api.restapi.model.Author;
-import org.springframework.boot.autoconfigure.elasticsearch.ElasticsearchConnectionDetails;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

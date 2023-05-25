@@ -3,7 +3,6 @@ package com.denielle.api.restapi.repository;
 import com.denielle.api.restapi.model.Author;
 import com.denielle.api.restapi.model.Book;
 import com.denielle.api.restapi.model.Genre;
-import jakarta.persistence.ManyToMany;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -16,12 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import static org.junit.jupiter.api.Assertions.*;
 @Slf4j
 @DataJpaTest
 @RunWith(SpringRunner.class)

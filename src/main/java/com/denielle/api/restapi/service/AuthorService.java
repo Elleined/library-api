@@ -1,13 +1,11 @@
 package com.denielle.api.restapi.service;
 
 import com.denielle.api.restapi.dto.AuthorDTO;
-import com.denielle.api.restapi.dto.BookDTO;
 import com.denielle.api.restapi.exception.NameAlreadyExistsException;
 import com.denielle.api.restapi.exception.NotFoundException;
 import com.denielle.api.restapi.model.Author;
 import com.denielle.api.restapi.model.Book;
 import com.denielle.api.restapi.repository.AuthorRepository;
-import com.denielle.api.restapi.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -84,6 +82,11 @@ public class AuthorService {
                 .anyMatch(authorName::equalsIgnoreCase);
     }
 
+    // Only used for initially saving the author records
+    @Transactional
+    public void saveAll(List<Author> authors) {
+        authorRepository.saveAll(authors);
+    }
 
     @Transactional
     public int save(AuthorDTO authorDTO) throws NameAlreadyExistsException {
