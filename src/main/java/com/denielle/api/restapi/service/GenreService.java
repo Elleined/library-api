@@ -27,6 +27,10 @@ public class GenreService {
         return this.convertToDTO(genre);
     }
 
+    public List<String> searchByFirstLetter(char firstLetter) {
+        return genreRepository.searchByFirstLetter(firstLetter);
+    }
+
     public List<GenreDTO> getAll() {
         return genreRepository.findAll()
                 .stream()

@@ -19,14 +19,19 @@ public class GenreController {
 
     private final GenreService genreService;
 
-    @GetMapping
-    public List<GenreDTO> getAll() {
-        return genreService.getAll();
-    }
-
     @GetMapping("/{id}")
     public GenreDTO getById(@PathVariable("id") int genreId) {
         return genreService.getById(genreId);
+    }
+
+    @GetMapping("/name")
+    public List<String> searchByFirstLetter(@RequestParam("firstLetter") char firstLetter) {
+        return genreService.searchByFirstLetter(firstLetter);
+    }
+
+    @GetMapping
+    public List<GenreDTO> getAll() {
+        return genreService.getAll();
     }
 
     @GetMapping("/{pageNumber}/{pageSize}")
