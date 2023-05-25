@@ -35,9 +35,4 @@ public class Genre {
     @ManyToMany(mappedBy = "genres")
     @Setter(AccessLevel.NONE)
     private Set<Book> bookGenres;
-
-    public Genre(String name, LocalDateTime createdAt) {
-        this.name = name;
-        this.createdAt = createdAt;
-    }
 }

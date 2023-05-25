@@ -73,6 +73,12 @@ public class BookService {
                 .toList();
     }
 
+    // Only used for initially saving book record
+    @Transactional
+    public void saveAll(List<BookDTO> books) {
+        books.forEach(this::save);
+    }
+
     @Transactional
     public int save(BookDTO bookDTO) {
         Author author = authorRepository.fetchByName(bookDTO.getAuthorName()).orElseThrow(() -> new NotFoundException("Author with name of " + bookDTO.getAuthorName() + " does not exists"));
@@ -84,7 +90,6 @@ public class BookService {
                 .collect(Collectors.toSet());
 
         Book book = Book.builder()
-                .id(bookDTO.getId())
                 .title(bookDTO.getTitle())
                 .description(bookDTO.getDescription())
                 .isbn(bookDTO.getIsbn())
@@ -96,7 +101,7 @@ public class BookService {
                 .build();
 
         bookRepository.save(book);
-        log.debug("Book saved successfully {}", book.getId());
+        log.debug("Book saved successfully {}", book.getTitle());
         return book.getId();
     }
 

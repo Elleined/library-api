@@ -84,8 +84,8 @@ public class AuthorService {
 
     // Only used for initially saving the author records
     @Transactional
-    public void saveAll(List<Author> authors) {
-        authorRepository.saveAll(authors);
+    public void saveAll(List<AuthorDTO> authors) {
+        authors.forEach(this::save);
     }
 
     @Transactional
@@ -98,7 +98,7 @@ public class AuthorService {
                 .build();
 
         authorRepository.save(author);
-        log.debug("Author saved successfully {}", author);
+        log.debug("Author saved successfully {}", author.getName());
         return author.getId();
     }
 

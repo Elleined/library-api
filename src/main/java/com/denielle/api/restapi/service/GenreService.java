@@ -63,8 +63,8 @@ public class GenreService {
 
     // This method is only used for initially save a genre record
     @Transactional
-    public void saveAll(List<Genre> genres) {
-        genreRepository.saveAll(genres);
+    public void saveAll(List<String> genres) {
+        genres.forEach(this::save);
     }
 
     @Transactional
