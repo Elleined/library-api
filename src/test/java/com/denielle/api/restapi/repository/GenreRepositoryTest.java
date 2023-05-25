@@ -40,4 +40,10 @@ class GenreRepositoryTest {
         genreRepository.save(genre2);
         log.debug("Genre successfully saved {}", genre2.getName());
     }
+
+    @Test
+    void searchByFirstLetter() {
+        char firstLetter = 'M';
+        genreRepository.searchByFirstLetter(firstLetter).forEach(System.out::println);
+    }
 }

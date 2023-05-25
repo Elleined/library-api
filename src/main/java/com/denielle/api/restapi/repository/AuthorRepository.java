@@ -13,6 +13,6 @@ public interface AuthorRepository extends JpaRepository<Author, Integer> {
     @Query("select a from Author a where a.name = ?1")
     Optional<Author> fetchByName(String name);
 
-    @Query(value = "SELECT * FROM author WHERE MATCH(name) AGAINST (CONCAT('+', :firstLetter, '*')) ORDER BY name ASC", nativeQuery = true)
-    List<Author> searchByFirstLetter(@Param("firstLetter") char firstLetter);
+    @Query("SELECT a.name FROM Author a WHERE a.name LIKE CONCAT(:firstLetter, '%') ORDER BY name")
+    List<String> searchByFirstLetter(@Param("firstLetter") char firstLetter);
 }

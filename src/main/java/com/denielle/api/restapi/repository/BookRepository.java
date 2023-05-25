@@ -15,6 +15,6 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
     @Query("select b from Book b where b.title = ?1")
     Optional<Book> fetchByTitle(String title);
 
-    @Query(value = "SELECT * FROM book WHERE MATCH(name) AGAINST (CONCAT('+', :firstLetter, '*')) ORDER BY name ASC", nativeQuery = true)
-    List<Book> searchByFirstLetter(@Param("firstLetter") char firstLetter);
+    @Query("SELECT b.title FROM Book b WHERE b.title LIKE CONCAT(:firstLetter, '%') ORDER BY title")
+    List<String> searchByFirstLetter(@Param("firstLetter") char firstLetter);
 }

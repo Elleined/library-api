@@ -13,6 +13,6 @@ public interface GenreRepository extends JpaRepository<Genre, Integer> {
     @Query("select g from Genre g where g.name = ?1")
     Optional<Genre> fetchByName(String name);
 
-    @Query(value = "SELECT * FROM author WHERE MATCH(name) AGAINST (CONCAT('+', :firstLetter, '*')) ORDER BY name ASC", nativeQuery = true)
-    List<Genre> searchByFirstLetter(@Param("firstLetter") char firstLetter);
+    @Query("SELECT g.name FROM Genre g WHERE g.name LIKE CONCAT(:firstLetter, '%') ORDER BY name")
+    List<String> searchByFirstLetter(@Param("firstLetter") char firstLetter);
 }

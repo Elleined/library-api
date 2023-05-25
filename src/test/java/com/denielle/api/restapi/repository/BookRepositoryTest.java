@@ -61,4 +61,10 @@ class BookRepositoryTest {
         bookRepository.save(book);
         log.debug("Book successfully saved {}", book.getTitle());
     }
+
+    @Test
+    void searchByFirstLetter() {
+        char firstLetter = 'M';
+        bookRepository.searchByFirstLetter(firstLetter).forEach(System.out::println);
+    }
 }
