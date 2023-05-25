@@ -43,6 +43,11 @@ public class AuthorController {
         return authorService.getByName(authorName);
     }
 
+    @GetMapping("/name")
+    public List<String> searchByFirstLetter(@RequestParam("firstLetter") char firstLetter) {
+        return authorService.searchByFirstLetter(firstLetter);
+    }
+
     @GetMapping("/{pageNumber}/{pageSize}")
     public List<AuthorDTO> getAll(@PathVariable int pageNumber,
                                  @PathVariable int pageSize) {

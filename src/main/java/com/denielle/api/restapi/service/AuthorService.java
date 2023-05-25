@@ -48,6 +48,10 @@ public class AuthorService {
         return author.getBookList().size();
     }
 
+    public List<String> searchByFirstLetter(char firstLetter) {
+        return authorRepository.searchByFirstLetter(firstLetter);
+    }
+
     public List<AuthorDTO> getAll() {
         return authorRepository.findAll()
                 .stream()
