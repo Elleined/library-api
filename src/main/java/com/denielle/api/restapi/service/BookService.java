@@ -32,6 +32,7 @@ public class BookService {
     public BookDTO getById(int id) {
         Book book = bookRepository.findById(id).orElseThrow(() -> new NotFoundException("Book with id of " + id + " does not exists"));
         book.setViews(book.getViews() + 1);
+        bookRepository.save(book);
 
         return this.convertToDTO(book);
     }
@@ -39,6 +40,7 @@ public class BookService {
     public BookDTO getByTitle(String title) {
         Book book = bookRepository.fetchByTitle(title).orElseThrow(() -> new NotFoundException("Book with title of " + title + " does not exits"));
         book.setViews(book.getViews() + 1);
+        bookRepository.save(book);
 
         return this.convertToDTO(book);
     }
@@ -46,6 +48,7 @@ public class BookService {
     public BookDTO getByIsbn(String isbn) {
         Book book = bookRepository.fetchByIsbn(isbn).orElseThrow(() -> new NotFoundException("Book with isbn of " + isbn + " does not exits"));
         book.setViews(book.getViews() + 1);
+        bookRepository.save(book);
 
         return this.convertToDTO(book);
     }
@@ -57,62 +60,67 @@ public class BookService {
     }
 
     public List<BookDTO> getAllByGenre(String genreName) {
-        List<BookDTO> books = bookRepository.getAllByGenre(genreName)
-                .stream()
+        List<Book> books = bookRepository.getAllByGenre(genreName);
+        books.forEach(book -> {
+            book.setViews(book.getViews() + 1);
+            bookRepository.save(book);
+        });
+
+        return books.stream()
                 .map(this::convertToDTO)
                 .toList();
-
-        books.forEach(book -> book.setViews(book.getViews() + 1));
-
-        return books;
     }
 
     public List<BookDTO> getAllByTitleFirstLetter(char firstLetter) {
-        List<BookDTO> books = bookRepository.getAllByTitleFirstLetter(firstLetter)
-                .stream()
+        List<Book> books = bookRepository.getAllByTitleFirstLetter(firstLetter);
+        books.forEach(book -> {
+            book.setViews(book.getViews() + 1);
+            bookRepository.save(book);
+        });
+
+        return books.stream()
                 .map(this::convertToDTO)
                 .toList();
-
-        books.forEach(book -> book.setViews(book.getViews() + 1));
-
-        return books;
     }
 
     public List<BookDTO> getAll() {
-        List<BookDTO> books = bookRepository.findAll()
-                .stream()
+        List<Book> books = bookRepository.findAll();
+        books.forEach(book -> {
+            book.setViews(book.getViews() + 1);
+            bookRepository.save(book);
+        });
+
+        return books.stream()
                 .map(this::convertToDTO)
                 .toList();
-
-        books.forEach(book -> book.setViews(book.getViews() + 1));
-
-        return books;
     }
 
     public List<BookDTO> getAll(int pageNumber, int pageSize) {
         Pageable pageable = PageSorter.getPage(pageNumber, pageSize);
 
-        List<BookDTO> books = bookRepository.findAll(pageable)
-                .stream()
+        List<Book> books = bookRepository.findAll(pageable).toList();
+        books.forEach(book -> {
+            book.setViews(book.getViews() + 1);
+            bookRepository.save(book);
+        });
+
+        return books.stream()
                 .map(this::convertToDTO)
                 .toList();
-
-        books.forEach(book -> book.setViews(book.getViews() + 1));
-
-        return books;
     }
 
     public List<BookDTO> getAll(int pageNumber, int pageSize, String sortDirection, String sortProperty) {
         Pageable pageable = PageSorter.getPage(pageNumber, pageSize, sortDirection, sortProperty);
 
-        List<BookDTO> books = bookRepository.findAll(pageable)
-                .stream()
+        List<Book> books = bookRepository.findAll(pageable).toList();
+        books.forEach(book -> {
+            book.setViews(book.getViews() + 1);
+            bookRepository.save(book);
+        });
+
+        return books.stream()
                 .map(this::convertToDTO)
                 .toList();
-
-        books.forEach(book -> book.setViews(book.getViews() + 1));
-
-        return books;
     }
 
     public List<Integer> saveAll(List<BookDTO> books) {
