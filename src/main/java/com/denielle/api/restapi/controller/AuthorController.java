@@ -2,10 +2,13 @@ package com.denielle.api.restapi.controller;
 
 import com.denielle.api.restapi.dto.AuthorDTO;
 import com.denielle.api.restapi.service.AuthorService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -70,7 +73,17 @@ public class AuthorController {
     }
 
     @PostMapping
-    public ResponseEntity<AuthorDTO> save(@RequestBody AuthorDTO authorDTO) {
+    public ResponseEntity<?> save(@Valid @RequestBody AuthorDTO authorDTO,
+                                          BindingResult result) {
+
+        if (result.hasErrors()) {
+            List<String> errors = result.getAllErrors()
+                    .stream()
+                    .map(ObjectError::getDefaultMessage)
+                    .toList();
+            return ResponseEntity.badRequest().body(errors);
+        }
+
         int authorId = authorService.save(authorDTO);
         AuthorDTO fetchedAuthor = authorService.getById(authorId);
 
@@ -78,7 +91,17 @@ public class AuthorController {
     }
 
     @PostMapping("/save-all")
-    public ResponseEntity<List<AuthorDTO>> saveAll(@RequestBody List<AuthorDTO> authors) {
+    public ResponseEntity<?> saveAll(@Valid @RequestBody List<AuthorDTO> authors,
+                                                   BindingResult result) {
+
+        if (result.hasErrors()) {
+            List<String> errors = result.getAllErrors()
+                    .stream()
+                    .map(ObjectError::getDefaultMessage)
+                    .toList();
+            return ResponseEntity.badRequest().body(errors);
+        }
+
         List<Integer> authorIds = authorService.saveAll(authors);
         List<AuthorDTO> fetchedAuthors = authorService.getAllById(authorIds);
 
