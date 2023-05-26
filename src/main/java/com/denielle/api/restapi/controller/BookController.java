@@ -40,10 +40,10 @@ public class BookController {
     }
 
     @GetMapping("/title")
-    public List<String> searchByFirstLetter(@RequestParam("firstLetter") char firstLetter) {
-        return bookService.searchByFirstLetter(firstLetter);
+    public List<BookDTO> getAllByTitleFirstLetter(@RequestParam("firstLetter") char firstLetter) {
+        return bookService.getAllByTitleFirstLetter(firstLetter);
     }
-    
+
     @GetMapping("/genre/{genreName}")
     public List<BookDTO> getAllByGenre(@PathVariable("genreName") String genreName) {
         return bookService.getAllByGenre(genreName);

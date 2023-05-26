@@ -61,7 +61,7 @@ class BookRepositoryTest {
     @Test
     void searchByFirstLetter() {
         char firstLetter = 'M';
-        bookRepository.searchByFirstLetter(firstLetter).forEach(System.out::println);
+        bookRepository.getAllByTitleFirstLetter(firstLetter).forEach(System.out::println);
     }
 
     @Test

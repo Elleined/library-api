@@ -56,8 +56,11 @@ public class BookService {
                 .toList();
     }
 
-    public List<String> searchByFirstLetter(char firstLetter) {
-        return bookRepository.searchByFirstLetter(firstLetter);
+    public List<BookDTO> getAllByTitleFirstLetter(char firstLetter) {
+        return bookRepository.getAllByTitleFirstLetter(firstLetter)
+                .stream()
+                .map(this::convertToDTO)
+                .toList();
     }
 
     public List<BookDTO> getAll() {
