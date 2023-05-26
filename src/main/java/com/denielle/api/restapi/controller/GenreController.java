@@ -1,5 +1,6 @@
 package com.denielle.api.restapi.controller;
 
+import com.denielle.api.restapi.dto.AuthorDTO;
 import com.denielle.api.restapi.dto.GenreDTO;
 import com.denielle.api.restapi.service.GenreService;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,11 @@ public class GenreController {
     @GetMapping("/{id}")
     public GenreDTO getById(@PathVariable("id") int genreId) {
         return genreService.getById(genreId);
+    }
+
+    @GetMapping("/get-all")
+    public List<GenreDTO> getAllById(@RequestParam("ids") List<Integer> genreIds) {
+        return genreService.getAllById(genreIds);
     }
 
     @GetMapping("/name/{name}")
@@ -61,6 +67,15 @@ public class GenreController {
 
         return new ResponseEntity<>(genreDTO, HttpStatus.CREATED);
     }
+
+    @PostMapping("/save-all")
+    public ResponseEntity<List<GenreDTO>> saveAll(@RequestParam("names") List<String> genreNames) {
+        List<Integer> authorsId = genreService.saveAll(genreNames);
+        List<GenreDTO> fetchedAuthors =  genreService.getAllById(authorsId);
+
+        return new ResponseEntity<>(fetchedAuthors, HttpStatus.CREATED);
+    }
+
 
     @PatchMapping("/{id}")
     public ResponseEntity<GenreDTO> update(@PathVariable("id") int genreId,

@@ -73,7 +73,6 @@ public class BookService {
                 .toList();
     }
 
-    // Only used for initially saving book record
     @Transactional
     public void saveAll(List<BookDTO> books) {
         books.forEach(this::save);

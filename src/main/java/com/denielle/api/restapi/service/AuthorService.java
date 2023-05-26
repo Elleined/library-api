@@ -82,7 +82,6 @@ public class AuthorService {
                 .anyMatch(authorName::equalsIgnoreCase);
     }
 
-    // Only used for initially saving the author records
     @Transactional
     public void saveAll(List<AuthorDTO> authors) {
         authors.forEach(this::save);
