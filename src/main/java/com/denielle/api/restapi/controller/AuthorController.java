@@ -4,7 +4,6 @@ import com.denielle.api.restapi.dto.AuthorDTO;
 import com.denielle.api.restapi.service.AuthorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +17,7 @@ import java.util.List;
 public class AuthorController {
 
     private final AuthorService authorService;
+
     @GetMapping
     public List<AuthorDTO> getAll() {
         return authorService.getAll();
@@ -43,14 +43,14 @@ public class AuthorController {
         return authorService.getBookCount(authorId);
     }
 
-    @GetMapping("/name/{name}")
-    public AuthorDTO getByName(@PathVariable("name") String authorName) {
-        return authorService.getByName(authorName);
-    }
-
     @GetMapping("/name")
     public List<String> searchByFirstLetter(@RequestParam("firstLetter") char firstLetter) {
         return authorService.searchByFirstLetter(firstLetter);
+    }
+
+    @GetMapping("/name/{name}")
+    public AuthorDTO getByName(@PathVariable("name") String authorName) {
+        return authorService.getByName(authorName);
     }
 
     @GetMapping("/{pageNumber}/{pageSize}")
@@ -60,12 +60,13 @@ public class AuthorController {
         return authorService.getAll(pageNumber, pageSize);
     }
 
-    @GetMapping("/{pageNumber}/{pageSize}/{sortProperty}")
+    @GetMapping("/{pageNumber}/{pageSize}/{sortDirection}/{sortProperty}")
     public List<AuthorDTO> getAll(@PathVariable int pageNumber,
-                                  @PathVariable int pageSize,
-                                  @PathVariable String sortProperty) {
+                                @PathVariable int pageSize,
+                                @PathVariable String sortDirection,
+                                @PathVariable String sortProperty) {
 
-        return authorService.getAll(pageNumber, pageSize, Sort.Direction.ASC, sortProperty);
+        return authorService.getAll(pageNumber, pageSize, sortDirection, sortProperty);
     }
 
     @PostMapping

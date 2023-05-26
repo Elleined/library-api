@@ -11,7 +11,6 @@ import com.denielle.api.restapi.repository.GenreRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -22,7 +21,7 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class BookService {
+public class BookService implements DTOConverter<Book, BookDTO> {
 
     private final BookRepository bookRepository;
     private final GenreRepository genreRepository;
@@ -79,8 +78,8 @@ public class BookService {
                 .toList();
     }
 
-    public List<BookDTO> getAll(int pageNumber, int pageSize, Sort.Direction direction, String sortProperty) {
-        Pageable pageable = PageSorter.getPage(pageNumber, pageSize, direction, sortProperty);
+    public List<BookDTO> getAll(int pageNumber, int pageSize, String sortDirection, String sortProperty) {
+        Pageable pageable = PageSorter.getPage(pageNumber, pageSize, sortDirection, sortProperty);
 
         return bookRepository.findAll(pageable)
                 .stream()
@@ -148,6 +147,7 @@ public class BookService {
         log.debug("Book with id of {} deleted successfully", id);
     }
 
+    @Override
     public BookDTO convertToDTO(Book book) {
         return BookDTO.builder()
                 .id(book.getId())

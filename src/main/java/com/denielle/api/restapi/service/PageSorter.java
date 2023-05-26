@@ -9,7 +9,7 @@ public interface PageSorter {
         return PageRequest.of(pageNumber, pageSize);
     }
 
-    static Pageable getPage(int pageNumber, int pageSize, Sort.Direction direction, String sortProperty) {
-        return PageRequest.of(pageNumber, pageSize, direction, sortProperty);
+    static Pageable getPage(int pageNumber, int pageSize, String sortDirection, String sortProperty) {
+        return PageRequest.of(pageNumber, pageSize, Sort.Direction.valueOf(sortDirection), sortProperty);
     }
 }

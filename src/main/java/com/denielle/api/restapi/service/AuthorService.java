@@ -1,6 +1,7 @@
 package com.denielle.api.restapi.service;
 
 import com.denielle.api.restapi.dto.AuthorDTO;
+import com.denielle.api.restapi.dto.BookDTO;
 import com.denielle.api.restapi.exception.NameAlreadyExistsException;
 import com.denielle.api.restapi.exception.NotFoundException;
 import com.denielle.api.restapi.model.Author;
@@ -9,7 +10,6 @@ import com.denielle.api.restapi.repository.AuthorRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -21,6 +21,7 @@ import java.util.List;
 public class AuthorService {
 
     private final AuthorRepository authorRepository;
+    private final DTOConverter<Book, BookDTO> converter;
 
     public AuthorDTO getById(int id) {
         Author author = authorRepository.findById(id).orElseThrow(() -> new NotFoundException("Author with id of " + id + " does not exists"));
@@ -71,8 +72,8 @@ public class AuthorService {
                 .toList();
     }
 
-    public List<AuthorDTO> getAll(int pageNumber, int pageSize, Sort.Direction direction, String sortProperty) {
-        Pageable pageable = PageSorter.getPage(pageNumber, pageSize, direction, sortProperty);
+    public List<AuthorDTO> getAll(int pageNumber, int pageSize, String sortDirection, String sortProperty) {
+        Pageable pageable = PageSorter.getPage(pageNumber, pageSize, sortDirection, sortProperty);
 
         return authorRepository.findAll(pageable)
                 .stream()
@@ -130,6 +131,11 @@ public class AuthorService {
                 .biography(author.getBiography())
                 .createdAt(author.getCreatedAt())
                 .updatedAt(author.getUpdatedAt())
+                .books(author.getBookList()
+                        .stream()
+                        .map(converter::convertToDTO)
+                        .toList())
+                .bookCount(author.getBookList().size())
                 .build();
     }
 }

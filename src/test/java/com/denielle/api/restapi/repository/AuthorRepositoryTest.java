@@ -11,6 +11,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
+import java.util.List;
+
 @Slf4j
 @DataJpaTest
 @RunWith(SpringRunner.class)
@@ -39,4 +42,15 @@ class AuthorRepositoryTest {
         char firstLetter = 'M';
         authorRepository.searchByFirstLetter(firstLetter).forEach(System.out::println);
     }
+
+    @Test
+    void test() {
+        List<Author> authors = authorRepository.findAll()
+                .stream()
+                .sorted(Comparator.comparing(author -> author.getBookList().size(),
+                        Comparator.reverseOrder()))
+                .toList();
+        authors.forEach(author -> System.out.println(author.getName() + " book count: " + author.getBookList().size()));
+    }
+
 }

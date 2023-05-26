@@ -4,7 +4,6 @@ import com.denielle.api.restapi.dto.BookDTO;
 import com.denielle.api.restapi.service.BookService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -61,12 +60,13 @@ public class BookController {
         return bookService.getAll(pageNumber, pageSize);
     }
 
-    @GetMapping("/{pageNumber}/{pageSize}/{sortProperty}")
+    @GetMapping("/{pageNumber}/{pageSize}/{sortDirection}/{sortProperty}")
     public List<BookDTO> getAll(@PathVariable int pageNumber,
-                                @PathVariable int pageSize,
-                                @PathVariable String sortProperty) {
+                                  @PathVariable int pageSize,
+                                  @PathVariable String sortDirection,
+                                  @PathVariable String sortProperty) {
 
-        return bookService.getAll(pageNumber, pageSize, Sort.Direction.ASC, sortProperty);
+        return bookService.getAll(pageNumber, pageSize, sortDirection, sortProperty);
     }
 
     @PostMapping

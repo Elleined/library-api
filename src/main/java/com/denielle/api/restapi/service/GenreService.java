@@ -8,7 +8,6 @@ import com.denielle.api.restapi.repository.GenreRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -57,8 +56,8 @@ public class GenreService {
                 .toList();
     }
 
-    public List<GenreDTO> getAll(int pageNumber, int pageSize, Sort.Direction direction, String sortProperty) {
-        Pageable pageable = PageSorter.getPage(pageNumber, pageSize, direction, sortProperty);
+    public List<GenreDTO> getAll(int pageNumber, int pageSize, String sortDirection, String sortProperty) {
+        Pageable pageable = PageSorter.getPage(pageNumber, pageSize, sortDirection, sortProperty);
 
         return genreRepository.findAll(pageable)
                 .stream()
