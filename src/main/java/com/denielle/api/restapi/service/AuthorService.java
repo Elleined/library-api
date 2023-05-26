@@ -1,7 +1,6 @@
 package com.denielle.api.restapi.service;
 
 import com.denielle.api.restapi.dto.AuthorDTO;
-import com.denielle.api.restapi.dto.BookDTO;
 import com.denielle.api.restapi.exception.NameAlreadyExistsException;
 import com.denielle.api.restapi.exception.NotFoundException;
 import com.denielle.api.restapi.model.Author;
@@ -23,7 +22,6 @@ import java.util.List;
 public class AuthorService {
 
     private final AuthorRepository authorRepository;
-    private final DTOConverter<Book, BookDTO> converter;
 
     public AuthorDTO getById(int id) {
         Author author = authorRepository.findById(id).orElseThrow(() -> new NotFoundException("Author with id of " + id + " does not exists"));
@@ -160,7 +158,7 @@ public class AuthorService {
                 .updatedAt(author.getUpdatedAt())
                 .books(author.getBookList()
                         .stream()
-                        .map(converter::convertToDTO)
+                        .map(Book::getTitle)
                         .toList())
                 .bookCount(author.getBookList().size())
                 .build();

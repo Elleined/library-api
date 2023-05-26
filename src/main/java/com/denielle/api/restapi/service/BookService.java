@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class BookService implements DTOConverter<Book, BookDTO> {
+public class BookService {
 
     private final BookRepository bookRepository;
     private final GenreRepository genreRepository;
@@ -147,7 +147,6 @@ public class BookService implements DTOConverter<Book, BookDTO> {
         log.debug("Book with id of {} deleted successfully", id);
     }
 
-    @Override
     public BookDTO convertToDTO(Book book) {
         return BookDTO.builder()
                 .id(book.getId())

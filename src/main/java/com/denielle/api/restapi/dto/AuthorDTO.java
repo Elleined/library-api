@@ -14,6 +14,6 @@ public class AuthorDTO {
     private String biography;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private List<BookDTO> books;
+    private List<String> books;
     private int bookCount;
 }
