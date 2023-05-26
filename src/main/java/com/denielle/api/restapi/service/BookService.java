@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -26,19 +27,26 @@ public class BookService {
     private final BookRepository bookRepository;
     private final GenreRepository genreRepository;
     private final AuthorRepository authorRepository;
+    private final Random random = new Random();
 
     public BookDTO getById(int id) {
         Book book = bookRepository.findById(id).orElseThrow(() -> new NotFoundException("Book with id of " + id + " does not exists"));
+        book.setViews(book.getViews() + 1);
+
         return this.convertToDTO(book);
     }
 
     public BookDTO getByTitle(String title) {
         Book book = bookRepository.fetchByTitle(title).orElseThrow(() -> new NotFoundException("Book with title of " + title + " does not exits"));
+        book.setViews(book.getViews() + 1);
+
         return this.convertToDTO(book);
     }
 
     public BookDTO getByIsbn(String isbn) {
         Book book = bookRepository.fetchByIsbn(isbn).orElseThrow(() -> new NotFoundException("Book with isbn of " + isbn + " does not exits"));
+        book.setViews(book.getViews() + 1);
+
         return this.convertToDTO(book);
     }
 
@@ -49,42 +57,62 @@ public class BookService {
     }
 
     public List<BookDTO> getAllByGenre(String genreName) {
-        return bookRepository.getAllByGenre(genreName)
+        List<BookDTO> books = bookRepository.getAllByGenre(genreName)
                 .stream()
                 .map(this::convertToDTO)
                 .toList();
+
+        books.forEach(book -> book.setViews(book.getViews() + 1));
+
+        return books;
     }
 
     public List<BookDTO> getAllByTitleFirstLetter(char firstLetter) {
-        return bookRepository.getAllByTitleFirstLetter(firstLetter)
+        List<BookDTO> books = bookRepository.getAllByTitleFirstLetter(firstLetter)
                 .stream()
                 .map(this::convertToDTO)
                 .toList();
+
+        books.forEach(book -> book.setViews(book.getViews() + 1));
+
+        return books;
     }
 
     public List<BookDTO> getAll() {
-        return bookRepository.findAll()
+        List<BookDTO> books = bookRepository.findAll()
                 .stream()
                 .map(this::convertToDTO)
                 .toList();
+
+        books.forEach(book -> book.setViews(book.getViews() + 1));
+
+        return books;
     }
 
     public List<BookDTO> getAll(int pageNumber, int pageSize) {
         Pageable pageable = PageSorter.getPage(pageNumber, pageSize);
 
-        return bookRepository.findAll(pageable)
+        List<BookDTO> books = bookRepository.findAll(pageable)
                 .stream()
                 .map(this::convertToDTO)
                 .toList();
+
+        books.forEach(book -> book.setViews(book.getViews() + 1));
+
+        return books;
     }
 
     public List<BookDTO> getAll(int pageNumber, int pageSize, String sortDirection, String sortProperty) {
         Pageable pageable = PageSorter.getPage(pageNumber, pageSize, sortDirection, sortProperty);
 
-        return bookRepository.findAll(pageable)
+        List<BookDTO> books = bookRepository.findAll(pageable)
                 .stream()
                 .map(this::convertToDTO)
                 .toList();
+
+        books.forEach(book -> book.setViews(book.getViews() + 1));
+
+        return books;
     }
 
     public List<Integer> saveAll(List<BookDTO> books) {
@@ -113,6 +141,7 @@ public class BookService {
                 .createdAt(LocalDateTime.now())
                 .author(author)
                 .genres(genres)
+                .saleCount(random.nextInt(999))
                 .build();
 
         bookRepository.save(book);
