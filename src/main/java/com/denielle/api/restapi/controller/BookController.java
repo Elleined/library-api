@@ -2,6 +2,7 @@ package com.denielle.api.restapi.controller;
 
 import com.denielle.api.restapi.dto.BookDTO;
 import com.denielle.api.restapi.service.BookService;
+import com.denielle.api.restapi.service.StringValidator;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -78,7 +79,7 @@ public class BookController {
 
         boolean isGenreNotValid = bookDTO.getGenres()
                 .stream()
-                .anyMatch(genre -> genre == null || genre.isBlank() || genre.isEmpty());
+                .anyMatch(StringValidator::validate);
         if (isGenreNotValid) return ResponseEntity.badRequest().body("Genre cannot be null or empty or blank");
 
         if (result.hasErrors()) {

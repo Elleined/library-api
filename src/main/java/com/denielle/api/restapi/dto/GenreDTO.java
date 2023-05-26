@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @Builder
 public class GenreDTO {
     private int id;
+
     private String name;
 
     private LocalDateTime updatedAt;
