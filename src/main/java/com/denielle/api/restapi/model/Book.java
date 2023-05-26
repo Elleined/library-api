@@ -39,6 +39,13 @@ public class Book {
     @Column(name = "pages")
     private int pages;
 
+    // For sorting mechanism
+    @Column(name = "views")
+    private int views;
+
+    @Column(name = "sale_count")
+    private int saleCount;
+
     @Column(name = "date_created")
     private LocalDateTime createdAt;
 

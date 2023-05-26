@@ -19,4 +19,6 @@ public class BookDTO {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private List<String> genres;
+    private int views;
+    private int saleCount;
 }

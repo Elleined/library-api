@@ -95,6 +95,8 @@ public class BookService {
 
     public int save(BookDTO bookDTO) {
         Author author = authorRepository.fetchByName(bookDTO.getAuthorName()).orElseThrow(() -> new NotFoundException("Author with name of " + bookDTO.getAuthorName() + " does not exists"));
+        author.setBookCount(author.getBookCount() + 1);
+        authorRepository.save(author);
 
         Set<Genre> genres = bookDTO.getGenres()
                 .stream()
@@ -162,6 +164,8 @@ public class BookService {
                         .stream()
                         .map(Genre::getName)
                         .toList())
+                .saleCount(book.getSaleCount())
+                .views(book.getViews())
                 .build();
     }
 }

@@ -23,11 +23,6 @@ public class AuthorController {
         return authorService.getAll();
     }
 
-    @GetMapping("/sort/{sortProperty}")
-    public List<AuthorDTO> sort(@PathVariable("sortProperty") String sortProperty) {
-        return authorService.sortBy(sortProperty);
-    }
-
     @GetMapping("/get-all-by-id")
     public List<AuthorDTO> getAllById(@RequestParam("ids") List<Integer> authorIds) {
         return authorService.getAllById(authorIds);

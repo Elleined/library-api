@@ -12,8 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -38,31 +37,6 @@ public class AuthorService {
         return author.getBookList()
                 .stream()
                 .map(Book::getTitle)
-                .toList();
-    }
-
-    public List<AuthorDTO> sortBy(String sortProperty) {
-        if (sortProperty.equalsIgnoreCase("bookCount")) return sortByBookCount();
-        // Add sorting mechanism here
-        return sortByPopularity();
-    }
-
-    private List<AuthorDTO> sortByBookCount() {
-        return authorRepository.findAll()
-                .stream()
-                .sorted(Comparator.comparing(author -> author.getBookList().size(),
-                        Comparator.reverseOrder()))
-                .map(this::convertToDTO)
-                .toList();
-    }
-
-    // Sort by popularity is randomized for now because we don't have a logic for now to get the popular authors
-    private List<AuthorDTO> sortByPopularity() {
-        List<Author> authors = authorRepository.findAll();
-        Collections.shuffle(authors);
-
-        return authors.stream()
-                .map(this::convertToDTO)
                 .toList();
     }
 
@@ -114,6 +88,7 @@ public class AuthorService {
 
     public int save(AuthorDTO authorDTO) throws NameAlreadyExistsException {
         if (isNameAlreadyExists(authorDTO.getName())) throw new NameAlreadyExistsException("Author with name of " + authorDTO.getName() + " already exists");
+
         Author author = Author.builder()
                 .name(authorDTO.getName())
                 .biography(authorDTO.getBiography())
@@ -150,6 +125,7 @@ public class AuthorService {
     }
 
     public AuthorDTO convertToDTO(Author author) {
+        if (author.getBookList() == null) author.setBookList(new ArrayList<>());
         return AuthorDTO.builder()
                 .id(author.getId())
                 .name(author.getName())
