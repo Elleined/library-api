@@ -138,11 +138,6 @@ public class BookService {
         log.debug("Book with id of {} deleted successfully", id);
     }
 
-    public void deleteAllById(List<Integer> ids) {
-        bookRepository.deleteAllById(ids);
-        log.debug("Book with id of {} deleted successfully", ids);
-    }
-
     public BookDTO convertToDTO(Book book) {
         return BookDTO.builder()
                 .id(book.getId())

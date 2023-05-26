@@ -63,4 +63,5 @@ class BookRepositoryTest {
         char firstLetter = 'M';
         bookRepository.searchByFirstLetter(firstLetter).forEach(System.out::println);
     }
+
 }

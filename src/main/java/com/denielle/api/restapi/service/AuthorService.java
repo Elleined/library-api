@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -57,6 +56,12 @@ public class AuthorService {
                 .toList();
     }
 
+    public List<AuthorDTO> getAllById(List<Integer> ids) {
+        return ids.stream()
+                .map(this::getById)
+                .toList();
+    }
+
     public List<AuthorDTO> getAll(int pageNumber, int pageSize) {
         Pageable pageable = PageSorter.getPage(pageNumber, pageSize);
 
@@ -82,12 +87,12 @@ public class AuthorService {
                 .anyMatch(authorName::equalsIgnoreCase);
     }
 
-    @Transactional
-    public void saveAll(List<AuthorDTO> authors) {
-        authors.forEach(this::save);
+    public List<Integer> saveAll(List<AuthorDTO> authors) {
+        return authors.stream()
+                .map(this::save)
+                .toList();
     }
 
-    @Transactional
     public int save(AuthorDTO authorDTO) throws NameAlreadyExistsException {
         if (isNameAlreadyExists(authorDTO.getName())) throw new NameAlreadyExistsException("Author with name of " + authorDTO.getName() + " already exists");
         Author author = Author.builder()
@@ -101,13 +106,11 @@ public class AuthorService {
         return author.getId();
     }
 
-    @Transactional
     public void delete(int id) {
         authorRepository.deleteById(id);
         log.debug("Author with id of {} deleted successfully", id);
     }
 
-    @Transactional
     public void update(int id, AuthorDTO authorDTO) {
         Author author = authorRepository.findById(id).orElseThrow(() -> new NotFoundException("Author with id of " + id + " does not exists"));
 

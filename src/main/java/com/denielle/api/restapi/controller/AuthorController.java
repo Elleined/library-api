@@ -23,6 +23,11 @@ public class AuthorController {
         return authorService.getAll();
     }
 
+    @GetMapping("/get-all-by-id")
+    public List<AuthorDTO> getAllById(@RequestParam("ids") List<Integer> authorIds) {
+        return authorService.getAllById(authorIds);
+    }
+
     @GetMapping("/{id}")
     public AuthorDTO getById(@PathVariable("id") int authorId) {
         return authorService.getById(authorId);
@@ -66,9 +71,17 @@ public class AuthorController {
     @PostMapping
     public ResponseEntity<AuthorDTO> save(@RequestBody AuthorDTO authorDTO) {
         int authorId = authorService.save(authorDTO);
-        AuthorDTO fetchAuthor = authorService.getById(authorId);
+        AuthorDTO fetchedAuthor = authorService.getById(authorId);
 
-        return new ResponseEntity<>(fetchAuthor, HttpStatus.CREATED);
+        return new ResponseEntity<>(fetchedAuthor, HttpStatus.CREATED);
+    }
+    
+    @PostMapping("/save-all")
+    public ResponseEntity<List<AuthorDTO>> saveAll(@RequestBody List<AuthorDTO> authors) {
+        List<Integer> authorIds = authorService.saveAll(authors);
+        List<AuthorDTO> fetchedAuthors = authorService.getAllById(authorIds);
+
+        return new ResponseEntity<>(fetchedAuthors, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
