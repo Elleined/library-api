@@ -16,4 +16,22 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
 
     @Query("SELECT b.title FROM Book b WHERE b.title LIKE CONCAT(:firstLetter, '%') ORDER BY title")
     List<String> searchByFirstLetter(@Param("firstLetter") char firstLetter);
+
+    @Query(value = """
+            SELECT
+            	b.*
+            FROM
+            	book b,
+                genre g,
+                book_genre bg
+            WHERE
+            	b.id = bg.book_id
+            AND
+            	g.id = bg.genre_id
+            AND
+            	g.name = :genreName
+            ORDER BY
+                b.title
+            """, nativeQuery = true)
+    List<Book> getAllByGenre(@Param("genreName") String genreName);
 }

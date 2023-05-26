@@ -49,6 +49,13 @@ public class BookService {
                 .toList();
     }
 
+    public List<BookDTO> getAllByGenre(String genreName) {
+        return bookRepository.getAllByGenre(genreName)
+                .stream()
+                .map(this::convertToDTO)
+                .toList();
+    }
+
     public List<String> searchByFirstLetter(char firstLetter) {
         return bookRepository.searchByFirstLetter(firstLetter);
     }

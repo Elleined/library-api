@@ -80,13 +80,6 @@ public class AuthorService {
                 .toList();
     }
 
-    public boolean isNameAlreadyExists(String authorName) {
-        return authorRepository.findAll()
-                .stream()
-                .map(Author::getName)
-                .anyMatch(authorName::equalsIgnoreCase);
-    }
-
     public List<Integer> saveAll(List<AuthorDTO> authors) {
         return authors.stream()
                 .map(this::save)
@@ -121,6 +114,13 @@ public class AuthorService {
         authorRepository.save(author);
 
         log.debug("Author with id of {} updated successfully", id);
+    }
+
+    public boolean isNameAlreadyExists(String authorName) {
+        return authorRepository.findAll()
+                .stream()
+                .map(Author::getName)
+                .anyMatch(authorName::equalsIgnoreCase);
     }
 
     public AuthorDTO convertToDTO(Author author) {

@@ -55,7 +55,7 @@ public class AuthorController {
 
     @GetMapping("/{pageNumber}/{pageSize}")
     public List<AuthorDTO> getAll(@PathVariable int pageNumber,
-                                 @PathVariable int pageSize) {
+                                  @PathVariable int pageSize) {
 
         return authorService.getAll(pageNumber, pageSize);
     }
@@ -75,7 +75,7 @@ public class AuthorController {
 
         return new ResponseEntity<>(fetchedAuthor, HttpStatus.CREATED);
     }
-    
+
     @PostMapping("/save-all")
     public ResponseEntity<List<AuthorDTO>> saveAll(@RequestBody List<AuthorDTO> authors) {
         List<Integer> authorIds = authorService.saveAll(authors);

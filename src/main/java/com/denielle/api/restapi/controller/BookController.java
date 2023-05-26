@@ -43,6 +43,11 @@ public class BookController {
     public List<String> searchByFirstLetter(@RequestParam("firstLetter") char firstLetter) {
         return bookService.searchByFirstLetter(firstLetter);
     }
+    
+    @GetMapping("/genre/{genreName}")
+    public List<BookDTO> getAllByGenre(@PathVariable("genreName") String genreName) {
+        return bookService.getAllByGenre(genreName);
+    }
 
     @GetMapping("/isbn/{isbn}")
     public BookDTO getByIsbn(@PathVariable("isbn") String isbn) {

@@ -64,4 +64,12 @@ class BookRepositoryTest {
         bookRepository.searchByFirstLetter(firstLetter).forEach(System.out::println);
     }
 
+    @Test
+    void getAllByGenre() {
+        String genreName = "General Fiction";
+        bookRepository.getAllByGenre(genreName)
+                .stream()
+                .map(Book::getTitle)
+                .forEach(System.out::println);
+    }
 }
