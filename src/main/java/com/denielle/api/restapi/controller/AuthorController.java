@@ -91,16 +91,8 @@ public class AuthorController {
     }
 
     @PostMapping("/save-all")
-    public ResponseEntity<?> saveAll(@Valid @RequestBody List<AuthorDTO> authors,
-                                                   BindingResult result) {
-
-        if (result.hasErrors()) {
-            List<String> errors = result.getAllErrors()
-                    .stream()
-                    .map(ObjectError::getDefaultMessage)
-                    .toList();
-            return ResponseEntity.badRequest().body(errors);
-        }
+    public ResponseEntity<List<AuthorDTO>> saveAll (@RequestBody List<AuthorDTO> authors,
+                                     BindingResult result) {
 
         List<Integer> authorIds = authorService.saveAll(authors);
         List<AuthorDTO> fetchedAuthors = authorService.getAllById(authorIds);

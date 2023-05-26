@@ -1,7 +1,6 @@
 package com.denielle.api.restapi.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.Builder;
 import lombok.Data;
 
@@ -13,12 +12,10 @@ import java.util.List;
 public class AuthorDTO {
     private int id;
 
-    @NotEmpty(message = "Author name cannot be null or empty")
-    @NotBlank(message = "Author name cannot be whitespace only") // Triggers when pure white space
+    @NotBlank(message = "Author name cannot be null or empty") // Triggers when pure white space
     private String name;
 
-    @NotEmpty(message = "Author biography cannot be null or empty")
-    @NotBlank(message = "Author biography cannot be whitespace only")
+    @NotBlank(message = "Author biography cannot be null or empty")
     private String biography;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

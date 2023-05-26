@@ -2,10 +2,13 @@ package com.denielle.api.restapi.controller;
 
 import com.denielle.api.restapi.dto.BookDTO;
 import com.denielle.api.restapi.service.BookService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -62,15 +65,30 @@ public class BookController {
 
     @GetMapping("/{pageNumber}/{pageSize}/{sortDirection}/{sortProperty}")
     public List<BookDTO> getAll(@PathVariable int pageNumber,
-                                  @PathVariable int pageSize,
-                                  @PathVariable String sortDirection,
-                                  @PathVariable String sortProperty) {
+                                @PathVariable int pageSize,
+                                @PathVariable String sortDirection,
+                                @PathVariable String sortProperty) {
 
         return bookService.getAll(pageNumber, pageSize, sortDirection, sortProperty);
     }
 
     @PostMapping
-    public ResponseEntity<BookDTO> save(@RequestBody BookDTO bookDTO) {
+    public ResponseEntity<?> save(@Valid @RequestBody BookDTO bookDTO,
+                                  BindingResult result) {
+
+        boolean isGenreNotValid = bookDTO.getGenres()
+                .stream()
+                .anyMatch(genre -> genre == null || genre.isBlank() || genre.isEmpty());
+        if (isGenreNotValid) return ResponseEntity.badRequest().body("Genre cannot be null or empty or blank");
+
+        if (result.hasErrors()) {
+            List<String> errors = result.getAllErrors()
+                    .stream()
+                    .map(ObjectError::getDefaultMessage)
+                    .toList();
+            return ResponseEntity.badRequest().body(errors);
+        }
+
         int bookId = bookService.save(bookDTO);
         BookDTO fetchedBook = bookService.getById(bookId);
 
