@@ -13,6 +13,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -38,6 +40,31 @@ public class AuthorService {
         return author.getBookList()
                 .stream()
                 .map(Book::getTitle)
+                .toList();
+    }
+
+    public List<AuthorDTO> sortBy(String sortProperty) {
+        if (sortProperty.equalsIgnoreCase("bookCount")) return sortByBookCount();
+        // Add sorting mechanism here
+        return sortByPopularity();
+    }
+
+    private List<AuthorDTO> sortByBookCount() {
+        return authorRepository.findAll()
+                .stream()
+                .sorted(Comparator.comparing(author -> author.getBookList().size(),
+                        Comparator.reverseOrder()))
+                .map(this::convertToDTO)
+                .toList();
+    }
+
+    // Sort by popularity is randomized for now because we don't have a logic for now to get the popular authors
+    private List<AuthorDTO> sortByPopularity() {
+        List<Author> authors = authorRepository.findAll();
+        Collections.shuffle(authors);
+
+        return authors.stream()
+                .map(this::convertToDTO)
                 .toList();
     }
 
