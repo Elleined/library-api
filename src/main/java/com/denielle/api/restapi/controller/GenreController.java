@@ -1,6 +1,5 @@
 package com.denielle.api.restapi.controller;
 
-import com.denielle.api.restapi.dto.AuthorDTO;
 import com.denielle.api.restapi.dto.GenreDTO;
 import com.denielle.api.restapi.service.GenreService;
 import lombok.RequiredArgsConstructor;
@@ -20,12 +19,17 @@ public class GenreController {
 
     private final GenreService genreService;
 
+    @GetMapping
+    public List<GenreDTO> getAll() {
+        return genreService.getAll();
+    }
+
     @GetMapping("/{id}")
     public GenreDTO getById(@PathVariable("id") int genreId) {
         return genreService.getById(genreId);
     }
 
-    @GetMapping("/get-all")
+    @GetMapping("/get-all-by-id")
     public List<GenreDTO> getAllById(@RequestParam("ids") List<Integer> genreIds) {
         return genreService.getAllById(genreIds);
     }
@@ -40,10 +44,6 @@ public class GenreController {
         return genreService.searchByFirstLetter(firstLetter);
     }
 
-    @GetMapping
-    public List<GenreDTO> getAll() {
-        return genreService.getAll();
-    }
 
     @GetMapping("/{pageNumber}/{pageSize}")
     public List<GenreDTO> getAll(@PathVariable int pageNumber,
@@ -90,6 +90,12 @@ public class GenreController {
     @DeleteMapping("/{id}")
     public ResponseEntity<GenreDTO> delete(@PathVariable("id") int genreId) {
         genreService.delete(genreId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/delete-all-by-id")
+    public ResponseEntity<GenreDTO> deleteAllById(@RequestParam("ids") List<Integer> genreIds) {
+        genreService.deleteAllById(genreIds);
         return ResponseEntity.noContent().build();
     }
 }

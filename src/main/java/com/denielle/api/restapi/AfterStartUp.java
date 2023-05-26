@@ -41,6 +41,8 @@ public class AfterStartUp {
 
     private List<String> genres() {
         return List.of("Drama",
+                "Sample Genre 1",
+                "sample Genre 2",
                 "Sorcery",
                 "Action Adventure",
                 "Epic Fantasy",
@@ -126,6 +128,18 @@ public class AfterStartUp {
                 AuthorDTO.builder()
                         .name("William Goldman")
                         .biography("William Goldman was an American novelist, playwright, and screenwriter. He first came to prominence in the 1950s as a novelist before turning to screenwriting. He won Academy Awards for his screenplays Butch Cassidy and the Sundance Kid and All the President's Men.")
+                        .createdAt(now)
+                        .build(),
+
+                AuthorDTO.builder()
+                        .name("Sample Author 1")
+                        .biography("Sample Author Biography 1")
+                        .createdAt(now)
+                        .build(),
+
+                AuthorDTO.builder()
+                        .name("Sample Author 2")
+                        .biography("Sample Author Biography 2")
                         .createdAt(now)
                         .build()
         );

@@ -13,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -42,6 +41,12 @@ public class BookService {
     public BookDTO getByIsbn(String isbn) {
         Book book = bookRepository.fetchByIsbn(isbn).orElseThrow(() -> new NotFoundException("Book with isbn of " + isbn + " does not exits"));
         return this.convertToDTO(book);
+    }
+
+    public List<BookDTO> getAllById(List<Integer> bookIds) {
+        return bookIds.stream()
+                .map(this::getById)
+                .toList();
     }
 
     public List<String> searchByFirstLetter(char firstLetter) {
@@ -73,12 +78,12 @@ public class BookService {
                 .toList();
     }
 
-    @Transactional
-    public void saveAll(List<BookDTO> books) {
-        books.forEach(this::save);
+    public List<Integer> saveAll(List<BookDTO> books) {
+        return books.stream()
+                .map(this::save)
+                .toList();
     }
 
-    @Transactional
     public int save(BookDTO bookDTO) {
         Author author = authorRepository.fetchByName(bookDTO.getAuthorName()).orElseThrow(() -> new NotFoundException("Author with name of " + bookDTO.getAuthorName() + " does not exists"));
 
@@ -104,7 +109,6 @@ public class BookService {
         return book.getId();
     }
 
-    @Transactional
     public void update(int id, BookDTO bookDTO) {
         Author author = authorRepository.fetchByName(bookDTO.getAuthorName()).orElseThrow(() -> new NotFoundException("Author with name of " + bookDTO.getAuthorName() + " does not exists"));
         Book book = bookRepository.findById(id).orElseThrow(() -> new NotFoundException("Book with id of " + id + " does not exists"));
@@ -128,10 +132,15 @@ public class BookService {
         log.debug("Book updated successfully");
     }
 
-    @Transactional
     public void delete(int id) {
         Book book = bookRepository.findById(id).orElseThrow(() -> new NotFoundException("Book with id of " + id + " does not exists"));
         bookRepository.delete(book);
+        log.debug("Book with id of {} deleted successfully", id);
+    }
+
+    public void deleteAllById(List<Integer> ids) {
+        bookRepository.deleteAllById(ids);
+        log.debug("Book with id of {} deleted successfully", ids);
     }
 
     public BookDTO convertToDTO(Book book) {

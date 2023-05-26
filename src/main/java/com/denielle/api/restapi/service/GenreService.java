@@ -84,16 +84,14 @@ public class GenreService {
         return genre.getId();
     }
 
-    public boolean isNameAlreadyExists(String genreName) {
-        return genreRepository.findAll()
-                .stream()
-                .map(Genre::getName)
-                .anyMatch(genreName::equalsIgnoreCase);
-    }
-
     public void delete(int id) {
         genreRepository.deleteById(id);
         log.debug("Genre with id of {} deleted successfully", id);
+    }
+
+    public void deleteAllById(List<Integer> ids) {
+        genreRepository.deleteAllById(ids);
+        log.debug("Genre with id of {} deleted successfully", ids);
     }
 
     public void update(int id, String newGenreName) {
@@ -105,6 +103,13 @@ public class GenreService {
 
         genreRepository.save(genre);
         log.debug("Genre with id of {} updated successfully", id);
+    }
+
+    public boolean isNameAlreadyExists(String genreName) {
+        return genreRepository.findAll()
+                .stream()
+                .map(Genre::getName)
+                .anyMatch(genreName::equalsIgnoreCase);
     }
 
     public GenreDTO convertToDTO(Genre genre) {

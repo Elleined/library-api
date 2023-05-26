@@ -1,6 +1,5 @@
 package com.denielle.api.restapi.controller;
 
-import com.denielle.api.restapi.dto.AuthorDTO;
 import com.denielle.api.restapi.dto.BookDTO;
 import com.denielle.api.restapi.service.BookService;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +29,11 @@ public class BookController {
         return bookService.getById(bookId);
     }
 
+    @GetMapping("/get-all-by-id")
+    public List<BookDTO> getAllById(@RequestParam("ids") List<Integer> bookIds) {
+        return bookService.getAllById(bookIds);
+    }
+
     @GetMapping("/title/{title}")
     public BookDTO getByTitle(@PathVariable("title") String bookTitle) {
         return bookService.getByTitle(bookTitle);
@@ -47,15 +51,15 @@ public class BookController {
 
     @GetMapping("/{pageNumber}/{pageSize}")
     public List<BookDTO> getAll(@PathVariable int pageNumber,
-                                  @PathVariable int pageSize) {
+                                @PathVariable int pageSize) {
 
         return bookService.getAll(pageNumber, pageSize);
     }
 
     @GetMapping("/{pageNumber}/{pageSize}/{sortProperty}")
     public List<BookDTO> getAll(@PathVariable int pageNumber,
-                                  @PathVariable int pageSize,
-                                  @PathVariable String sortProperty) {
+                                @PathVariable int pageSize,
+                                @PathVariable String sortProperty) {
 
         return bookService.getAll(pageNumber, pageSize, Sort.Direction.ASC, sortProperty);
     }
@@ -66,6 +70,14 @@ public class BookController {
         BookDTO fetchedBook = bookService.getById(bookId);
 
         return new ResponseEntity<>(fetchedBook, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/save-all")
+    public ResponseEntity<List<BookDTO>> save(@RequestBody List<BookDTO> books) {
+        List<Integer> bookIds = bookService.saveAll(books);
+        List<BookDTO> fetchedBooks = bookService.getAllById(bookIds);
+
+        return new ResponseEntity<>(fetchedBooks, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
@@ -79,7 +91,7 @@ public class BookController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<AuthorDTO> delete(@PathVariable("id") int bookId) {
+    public ResponseEntity<BookDTO> delete(@PathVariable("id") int bookId) {
         bookService.delete(bookId);
         return ResponseEntity.noContent().build();
     }
