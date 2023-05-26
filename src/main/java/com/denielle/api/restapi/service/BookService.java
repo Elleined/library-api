@@ -136,8 +136,7 @@ public class BookService {
 
         Set<Genre> genres = bookDTO.getGenres()
                 .stream()
-                .map(name -> genreRepository.fetchByName(name)
-                        .orElseThrow(() -> new NotFoundException("Genre with name of " + name + " does not exists")))
+                .map(name -> genreRepository.fetchByName(name).orElseThrow(() -> new NotFoundException("Genre with name of " + name + " does not exists")))
                 .collect(Collectors.toSet());
 
         Book book = Book.builder()

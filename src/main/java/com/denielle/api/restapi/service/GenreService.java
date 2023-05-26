@@ -72,7 +72,7 @@ public class GenreService {
     }
 
     public int save(String genreName) throws NameAlreadyExistsException {
-        if (isNameAlreadyExists(genreName)) throw new NameAlreadyExistsException("Genre name already exists");
+        if (isNameAlreadyExists(genreName)) throw new NameAlreadyExistsException("Genre with name of " + genreName + " already exists");
         Genre genre = Genre.builder()
                 .name(genreName)
                 .createdAt(LocalDateTime.now())
