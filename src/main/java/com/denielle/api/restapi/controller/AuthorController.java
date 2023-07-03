@@ -1,17 +1,20 @@
 package com.denielle.api.restapi.controller;
 
 import com.denielle.api.restapi.dto.AuthorDTO;
+import com.denielle.api.restapi.dto.ResponseMessage;
 import com.denielle.api.restapi.service.AuthorService;
-import jakarta.validation.Valid;
+import jakarta.validation.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -74,12 +77,13 @@ public class AuthorController {
 
     @PostMapping
     public ResponseEntity<?> save(@Valid @RequestBody AuthorDTO authorDTO,
-                                          BindingResult result) {
+                                  BindingResult result) {
 
         if (result.hasErrors()) {
-            List<String> errors = result.getAllErrors()
+            List<ResponseMessage> errors = result.getAllErrors()
                     .stream()
                     .map(ObjectError::getDefaultMessage)
+                    .map(errorMessage -> new ResponseMessage(HttpStatus.BAD_REQUEST, errorMessage))
                     .toList();
             return ResponseEntity.badRequest().body(errors);
         }
@@ -91,9 +95,7 @@ public class AuthorController {
     }
 
     @PostMapping("/save-all")
-    public ResponseEntity<List<AuthorDTO>> saveAll (@RequestBody List<AuthorDTO> authors,
-                                     BindingResult result) {
-
+    public ResponseEntity<?> saveAll (@RequestBody List<AuthorDTO> authors) {
         List<Integer> authorIds = authorService.saveAll(authors);
         List<AuthorDTO> fetchedAuthors = authorService.getAllById(authorIds);
 
@@ -101,8 +103,18 @@ public class AuthorController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<AuthorDTO> update(@PathVariable("id") int authorId,
-                                            @RequestBody AuthorDTO authorDTO) {
+    public ResponseEntity<?> update(@PathVariable("id") int authorId,
+                                    @Valid @RequestBody AuthorDTO authorDTO,
+                                    BindingResult result) {
+
+        if (result.hasErrors()) {
+            List<ResponseMessage> errors = result.getAllErrors()
+                    .stream()
+                    .map(ObjectError::getDefaultMessage)
+                    .map(errorMessage -> new ResponseMessage(HttpStatus.BAD_REQUEST, errorMessage))
+                    .toList();
+            return ResponseEntity.badRequest().body(errors);
+        }
 
         authorService.update(authorId, authorDTO);
 

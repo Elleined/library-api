@@ -136,6 +136,8 @@ public class BookService {
 
     public int save(BookDTO bookDTO) {
         if (isbnAlreadyExists(bookDTO.getIsbn())) throw new NameAlreadyExistsException("Book with isbn of " + bookDTO.getIsbn() + " already exists!");
+        if (isGenreNotValid(bookDTO.getGenres())) throw new NullPointerException("Genre cannot be null or empty or blank");
+
         Author author = authorRepository.fetchByName(bookDTO.getAuthorName()).orElseThrow(() -> new NotFoundException("Author with name of " + bookDTO.getAuthorName() + " does not exists"));
         author.setBookCount(author.getBookCount() + 1);
         authorRepository.save(author);
@@ -150,7 +152,7 @@ public class BookService {
         book.setAuthor(author);
         book.setGenres(genres);
         book.setSaleCount(random.nextInt(999));
-        
+
         bookRepository.save(book);
         log.debug("Book saved successfully {}", book.getTitle());
         return book.getId();
@@ -158,6 +160,7 @@ public class BookService {
 
     public void update(int id, BookDTO bookDTO) {
         if (isbnAlreadyExists(bookDTO.getIsbn())) throw new NameAlreadyExistsException("Book with isbn of " + bookDTO.getIsbn() + " already exists!");
+        if (isGenreNotValid(bookDTO.getGenres())) throw new IllegalArgumentException("Genre cannot be null or empty or blank");
 
         Author author = authorRepository.fetchByName(bookDTO.getAuthorName()).orElseThrow(() -> new NotFoundException("Author with name of " + bookDTO.getAuthorName() + " does not exists"));
         Book book = bookRepository.findById(id).orElseThrow(() -> new NotFoundException("Book with id of " + id + " does not exists"));
@@ -192,5 +195,9 @@ public class BookService {
                 .stream()
                 .map(Book::getIsbn)
                 .anyMatch(isbn::equalsIgnoreCase);
+    }
+
+    public boolean isGenreNotValid(List<String> genres) {
+        return genres.stream().anyMatch(StringValidator::validate);
     }
 }

@@ -77,12 +77,6 @@ public class BookController {
     public ResponseEntity<?> save(@Valid @RequestBody BookDTO bookDTO,
                                   BindingResult result) {
 
-        boolean isGenreNotValid = bookDTO.getGenres()
-                .stream()
-                .anyMatch(StringValidator::validate);
-
-        if (isGenreNotValid) return ResponseEntity.badRequest().body("Genre cannot be null or empty or blank");
-
         if (result.hasErrors()) {
             List<String> errors = result.getAllErrors()
                     .stream()

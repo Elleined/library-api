@@ -25,7 +25,7 @@ public class AuthorService {
     private final AuthorRepository authorRepository;
     private final AuthorMapper authorMapper;
 
-    public AuthorDTO getById(int id) {
+    public AuthorDTO getById(int id) throws NotFoundException {
         Author author = authorRepository.findById(id).orElseThrow(() -> new NotFoundException("Author with id of " + id + " does not exists"));
         return authorMapper.toDTO(author);
     }
@@ -35,7 +35,7 @@ public class AuthorService {
         return authorMapper.toDTO(author);
     }
 
-    public List<String> getAllBooks(int id) {
+    public List<String> getAllBooks(int id) throws NotFoundException {
         Author author = authorRepository.findById(id).orElseThrow(() -> new NotFoundException("Author with id of " + id + " does not exists"));
         return author.getBookList()
                 .stream()
@@ -43,7 +43,7 @@ public class AuthorService {
                 .toList();
     }
 
-    public int getBookCount(int id) {
+    public int getBookCount(int id) throws NotFoundException {
         Author author = authorRepository.findById(id).orElseThrow(() -> new NotFoundException("Author with id of " + id + " does not exists"));
         return author.getBookList().size();
     }
@@ -105,7 +105,9 @@ public class AuthorService {
         log.debug("Author with id of {} deleted successfully", id);
     }
 
-    public void update(int id, AuthorDTO authorDTO) {
+    public void update(int id, AuthorDTO authorDTO) throws NotFoundException, NameAlreadyExistsException {
+        if (isNameAlreadyExists(authorDTO.getName())) throw new NameAlreadyExistsException("Author with name of " + authorDTO.getName() + " already exists");
+
         Author author = authorRepository.findById(id).orElseThrow(() -> new NotFoundException("Author with id of " + id + " does not exists"));
 
         author.setName(authorDTO.getName());
