@@ -19,6 +19,7 @@ public interface GenreMapper {
     Genre toEntity(GenreDTO genreDTO);
 
     default List<String> mapGenreName(Set<Genre> genres) {
+        if (genres == null) return null;
         return genres.stream()
                 .map(Genre::getName)
                 .toList();

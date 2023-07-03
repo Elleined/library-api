@@ -2,7 +2,6 @@ package com.denielle.api.restapi.mapper;
 
 import com.denielle.api.restapi.dto.AuthorDTO;
 import com.denielle.api.restapi.model.Author;
-import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -12,10 +11,10 @@ public interface AuthorMapper {
     @Mapping(target = "books", source = "bookList")
     AuthorDTO toDTO(Author author);
 
-    @Mapping(target = "bookList", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "bookCount", ignore = true)
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "bookList", ignore = true)
     Author toEntity(AuthorDTO authorDTO);
 }

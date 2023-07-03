@@ -80,6 +80,7 @@ public class BookController {
         boolean isGenreNotValid = bookDTO.getGenres()
                 .stream()
                 .anyMatch(StringValidator::validate);
+
         if (isGenreNotValid) return ResponseEntity.badRequest().body("Genre cannot be null or empty or blank");
 
         if (result.hasErrors()) {

@@ -1,6 +1,7 @@
 package com.denielle.api.restapi.service;
 
 import com.denielle.api.restapi.dto.BookDTO;
+import com.denielle.api.restapi.exception.NameAlreadyExistsException;
 import com.denielle.api.restapi.exception.NotFoundException;
 import com.denielle.api.restapi.mapper.BookMapper;
 import com.denielle.api.restapi.model.Author;
@@ -134,6 +135,7 @@ public class BookService {
     }
 
     public int save(BookDTO bookDTO) {
+        if (isbnAlreadyExists(bookDTO.getIsbn())) throw new NameAlreadyExistsException("Book with isbn of " + bookDTO.getIsbn() + " already exists!");
         Author author = authorRepository.fetchByName(bookDTO.getAuthorName()).orElseThrow(() -> new NotFoundException("Author with name of " + bookDTO.getAuthorName() + " does not exists"));
         author.setBookCount(author.getBookCount() + 1);
         authorRepository.save(author);
@@ -161,6 +163,8 @@ public class BookService {
     }
 
     public void update(int id, BookDTO bookDTO) {
+        if (isbnAlreadyExists(bookDTO.getIsbn())) throw new NameAlreadyExistsException("Book with isbn of " + bookDTO.getIsbn() + " already exists!");
+
         Author author = authorRepository.fetchByName(bookDTO.getAuthorName()).orElseThrow(() -> new NotFoundException("Author with name of " + bookDTO.getAuthorName() + " does not exists"));
         Book book = bookRepository.findById(id).orElseThrow(() -> new NotFoundException("Book with id of " + id + " does not exists"));
 
@@ -187,5 +191,12 @@ public class BookService {
         Book book = bookRepository.findById(id).orElseThrow(() -> new NotFoundException("Book with id of " + id + " does not exists"));
         bookRepository.delete(book);
         log.debug("Book with id of {} deleted successfully", id);
+    }
+
+    public boolean isbnAlreadyExists(String isbn) {
+        return bookRepository.findAll()
+                .stream()
+                .map(Book::getIsbn)
+                .anyMatch(isbn::equalsIgnoreCase);
     }
 }

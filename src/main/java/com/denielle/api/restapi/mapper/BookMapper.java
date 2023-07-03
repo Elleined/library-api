@@ -19,6 +19,7 @@ public interface BookMapper {
     Book toEntity(BookDTO bookDTO);
 
     default List<String> mapBookTitle(List<Book> books) {
+        if (books == null) return null;
         return books.stream()
                 .map(Book::getTitle)
                 .toList();
