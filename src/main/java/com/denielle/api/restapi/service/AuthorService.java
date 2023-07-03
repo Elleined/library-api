@@ -108,13 +108,11 @@ public class AuthorService {
     public void update(int id, AuthorDTO authorDTO) {
         Author author = authorRepository.findById(id).orElseThrow(() -> new NotFoundException("Author with id of " + id + " does not exists"));
 
-
         author.setName(authorDTO.getName());
         author.setBiography(authorDTO.getBiography());
         author.setUpdatedAt(LocalDateTime.now());
 
         authorRepository.save(author);
-
         log.debug("Author with id of {} updated successfully", id);
     }
 

@@ -145,18 +145,12 @@ public class BookService {
                 .map(name -> genreRepository.fetchByName(name).orElseThrow(() -> new NotFoundException("Genre with name of " + name + " does not exists")))
                 .collect(Collectors.toSet());
 
-        Book book = Book.builder()
-                .title(bookDTO.getTitle())
-                .description(bookDTO.getDescription())
-                .isbn(bookDTO.getIsbn())
-                .pages(bookDTO.getPages())
-                .publishedDate(bookDTO.getPublishedDate())
-                .createdAt(LocalDateTime.now())
-                .author(author)
-                .genres(genres)
-                .saleCount(random.nextInt(999))
-                .build();
-
+        Book book = bookMapper.toEntity(bookDTO);
+        book.setCreatedAt(LocalDateTime.now());
+        book.setAuthor(author);
+        book.setGenres(genres);
+        book.setSaleCount(random.nextInt(999));
+        
         bookRepository.save(book);
         log.debug("Book saved successfully {}", book.getTitle());
         return book.getId();
