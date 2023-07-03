@@ -3,6 +3,9 @@ package com.denielle.api.restapi.controller;
 import com.denielle.api.restapi.dto.GenreDTO;
 import com.denielle.api.restapi.service.GenreService;
 import com.denielle.api.restapi.service.StringValidator;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -64,7 +67,6 @@ public class GenreController {
 
     @PostMapping
     public ResponseEntity<?> save(@RequestParam("name") String genreName) {
-        if (StringValidator.validate(genreName)) return ResponseEntity.badRequest().body("Genre name cannot be null or empty");
         int genreId = genreService.save(genreName);
         GenreDTO genreDTO = genreService.getById(genreId);
 

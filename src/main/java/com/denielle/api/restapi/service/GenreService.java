@@ -9,6 +9,7 @@ import com.denielle.api.restapi.repository.GenreRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,12 +26,12 @@ public class GenreService {
     private final GenreRepository genreRepository;
     private final GenreMapper genreMapper;
 
-    public GenreDTO getById(int id) {
+    public GenreDTO getById(int id) throws NotFoundException {
         Genre genre = genreRepository.findById(id).orElseThrow(() -> new NotFoundException("Genre does not exists"));
         return this.genreMapper.toDTO(genre);
     }
 
-    public GenreDTO getByName(String name) {
+    public GenreDTO getByName(String name) throws NotFoundException {
         Genre genre = genreRepository.fetchByName(name).orElseThrow(() -> new NotFoundException("Genre with name of " + name + " does not exists"));
         return this.genreMapper.toDTO(genre);
     }
@@ -76,8 +77,10 @@ public class GenreService {
                 .toList();
     }
 
-    public int save(String genreName) throws FieldAlreadyExistsException {
+    public int save(String genreName) throws FieldAlreadyExistsException, IllegalArgumentException {
+        if (StringValidator.validate(genreName)) throw new IllegalArgumentException("Genre name cannot be null or empty");
         if (isNameAlreadyExists(genreName)) throw new FieldAlreadyExistsException("Genre with name of " + genreName + " already exists");
+
         Genre genre = Genre.builder()
                 .name(genreName)
                 .createdAt(LocalDateTime.now())
@@ -98,8 +101,9 @@ public class GenreService {
         log.debug("Genre with id of {} deleted successfully", ids);
     }
 
-    public void update(int id, String newGenreName) {
-        if (isNameAlreadyExists(newGenreName)) throw new FieldAlreadyExistsException("Genre name already exists");
+    public void update(int id, String newGenreName) throws NotFoundException, FieldAlreadyExistsException, IllegalArgumentException {
+        if (StringValidator.validate(newGenreName)) throw new IllegalArgumentException("Genre name cannot be null or empty");
+        if (isNameAlreadyExists(newGenreName)) throw new FieldAlreadyExistsException("Genre with name of " + newGenreName + " already exists");
         Genre genre = genreRepository.findById(id).orElseThrow(() -> new NotFoundException("Genre with id of " + id + " of does not exists"));
 
         genre.setName(newGenreName);
