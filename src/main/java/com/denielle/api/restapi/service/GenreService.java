@@ -3,6 +3,7 @@ package com.denielle.api.restapi.service;
 import com.denielle.api.restapi.dto.GenreDTO;
 import com.denielle.api.restapi.exception.NameAlreadyExistsException;
 import com.denielle.api.restapi.exception.NotFoundException;
+import com.denielle.api.restapi.mapper.GenreMapper;
 import com.denielle.api.restapi.model.Genre;
 import com.denielle.api.restapi.repository.GenreRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,21 +17,22 @@ import java.util.List;
 import java.util.Set;
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class GenreService {
 
     private final GenreRepository genreRepository;
+    private final GenreMapper genreMapper;
 
     public GenreDTO getById(int id) {
         Genre genre = genreRepository.findById(id).orElseThrow(() -> new NotFoundException("Genre does not exists"));
-        return this.convertToDTO(genre);
+        return this.genreMapper.toDTO(genre);
     }
 
     public GenreDTO getByName(String name) {
         Genre genre = genreRepository.fetchByName(name).orElseThrow(() -> new NotFoundException("Genre with name of " + name + " does not exists"));
-        return this.convertToDTO(genre);
+        return this.genreMapper.toDTO(genre);
     }
 
     public List<GenreDTO> getAllById(List<Integer> ids) {
@@ -46,7 +48,7 @@ public class GenreService {
     public List<GenreDTO> getAll() {
         return genreRepository.findAll()
                 .stream()
-                .map(this::convertToDTO)
+                .map(genreMapper::toDTO)
                 .toList();
     }
 
@@ -55,7 +57,7 @@ public class GenreService {
 
         return genreRepository.findAll(pageable)
                 .stream()
-                .map(this::convertToDTO)
+                .map(genreMapper::toDTO)
                 .toList();
     }
 
@@ -64,7 +66,7 @@ public class GenreService {
 
         return genreRepository.findAll(pageable)
                 .stream()
-                .map(this::convertToDTO)
+                .map(genreMapper::toDTO)
                 .toList();
     }
 
@@ -112,14 +114,5 @@ public class GenreService {
                 .stream()
                 .map(Genre::getName)
                 .anyMatch(genreName::equalsIgnoreCase);
-    }
-
-    public GenreDTO convertToDTO(Genre genre) {
-        return GenreDTO.builder()
-                .id(genre.getId())
-                .name(genre.getName())
-                .createdAt(genre.getCreatedAt())
-                .updatedAt(genre.getUpdatedAt())
-                .build();
     }
 }
