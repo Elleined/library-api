@@ -1,8 +1,8 @@
 package com.denielle.api.restapi.controller;
 
 import com.denielle.api.restapi.dto.BookDTO;
+import com.denielle.api.restapi.dto.ResponseMessage;
 import com.denielle.api.restapi.service.BookService;
-import com.denielle.api.restapi.service.StringValidator;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -78,9 +78,10 @@ public class BookController {
                                   BindingResult result) {
 
         if (result.hasErrors()) {
-            List<String> errors = result.getAllErrors()
+            List<ResponseMessage> errors = result.getAllErrors()
                     .stream()
                     .map(ObjectError::getDefaultMessage)
+                    .map(errorMessage -> new ResponseMessage(HttpStatus.BAD_REQUEST, errorMessage))
                     .toList();
             return ResponseEntity.badRequest().body(errors);
         }
@@ -100,8 +101,18 @@ public class BookController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<BookDTO> update(@PathVariable("id") int bookId,
-                                          @RequestBody BookDTO bookDTO) {
+    public ResponseEntity<?> update(@PathVariable("id") int bookId,
+                                    @Valid @RequestBody BookDTO bookDTO,
+                                    BindingResult result) {
+
+        if (result.hasErrors()) {
+            List<ResponseMessage> errors = result.getAllErrors()
+                    .stream()
+                    .map(ObjectError::getDefaultMessage)
+                    .map(errorMessage -> new ResponseMessage(HttpStatus.BAD_REQUEST, errorMessage))
+                    .toList();
+            return ResponseEntity.badRequest().body(errors);
+        }
 
         bookService.update(bookId, bookDTO);
 

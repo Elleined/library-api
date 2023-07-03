@@ -1,7 +1,7 @@
 package com.denielle.api.restapi.service;
 
 import com.denielle.api.restapi.dto.GenreDTO;
-import com.denielle.api.restapi.exception.NameAlreadyExistsException;
+import com.denielle.api.restapi.exception.FieldAlreadyExistsException;
 import com.denielle.api.restapi.exception.NotFoundException;
 import com.denielle.api.restapi.mapper.GenreMapper;
 import com.denielle.api.restapi.model.Genre;
@@ -76,8 +76,8 @@ public class GenreService {
                 .toList();
     }
 
-    public int save(String genreName) throws NameAlreadyExistsException {
-        if (isNameAlreadyExists(genreName)) throw new NameAlreadyExistsException("Genre with name of " + genreName + " already exists");
+    public int save(String genreName) throws FieldAlreadyExistsException {
+        if (isNameAlreadyExists(genreName)) throw new FieldAlreadyExistsException("Genre with name of " + genreName + " already exists");
         Genre genre = Genre.builder()
                 .name(genreName)
                 .createdAt(LocalDateTime.now())
@@ -99,7 +99,7 @@ public class GenreService {
     }
 
     public void update(int id, String newGenreName) {
-        if (isNameAlreadyExists(newGenreName)) throw new NameAlreadyExistsException("Genre name already exists");
+        if (isNameAlreadyExists(newGenreName)) throw new FieldAlreadyExistsException("Genre name already exists");
         Genre genre = genreRepository.findById(id).orElseThrow(() -> new NotFoundException("Genre with id of " + id + " of does not exists"));
 
         genre.setName(newGenreName);

@@ -1,7 +1,7 @@
 package com.denielle.api.restapi.controller;
 
 import com.denielle.api.restapi.dto.ResponseMessage;
-import com.denielle.api.restapi.exception.NameAlreadyExistsException;
+import com.denielle.api.restapi.exception.FieldAlreadyExistsException;
 import com.denielle.api.restapi.exception.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +17,7 @@ public class ExceptionController {
         return new ResponseEntity<>(responseMessage, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler({NameAlreadyExistsException.class, IllegalArgumentException.class})
+    @ExceptionHandler({FieldAlreadyExistsException.class, IllegalArgumentException.class})
     public ResponseEntity<ResponseMessage> handleGenreNameAlreadyExistsException(RuntimeException ex) {
         var responseMessage = new ResponseMessage(HttpStatus.BAD_REQUEST, ex.getMessage());
         return new ResponseEntity<>(responseMessage, HttpStatus.BAD_REQUEST);

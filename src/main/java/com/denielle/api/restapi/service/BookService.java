@@ -1,7 +1,7 @@
 package com.denielle.api.restapi.service;
 
 import com.denielle.api.restapi.dto.BookDTO;
-import com.denielle.api.restapi.exception.NameAlreadyExistsException;
+import com.denielle.api.restapi.exception.FieldAlreadyExistsException;
 import com.denielle.api.restapi.exception.NotFoundException;
 import com.denielle.api.restapi.mapper.BookMapper;
 import com.denielle.api.restapi.model.Author;
@@ -34,26 +34,23 @@ public class BookService {
     private final BookMapper bookMapper;
     private final Random random = new Random();
 
-    public BookDTO getById(int id) {
+    public BookDTO getById(int id) throws NotFoundException {
         Book book = bookRepository.findById(id).orElseThrow(() -> new NotFoundException("Book with id of " + id + " does not exists"));
-        book.setViews(book.getViews() + 1);
-        bookRepository.save(book);
+        this.addBookViewCount(book);
 
         return bookMapper.toDTO(book);
     }
 
-    public BookDTO getByTitle(String title) {
+    public BookDTO getByTitle(String title) throws NotFoundException {
         Book book = bookRepository.fetchByTitle(title).orElseThrow(() -> new NotFoundException("Book with title of " + title + " does not exits"));
-        book.setViews(book.getViews() + 1);
-        bookRepository.save(book);
+        this.addBookViewCount(book);
 
         return bookMapper.toDTO(book);
     }
 
-    public BookDTO getByIsbn(String isbn) {
+    public BookDTO getByIsbn(String isbn) throws NotFoundException {
         Book book = bookRepository.fetchByIsbn(isbn).orElseThrow(() -> new NotFoundException("Book with isbn of " + isbn + " does not exits"));
-        book.setViews(book.getViews() + 1);
-        bookRepository.save(book);
+        this.addBookViewCount(book);
 
         return bookMapper.toDTO(book);
     }
@@ -66,10 +63,7 @@ public class BookService {
 
     public List<BookDTO> getAllByGenre(String genreName) {
         List<Book> books = bookRepository.getAllByGenre(genreName);
-        books.forEach(book -> {
-            book.setViews(book.getViews() + 1);
-            bookRepository.save(book);
-        });
+        books.forEach(this::addBookViewCount);
 
         return books.stream()
                 .map(bookMapper::toDTO)
@@ -78,10 +72,7 @@ public class BookService {
 
     public List<BookDTO> getAllByTitleFirstLetter(char firstLetter) {
         List<Book> books = bookRepository.getAllByTitleFirstLetter(firstLetter);
-        books.forEach(book -> {
-            book.setViews(book.getViews() + 1);
-            bookRepository.save(book);
-        });
+        books.forEach(this::addBookViewCount);
 
         return books.stream()
                 .map(bookMapper::toDTO)
@@ -90,10 +81,7 @@ public class BookService {
 
     public List<BookDTO> getAll() {
         List<Book> books = bookRepository.findAll();
-        books.forEach(book -> {
-            book.setViews(book.getViews() + 1);
-            bookRepository.save(book);
-        });
+        books.forEach(this::addBookViewCount);
 
         return books.stream()
                 .map(bookMapper::toDTO)
@@ -104,10 +92,7 @@ public class BookService {
         Pageable pageable = PageSorter.getPage(pageNumber, pageSize);
 
         List<Book> books = bookRepository.findAll(pageable).toList();
-        books.forEach(book -> {
-            book.setViews(book.getViews() + 1);
-            bookRepository.save(book);
-        });
+        books.forEach(this::addBookViewCount);
 
         return books.stream()
                 .map(bookMapper::toDTO)
@@ -118,10 +103,7 @@ public class BookService {
         Pageable pageable = PageSorter.getPage(pageNumber, pageSize, sortDirection, sortProperty);
 
         List<Book> books = bookRepository.findAll(pageable).toList();
-        books.forEach(book -> {
-            book.setViews(book.getViews() + 1);
-            bookRepository.save(book);
-        });
+        books.forEach(this::addBookViewCount);
 
         return books.stream()
                 .map(bookMapper::toDTO)
@@ -134,8 +116,8 @@ public class BookService {
                 .toList();
     }
 
-    public int save(BookDTO bookDTO) {
-        if (isbnAlreadyExists(bookDTO.getIsbn())) throw new NameAlreadyExistsException("Book with isbn of " + bookDTO.getIsbn() + " already exists!");
+    public int save(BookDTO bookDTO) throws FieldAlreadyExistsException, NotFoundException {
+        if (isbnAlreadyExists(bookDTO.getIsbn())) throw new FieldAlreadyExistsException("Book with isbn of " + bookDTO.getIsbn() + " already exists!");
         if (isGenreNotValid(bookDTO.getGenres())) throw new NullPointerException("Genre cannot be null or empty or blank");
 
         Author author = authorRepository.fetchByName(bookDTO.getAuthorName()).orElseThrow(() -> new NotFoundException("Author with name of " + bookDTO.getAuthorName() + " does not exists"));
@@ -158,8 +140,8 @@ public class BookService {
         return book.getId();
     }
 
-    public void update(int id, BookDTO bookDTO) {
-        if (isbnAlreadyExists(bookDTO.getIsbn())) throw new NameAlreadyExistsException("Book with isbn of " + bookDTO.getIsbn() + " already exists!");
+    public void update(int id, BookDTO bookDTO) throws FieldAlreadyExistsException, IllegalArgumentException {
+        if (isbnAlreadyExists(bookDTO.getIsbn())) throw new FieldAlreadyExistsException("Book with isbn of " + bookDTO.getIsbn() + " already exists!");
         if (isGenreNotValid(bookDTO.getGenres())) throw new IllegalArgumentException("Genre cannot be null or empty or blank");
 
         Author author = authorRepository.fetchByName(bookDTO.getAuthorName()).orElseThrow(() -> new NotFoundException("Author with name of " + bookDTO.getAuthorName() + " does not exists"));
@@ -185,8 +167,7 @@ public class BookService {
     }
 
     public void delete(int id) {
-        Book book = bookRepository.findById(id).orElseThrow(() -> new NotFoundException("Book with id of " + id + " does not exists"));
-        bookRepository.delete(book);
+        bookRepository.deleteById(id);
         log.debug("Book with id of {} deleted successfully", id);
     }
 
@@ -199,5 +180,9 @@ public class BookService {
 
     public boolean isGenreNotValid(List<String> genres) {
         return genres.stream().anyMatch(StringValidator::validate);
+    }
+    private void addBookViewCount(Book book) {
+        book.setViews(book.getViews() + 1);
+        bookRepository.save(book);
     }
 }

@@ -1,7 +1,7 @@
 package com.denielle.api.restapi.service;
 
 import com.denielle.api.restapi.dto.AuthorDTO;
-import com.denielle.api.restapi.exception.NameAlreadyExistsException;
+import com.denielle.api.restapi.exception.FieldAlreadyExistsException;
 import com.denielle.api.restapi.exception.NotFoundException;
 import com.denielle.api.restapi.mapper.AuthorMapper;
 import com.denielle.api.restapi.model.Author;
@@ -30,8 +30,8 @@ public class AuthorService {
         return authorMapper.toDTO(author);
     }
 
-    public AuthorDTO getByName(String name) {
-        Author author = authorRepository.fetchByName(name).orElseThrow(() -> new NameAlreadyExistsException("Author with name of " + name + " does not exists"));
+    public AuthorDTO getByName(String name) throws NotFoundException {
+        Author author = authorRepository.fetchByName(name).orElseThrow(() -> new NotFoundException("Author with name of " + name + " does not exists"));
         return authorMapper.toDTO(author);
     }
 
@@ -89,8 +89,8 @@ public class AuthorService {
                 .toList();
     }
 
-    public int save(AuthorDTO authorDTO) throws NameAlreadyExistsException {
-        if (isNameAlreadyExists(authorDTO.getName())) throw new NameAlreadyExistsException("Author with name of " + authorDTO.getName() + " already exists");
+    public int save(AuthorDTO authorDTO) throws FieldAlreadyExistsException {
+        if (isNameAlreadyExists(authorDTO.getName())) throw new FieldAlreadyExistsException("Author with name of " + authorDTO.getName() + " already exists");
 
         Author author = authorMapper.toEntity(authorDTO);
         author.setCreatedAt(LocalDateTime.now());
@@ -105,8 +105,8 @@ public class AuthorService {
         log.debug("Author with id of {} deleted successfully", id);
     }
 
-    public void update(int id, AuthorDTO authorDTO) throws NotFoundException, NameAlreadyExistsException {
-        if (isNameAlreadyExists(authorDTO.getName())) throw new NameAlreadyExistsException("Author with name of " + authorDTO.getName() + " already exists");
+    public void update(int id, AuthorDTO authorDTO) throws NotFoundException, FieldAlreadyExistsException {
+        if (isNameAlreadyExists(authorDTO.getName())) throw new FieldAlreadyExistsException("Author with name of " + authorDTO.getName() + " already exists");
 
         Author author = authorRepository.findById(id).orElseThrow(() -> new NotFoundException("Author with id of " + id + " does not exists"));
 
