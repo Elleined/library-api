@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -77,6 +78,7 @@ public class GenreController {
 
         return new ResponseEntity<>(fetchedAuthors, HttpStatus.CREATED);
     }
+    
 
 
     @PatchMapping("/{id}")
@@ -96,7 +98,7 @@ public class GenreController {
     }
 
     @DeleteMapping("/delete-all-by-id")
-    public ResponseEntity<GenreDTO> deleteAllById(@RequestParam("ids") List<Integer> genreIds) {
+    public ResponseEntity<GenreDTO> deleteAllById(@RequestParam("ids") Set<Integer> genreIds) {
         genreService.deleteAllById(genreIds);
         return ResponseEntity.noContent().build();
     }
