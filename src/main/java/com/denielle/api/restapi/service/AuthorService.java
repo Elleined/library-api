@@ -3,6 +3,7 @@ package com.denielle.api.restapi.service;
 import com.denielle.api.restapi.dto.AuthorDTO;
 import com.denielle.api.restapi.exception.NameAlreadyExistsException;
 import com.denielle.api.restapi.exception.NotFoundException;
+import com.denielle.api.restapi.mapper.AuthorMapper;
 import com.denielle.api.restapi.model.Author;
 import com.denielle.api.restapi.model.Book;
 import com.denielle.api.restapi.repository.AuthorRepository;
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,15 +23,16 @@ import java.util.List;
 public class AuthorService {
 
     private final AuthorRepository authorRepository;
+    private final AuthorMapper authorMapper;
 
     public AuthorDTO getById(int id) {
         Author author = authorRepository.findById(id).orElseThrow(() -> new NotFoundException("Author with id of " + id + " does not exists"));
-        return this.convertToDTO(author);
+        return authorMapper.toDTO(author);
     }
 
     public AuthorDTO getByName(String name) {
         Author author = authorRepository.fetchByName(name).orElseThrow(() -> new NameAlreadyExistsException("Author with name of " + name + " does not exists"));
-        return this.convertToDTO(author);
+        return authorMapper.toDTO(author);
     }
 
     public List<String> getAllBooks(int id) {
@@ -54,7 +55,7 @@ public class AuthorService {
     public List<AuthorDTO> getAll() {
         return authorRepository.findAll()
                 .stream()
-                .map(this::convertToDTO)
+                .map(authorMapper::toDTO)
                 .toList();
     }
 
@@ -69,7 +70,7 @@ public class AuthorService {
 
         return authorRepository.findAll(pageable)
                 .stream()
-                .map(this::convertToDTO)
+                .map(authorMapper::toDTO)
                 .toList();
     }
 
@@ -78,7 +79,7 @@ public class AuthorService {
 
         return authorRepository.findAll(pageable)
                 .stream()
-                .map(this::convertToDTO)
+                .map(authorMapper::toDTO)
                 .toList();
     }
 
@@ -91,11 +92,8 @@ public class AuthorService {
     public int save(AuthorDTO authorDTO) throws NameAlreadyExistsException {
         if (isNameAlreadyExists(authorDTO.getName())) throw new NameAlreadyExistsException("Author with name of " + authorDTO.getName() + " already exists");
 
-        Author author = Author.builder()
-                .name(authorDTO.getName())
-                .biography(authorDTO.getBiography())
-                .createdAt(LocalDateTime.now())
-                .build();
+        Author author = authorMapper.toEntity(authorDTO);
+        author.setCreatedAt(LocalDateTime.now());
 
         authorRepository.save(author);
         log.debug("Author saved successfully {}", author.getName());
@@ -109,6 +107,7 @@ public class AuthorService {
 
     public void update(int id, AuthorDTO authorDTO) {
         Author author = authorRepository.findById(id).orElseThrow(() -> new NotFoundException("Author with id of " + id + " does not exists"));
+
 
         author.setName(authorDTO.getName());
         author.setBiography(authorDTO.getBiography());
@@ -124,21 +123,5 @@ public class AuthorService {
                 .stream()
                 .map(Author::getName)
                 .anyMatch(authorName::equalsIgnoreCase);
-    }
-
-    public AuthorDTO convertToDTO(Author author) {
-        if (author.getBookList() == null) author.setBookList(new ArrayList<>());
-        return AuthorDTO.builder()
-                .id(author.getId())
-                .name(author.getName())
-                .biography(author.getBiography())
-                .createdAt(author.getCreatedAt())
-                .updatedAt(author.getUpdatedAt())
-                .books(author.getBookList()
-                        .stream()
-                        .map(Book::getTitle)
-                        .toList())
-                .bookCount(author.getBookList().size())
-                .build();
     }
 }

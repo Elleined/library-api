@@ -2,6 +2,7 @@ package com.denielle.api.restapi.service;
 
 import com.denielle.api.restapi.dto.BookDTO;
 import com.denielle.api.restapi.exception.NotFoundException;
+import com.denielle.api.restapi.mapper.BookMapper;
 import com.denielle.api.restapi.model.Author;
 import com.denielle.api.restapi.model.Book;
 import com.denielle.api.restapi.model.Genre;
@@ -29,6 +30,7 @@ public class BookService {
     private final BookRepository bookRepository;
     private final GenreRepository genreRepository;
     private final AuthorRepository authorRepository;
+    private final BookMapper bookMapper;
     private final Random random = new Random();
 
     public BookDTO getById(int id) {
@@ -36,7 +38,7 @@ public class BookService {
         book.setViews(book.getViews() + 1);
         bookRepository.save(book);
 
-        return this.convertToDTO(book);
+        return bookMapper.toDTO(book);
     }
 
     public BookDTO getByTitle(String title) {
@@ -44,7 +46,7 @@ public class BookService {
         book.setViews(book.getViews() + 1);
         bookRepository.save(book);
 
-        return this.convertToDTO(book);
+        return bookMapper.toDTO(book);
     }
 
     public BookDTO getByIsbn(String isbn) {
@@ -52,7 +54,7 @@ public class BookService {
         book.setViews(book.getViews() + 1);
         bookRepository.save(book);
 
-        return this.convertToDTO(book);
+        return bookMapper.toDTO(book);
     }
 
     public List<BookDTO> getAllById(List<Integer> bookIds) {
@@ -69,7 +71,7 @@ public class BookService {
         });
 
         return books.stream()
-                .map(this::convertToDTO)
+                .map(bookMapper::toDTO)
                 .toList();
     }
 
@@ -81,7 +83,7 @@ public class BookService {
         });
 
         return books.stream()
-                .map(this::convertToDTO)
+                .map(bookMapper::toDTO)
                 .toList();
     }
 
@@ -93,7 +95,7 @@ public class BookService {
         });
 
         return books.stream()
-                .map(this::convertToDTO)
+                .map(bookMapper::toDTO)
                 .toList();
     }
 
@@ -107,7 +109,7 @@ public class BookService {
         });
 
         return books.stream()
-                .map(this::convertToDTO)
+                .map(bookMapper::toDTO)
                 .toList();
     }
 
@@ -121,7 +123,7 @@ public class BookService {
         });
 
         return books.stream()
-                .map(this::convertToDTO)
+                .map(bookMapper::toDTO)
                 .toList();
     }
 
@@ -185,25 +187,5 @@ public class BookService {
         Book book = bookRepository.findById(id).orElseThrow(() -> new NotFoundException("Book with id of " + id + " does not exists"));
         bookRepository.delete(book);
         log.debug("Book with id of {} deleted successfully", id);
-    }
-
-    public BookDTO convertToDTO(Book book) {
-        return BookDTO.builder()
-                .id(book.getId())
-                .title(book.getTitle())
-                .description(book.getDescription())
-                .isbn(book.getIsbn())
-                .pages(book.getPages())
-                .publishedDate(book.getPublishedDate())
-                .createdAt(book.getCreatedAt())
-                .updatedAt(book.getUpdatedAt())
-                .authorName(book.getAuthor().getName())
-                .genres(book.getGenres()
-                        .stream()
-                        .map(Genre::getName)
-                        .toList())
-                .saleCount(book.getSaleCount())
-                .views(book.getViews())
-                .build();
     }
 }

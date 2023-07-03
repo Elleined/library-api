@@ -6,6 +6,8 @@ import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring", uses = GenreMapper.class)
 public interface BookMapper {
 
@@ -15,4 +17,10 @@ public interface BookMapper {
     @InheritInverseConfiguration
     @Mapping(target = "genres", ignore = true)
     Book toEntity(BookDTO bookDTO);
+
+    default List<String> mapBookTitle(List<Book> books) {
+        return books.stream()
+                .map(Book::getTitle)
+                .toList();
+    }
 }
