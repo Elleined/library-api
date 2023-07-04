@@ -106,7 +106,7 @@ public class AuthorService {
 
         Author author = authorRepository.findById(id).orElseThrow(() -> new NotFoundException("Author with id of " + id + " does not exists"));
 
-        authorMapper.updateAuthor(authorDTO, author);
+        authorMapper.updateEntity(author, authorDTO);
         authorRepository.save(author);
 
         log.debug("Author with id of {} updated successfully", id);

@@ -62,7 +62,7 @@ public class GenreController {
     }
 
     @PostMapping
-    public ResponseEntity<?> save(@RequestParam("name") String genreName) {
+    public ResponseEntity<?> save(@RequestBody GenreDTO genreName) {
         int genreId = genreService.save(genreName);
         GenreDTO genreDTO = genreService.getById(genreId);
 
@@ -70,7 +70,7 @@ public class GenreController {
     }
 
     @PostMapping("/save-all")
-    public ResponseEntity<List<GenreDTO>> saveAll(@RequestParam("names") List<String> genreNames) {
+    public ResponseEntity<List<GenreDTO>> saveAll(@RequestBody List<GenreDTO> genreNames) {
         List<Integer> authorsId = genreService.saveAll(genreNames);
         List<GenreDTO> fetchedAuthors =  genreService.getAllById(authorsId);
 

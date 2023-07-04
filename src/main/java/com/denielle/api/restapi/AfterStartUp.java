@@ -2,24 +2,20 @@ package com.denielle.api.restapi;
 
 import com.denielle.api.restapi.dto.AuthorDTO;
 import com.denielle.api.restapi.dto.BookDTO;
+import com.denielle.api.restapi.dto.GenreDTO;
 import com.denielle.api.restapi.service.AuthorService;
 import com.denielle.api.restapi.service.BookService;
 import com.denielle.api.restapi.service.GenreService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
-@Component
 @RequiredArgsConstructor
 public class AfterStartUp {
-    private static final LocalDateTime now = LocalDateTime.now();
-
     private final BookService bookService;
     private final AuthorService authorService;
     private final GenreService genreService;
@@ -39,35 +35,89 @@ public class AfterStartUp {
         log.debug("Initial books record saved");
     }
 
-    private List<String> genres() {
-        return List.of("Drama",
-                "Sample Genre 1",
-                "sample Genre 2",
-                "Sorcery",
-                "Action Adventure",
-                "Epic Fantasy",
-                "Comedy",
-                "Action",
-                "Horror",
-                "Romance",
-                "Thriller",
-                "Fantasy",
-                "Fiction",
-                "Adventure",
-                "Mystery",
-                "Crime",
-                "War",
-                "Musical",
-                "Sports",
-                "Science Fiction",
-                "Literary",
-                "Suspense",
-                "Psychological Suspense",
-                "Graphic Novel",
-                "Speculative Fiction",
-                "Historical",
-                "General Fiction"
-        );
+    private List<GenreDTO> genres() {
+       return List.of(
+               GenreDTO.builder()
+                       .name("General Fiction")
+                       .build(),
+               GenreDTO.builder()
+                       .name("Drama")
+                       .build(),
+               GenreDTO.builder()
+                       .name("Sample Genre 1")
+                       .build(),
+               GenreDTO.builder()
+                       .name("sample Genre 2")
+                       .build(),
+               GenreDTO.builder()
+                       .name("Sorcery")
+                       .build(),
+               GenreDTO.builder()
+                       .name("Action Adventure")
+                       .build(),
+               GenreDTO.builder()
+                       .name("Epic Fantasy")
+                       .build(),
+               GenreDTO.builder()
+                       .name("Comedy")
+                       .build(),
+               GenreDTO.builder()
+                       .name("Action")
+                       .build(),
+               GenreDTO.builder()
+                       .name("Horror")
+                       .build(),
+               GenreDTO.builder()
+                       .name("Romance")
+                       .build(),
+               GenreDTO.builder()
+                       .name("Thriller")
+                       .build(),
+               GenreDTO.builder()
+                       .name("Fantasy")
+                       .build(),
+               GenreDTO.builder()
+                       .name("Fiction")
+                       .build(),
+               GenreDTO.builder()
+                       .name("Adventure")
+                       .build(),
+               GenreDTO.builder()
+                       .name("Mystery")
+                       .build(),
+               GenreDTO.builder()
+                       .name("Crime")
+                       .build(),
+               GenreDTO.builder()
+                       .name("War")
+                       .build(),
+               GenreDTO.builder()
+                       .name("Musical")
+                       .build(),
+               GenreDTO.builder()
+                       .name("Sports")
+                       .build(),
+               GenreDTO.builder()
+                       .name("Science Fiction")
+                       .build(),
+               GenreDTO.builder()
+                       .name("Literary")
+                       .build(),
+               GenreDTO.builder()
+                       .name("Suspense")
+                       .build(),
+               GenreDTO.builder()
+                       .name("Psychological Suspense")
+                       .build(),
+               GenreDTO.builder()
+                       .name("Graphic Novel")
+                       .build(),
+               GenreDTO.builder()
+                       .name("Speculative Fiction")
+                       .build(),
+               com.denielle.api.restapi.dto.GenreDTO.builder()
+                       .name("Historical").build()
+       );
     }
 
     private List<AuthorDTO> authors() {
@@ -75,72 +125,60 @@ public class AfterStartUp {
                 AuthorDTO.builder()
                         .name("Bret Easton Ellis")
                         .biography("Bret Easton Ellis is an American author, screenwriter, short-story writer, and director. Ellis was first regarded as one of the so-called literary Brat Pack and is a self-proclaimed satirist whose trademark technique, as a writer, is the expression of extreme acts and opinions in an affectless style.")
-                        .createdAt(now)
                         .build(),
 
                 AuthorDTO.builder()
                         .name("Stephen King")
                         .biography("Stephen Edwin King is an American author of horror, supernatural fiction, suspense, crime, science-fiction, and fantasy novels. Described as the 'King of Horror', his books have sold more than 350 million copies as of 2006, and many have been adapted into films, television series, miniseries, and comic books.")
-                        .createdAt(now)
                         .build(),
 
                 AuthorDTO.builder().name("Mario Puzo")
                         .biography("Mario Francis Puzo was an American author, screenwriter, and journalist. He is known for his crime novels about the Italian-American Mafia and Sicilian Mafia, most notably The Godfather, which he later co-adapted into a film trilogy directed by Francis Ford Coppola.")
-                        .createdAt(now)
                         .build(),
 
                 AuthorDTO.builder()
                         .name("Thomas Harris")
                         .biography("William Thomas Harris III is an American writer, best known for a series of suspense novels about his most famous character, Hannibal Lecter.")
-                        .createdAt(now)
                         .build(),
 
                 AuthorDTO.builder()
                         .name("Harper Lee")
                         .biography("Nelle Harper Lee was an American novelist. She wrote the 1960 novel To Kill a Mockingbird that won the 1961 Pulitzer Prize and became a classic of modern American literature.")
-                        .createdAt(now)
                         .build(),
 
                 AuthorDTO.builder()
                         .name("J.R.R. Tolkien")
                         .biography("John Ronald Reuel Tolkien CBE FRSL was an English writer and philologist. He was the author of the high fantasy works The Hobbit and The Lord of the Rings. From 1925 to 1945, Tolkien was the Rawlinson and Bosworth Professor of Anglo-Saxon and a Fellow of Pembroke College, both at the University of Oxford. ")
-                        .createdAt(now)
                         .build(),
 
                 AuthorDTO.builder()
                         .name("J.K. Rowling")
                         .biography("Joanne Rowling CH OBE FRSL, best known by her pen name J. K. Rowling, is a British author and philanthropist. She wrote Harry Potter, a seven-volume children's fantasy series published from 1997 to 2007.")
-                        .createdAt(now)
                         .build(),
 
                 AuthorDTO.builder()
                         .name("L. Frank Baum")
                         .biography("Lyman Frank Baum was an American author best known for his children's books, particularly The Wonderful Wizard of Oz, part of a series. In addition to the 14 Oz books, Baum penned 41 other novels, 83 short stories, over 200 poems, and at least 42 scripts.")
-                        .createdAt(now)
                         .build(),
 
                 AuthorDTO.builder()
                         .name("Margaret Mitchell")
                         .biography("Margaret Munnerlyn Mitchell was an American novelist and journalist. Mitchell wrote only one novel, published during her lifetime, the American Civil War-era novel Gone with the Wind, for which she won the National Book Award for Fiction for Most Distinguished Novel of 1936 and the Pulitzer Prize for Fiction in 1937.")
-                        .createdAt(now)
                         .build(),
 
                 AuthorDTO.builder()
                         .name("William Goldman")
                         .biography("William Goldman was an American novelist, playwright, and screenwriter. He first came to prominence in the 1950s as a novelist before turning to screenwriting. He won Academy Awards for his screenplays Butch Cassidy and the Sundance Kid and All the President's Men.")
-                        .createdAt(now)
                         .build(),
 
                 AuthorDTO.builder()
                         .name("Sample Author 1")
                         .biography("Sample Author Biography 1")
-                        .createdAt(now)
                         .build(),
 
                 AuthorDTO.builder()
                         .name("Sample Author 2")
                         .biography("Sample Author Biography 2")
-                        .createdAt(now)
                         .build()
         );
     }
@@ -153,7 +191,6 @@ public class AfterStartUp {
                         .isbn("9780307278692")
                         .pages(192)
                         .publishedDate(LocalDate.of(2010, 6, 1))
-                        .createdAt(now)
                         .authorName("Bret Easton Ellis")
                         .genres(List.of("Literary"))
                         .build(),
@@ -164,7 +201,6 @@ public class AfterStartUp {
                         .isbn("9780593535608")
                         .pages(608)
                         .publishedDate(LocalDate.of(2023, 1, 1))
-                        .createdAt(now)
                         .authorName("Bret Easton Ellis")
                         .genres(List.of("General Fiction", "Suspense", "Thriller", "Literary"))
                         .build(),
@@ -175,7 +211,6 @@ public class AfterStartUp {
                         .isbn("9780785170365")
                         .pages(240)
                         .publishedDate(LocalDate.of(2007, 11, 1))
-                        .createdAt(now)
                         .authorName("Stephen King")
                         .genres(List.of("Fantasy", "Graphic Novel", "Speculative Fiction"))
                         .build(),
@@ -186,7 +221,6 @@ public class AfterStartUp {
                         .isbn("9780785147091")
                         .pages(136)
                         .publishedDate(LocalDate.of(2011, 2, 1))
-                        .createdAt(now)
                         .authorName("Stephen King")
                         .genres(List.of("Horror", "Graphic Novel", "Speculative Fiction"))
                         .build(),
@@ -197,7 +231,6 @@ public class AfterStartUp {
                         .isbn("9780061032424")
                         .pages(418)
                         .publishedDate(LocalDate.of(2002, 9, 1))
-                        .createdAt(now)
                         .authorName("Mario Puzo")
                         .genres(List.of("General Fiction", "Historical"))
                         .build(),
@@ -208,7 +241,6 @@ public class AfterStartUp {
                         .isbn("9780345432407")
                         .pages(384)
                         .publishedDate(LocalDate.of(2000, 7, 1))
-                        .createdAt(now)
                         .authorName("Mario Puzo")
                         .genres(List.of("General Fiction", "Suspense"))
                         .build(),
@@ -219,7 +251,6 @@ public class AfterStartUp {
                         .isbn("9780440206156")
                         .pages(480)
                         .publishedDate(LocalDate.of(1981, 10, 1))
-                        .createdAt(now)
                         .authorName("Thomas Harris")
                         .genres(List.of("Thriller", "Suspense"))
                         .build(),
@@ -230,7 +261,6 @@ public class AfterStartUp {
                         .isbn("9781538750124")
                         .pages(464)
                         .publishedDate(LocalDate.of(2019, 5, 1))
-                        .createdAt(now)
                         .authorName("Thomas Harris")
                         .genres(List.of("Suspense", "Mystery", "Thriller", "Action", "Adventure"))
                         .build(),
@@ -241,7 +271,6 @@ public class AfterStartUp {
                         .isbn("9780615751276")
                         .pages(32)
                         .publishedDate(LocalDate.of(2013, 1, 1))
-                        .createdAt(now)
                         .authorName("Harper Lee")
                         .genres(List.of("General Fiction"))
                         .build(),
@@ -252,7 +281,6 @@ public class AfterStartUp {
                         .isbn("9780062409874")
                         .pages(288)
                         .publishedDate(LocalDate.of(2015, 7, 1))
-                        .createdAt(now)
                         .authorName("Harper Lee")
                         .genres(List.of("Fantasy", "Literary", "Speculative Fiction", "General Fiction"))
                         .build(),
@@ -263,7 +291,6 @@ public class AfterStartUp {
                         .isbn("9780345296047")
                         .pages(320)
                         .publishedDate(LocalDate.of(1937, 1, 15))
-                        .createdAt(now)
                         .authorName("J.R.R. Tolkien")
                         .genres(List.of("Speculative Fiction", "Epic Fantasy", "Fantasy"))
                         .build(),
@@ -274,7 +301,6 @@ public class AfterStartUp {
                         .isbn("9780063269606")
                         .pages(464)
                         .publishedDate(LocalDate.of(2021, 9, 1))
-                        .createdAt(now)
                         .authorName("J.R.R. Tolkien")
                         .genres(List.of("General Fiction", "Speculative Fiction", "Action Adventure", "Epic Fantasy", "Fantasy"))
                         .build(),
@@ -285,7 +311,6 @@ public class AfterStartUp {
                         .isbn("9780439321600")
                         .pages(64)
                         .publishedDate(LocalDate.of(2001, 6, 1))
-                        .createdAt(now)
                         .authorName("J.K. Rowling")
                         .genres(List.of("Speculative Fiction", "Fantasy"))
                         .build(),
@@ -296,7 +321,6 @@ public class AfterStartUp {
                         .isbn("9781338263893")
                         .pages(304)
                         .publishedDate(LocalDate.of(2018, 11, 1))
-                        .createdAt(now)
                         .authorName("J.K. Rowling")
                         .genres(List.of("Speculative Fiction", "Fantasy", "Sorcery"))
                         .build(),
@@ -307,7 +331,6 @@ public class AfterStartUp {
                         .isbn("9781499525236")
                         .pages(92)
                         .publishedDate(LocalDate.of(2014, 5, 1))
-                        .createdAt(now)
                         .authorName("L. Frank Baum")
                         .genres(List.of("Speculative Fiction", "Fantasy"))
                         .build(),
@@ -318,7 +341,6 @@ public class AfterStartUp {
                         .isbn("9780991199075")
                         .pages(356)
                         .publishedDate(LocalDate.of(2017, 12, 1))
-                        .createdAt(now)
                         .authorName("L. Frank Baum")
                         .genres(List.of("Speculative Fiction", "Fantasy"))
                         .build(),
@@ -329,7 +351,6 @@ public class AfterStartUp {
                         .isbn("9781570039386")
                         .pages(240)
                         .publishedDate(LocalDate.of(2010, 8, 1))
-                        .createdAt(now)
                         .authorName("Margaret Mitchell")
                         .genres(List.of("General Fiction"))
                         .build(),
@@ -340,7 +361,6 @@ public class AfterStartUp {
                         .isbn("9780684824284")
                         .pages(128)
                         .publishedDate(LocalDate.of(1996, 5, 1))
-                        .createdAt(now)
                         .authorName("Margaret Mitchell")
                         .genres(List.of("General Fiction"))
                         .build(),
@@ -351,7 +371,6 @@ public class AfterStartUp {
                         .isbn("9780345439741")
                         .pages(224)
                         .publishedDate(LocalDate.of(2001, 10, 1))
-                        .createdAt(now)
                         .authorName("William Goldman")
                         .genres(List.of("Suspense"))
                         .build(),
@@ -362,7 +381,6 @@ public class AfterStartUp {
                         .isbn("9780307487865")
                         .pages(243)
                         .publishedDate(LocalDate.of(2009, 1, 1))
-                        .createdAt(now)
                         .authorName("William Goldman")
                         .genres(List.of("Suspense", "Psychological Suspense"))
                         .build()
@@ -379,7 +397,6 @@ public class AfterStartUp {
  *        .isbn("")
  *        .pages()
  *        .publishedDate(LocalDate.of())
- *        .createdAt(now)
  *        .authorName("")
  *        .genres(List.of("", ""))
  *        .build();

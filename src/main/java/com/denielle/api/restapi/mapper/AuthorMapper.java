@@ -1,10 +1,13 @@
 package com.denielle.api.restapi.mapper;
 
 import com.denielle.api.restapi.dto.AuthorDTO;
+import com.denielle.api.restapi.exception.NotFoundException;
 import com.denielle.api.restapi.model.Author;
-import com.denielle.api.restapi.service.GenreService;
+import com.denielle.api.restapi.repository.AuthorRepository;
 import org.mapstruct.*;
+import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 
 import java.time.LocalDateTime;
 
@@ -12,7 +15,7 @@ import java.time.LocalDateTime;
 public abstract class AuthorMapper implements BaseMapper<AuthorDTO, Author> {
 
     @Autowired
-    protected GenreService genreService;
+    protected AuthorRepository authorRepository;
     // Use other beans here and annotate with autowired to use
 
     @Mapping(target = "bookCount", source = "author")
@@ -44,16 +47,20 @@ public abstract class AuthorMapper implements BaseMapper<AuthorDTO, Author> {
             @Mapping(target = "id", ignore = true),
             @Mapping(target = "bookList", ignore = true)
     })
-    public abstract Author updateAuthor(AuthorDTO authorDTO, @MappingTarget Author author);
+    public abstract Author updateEntity(@MappingTarget Author author, AuthorDTO authorDTO);
+
+    protected Author getByName(String authorName) {
+        return authorRepository.fetchByName(authorName).orElseThrow(() -> new NotFoundException("Author with name of " + authorName + " does not exists"));
+    }
 
     @BeforeMapping
-    protected void beforeUpdateAuthor(AuthorDTO authorDTO, @MappingTarget Author author) {
+    protected void beforeUpdateAuthor(@MappingTarget Author author, AuthorDTO authorDTO) {
         authorDTO.setUpdatedAt(LocalDateTime.now());
         // Execute code before updating the author
     }
 
     @AfterMapping
-    protected void afterUpdateAuthor(AuthorDTO authorDTO, @MappingTarget Author author) {
+    protected void afterUpdateAuthor(@MappingTarget Author author, AuthorDTO authorDTO) {
         // Execute code after updating the author
     }
 

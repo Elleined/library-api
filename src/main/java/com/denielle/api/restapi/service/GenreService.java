@@ -12,7 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -70,23 +69,19 @@ public class GenreService {
                 .toList();
     }
 
-    public List<Integer> saveAll(List<String> genres) {
+    public List<Integer> saveAll(List<GenreDTO> genres) {
         return genres.stream()
                 .map(this::save)
                 .toList();
     }
 
-    public int save(String genreName) throws FieldAlreadyExistsException, IllegalArgumentException {
-        if (StringValidator.validate(genreName)) throw new IllegalArgumentException("Genre name cannot be null or empty");
-        if (isNameAlreadyExists(genreName)) throw new FieldAlreadyExistsException("Genre with name of " + genreName + " already exists");
+    public int save(GenreDTO genreDTO) throws FieldAlreadyExistsException, IllegalArgumentException {
+        if (StringValidator.validate(genreDTO.getName())) throw new IllegalArgumentException("Genre name cannot be null or empty");
+        if (isNameAlreadyExists(genreDTO.getName())) throw new FieldAlreadyExistsException("Genre with name of " + genreDTO.getName() + " already exists");
 
-        Genre genre = Genre.builder()
-                .name(genreName)
-                .createdAt(LocalDateTime.now())
-                .build();
-
+        Genre genre = genreMapper.toEntity(genreDTO);
         genreRepository.save(genre);
-        log.debug("Genre saved successfully {}", genreName);
+        log.debug("Genre saved successfully {}", genreDTO.getName());
         return genre.getId();
     }
 
@@ -106,7 +101,6 @@ public class GenreService {
         Genre genre = genreRepository.findById(id).orElseThrow(() -> new NotFoundException("Genre with id of " + id + " of does not exists"));
 
         genre.setName(newGenreName);
-        genre.setUpdatedAt(LocalDateTime.now());
 
         genreRepository.save(genre);
         log.debug("Genre with id of {} updated successfully", id);
