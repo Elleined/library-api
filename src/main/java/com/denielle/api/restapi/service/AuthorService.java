@@ -13,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -91,10 +90,7 @@ public class AuthorService {
 
     public int save(AuthorDTO authorDTO) throws FieldAlreadyExistsException {
         if (isNameAlreadyExists(authorDTO.getName())) throw new FieldAlreadyExistsException("Author with name of " + authorDTO.getName() + " already exists");
-
         Author author = authorMapper.toEntity(authorDTO);
-        author.setCreatedAt(LocalDateTime.now());
-
         authorRepository.save(author);
         log.debug("Author saved successfully {}", author.getName());
         return author.getId();
@@ -110,11 +106,9 @@ public class AuthorService {
 
         Author author = authorRepository.findById(id).orElseThrow(() -> new NotFoundException("Author with id of " + id + " does not exists"));
 
-        author.setName(authorDTO.getName());
-        author.setBiography(authorDTO.getBiography());
-        author.setUpdatedAt(LocalDateTime.now());
+        Author modifiedAuthor = authorMapper.updateAuthor(authorDTO, author);
 
-        authorRepository.save(author);
+        authorRepository.save(modifiedAuthor);
         log.debug("Author with id of {} updated successfully", id);
     }
 

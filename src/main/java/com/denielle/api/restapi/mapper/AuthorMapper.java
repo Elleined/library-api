@@ -6,13 +6,15 @@ import com.denielle.api.restapi.service.GenreService;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.LocalDateTime;
+
 @Mapper(componentModel = "spring", uses = BookMapper.class)
 public abstract class AuthorMapper implements BaseMapper<AuthorDTO, Author> {
 
     @Autowired
     protected GenreService genreService;
     // Use other beans here and annotate with autowired to use
-    
+
     @Mapping(target = "books", source = "bookList")
     public abstract AuthorDTO toDTO(Author author);
 
@@ -21,7 +23,6 @@ public abstract class AuthorMapper implements BaseMapper<AuthorDTO, Author> {
                                     @Context String anyObjectToUse);
 
     @Mappings({
-            @Mapping(target = "createdAt", ignore = true),
             @Mapping(target = "updatedAt", ignore = true),
             @Mapping(target = "bookCount", ignore = true),
             @Mapping(target = "id", ignore = true),
@@ -30,7 +31,6 @@ public abstract class AuthorMapper implements BaseMapper<AuthorDTO, Author> {
     public abstract Author toEntity(AuthorDTO authorDTO);
 
     @Mappings({
-            @Mapping(target = "createdAt", ignore = true),
             @Mapping(target = "updatedAt", ignore = true),
             @Mapping(target = "bookCount", ignore = true),
             @Mapping(target = "id", ignore = true),
@@ -39,17 +39,23 @@ public abstract class AuthorMapper implements BaseMapper<AuthorDTO, Author> {
     public abstract Author toEntity(AuthorDTO authorDTO,
                                     @Context String anyObjectToUse);
 
-    @Mapping(target = "name", source = "name")
-    public abstract Author updateAuthorName(String name, @MappingTarget Author author);
+    @Mappings({
+            @Mapping(target = "createdAt", ignore = true),
+            @Mapping(target = "bookCount", ignore = true),
+            @Mapping(target = "id", ignore = true),
+            @Mapping(target = "bookList", ignore = true)
+    })
+    public abstract Author updateAuthor(AuthorDTO authorDTO, @MappingTarget Author author);
 
     @BeforeMapping
-    protected void beforeUpdateAuthor(String name, @MappingTarget Author author) {
-        // Execute code before updating the author name
+    protected void beforeUpdateAuthor(AuthorDTO authorDTO, @MappingTarget Author author) {
+        authorDTO.setUpdatedAt(LocalDateTime.now());
+        // Execute code before updating the author
     }
 
     @AfterMapping
-    protected void afterUpdateAuthor(String name, @MappingTarget Author author) {
-        // Execute code after updating the author name
+    protected void afterUpdateAuthor(AuthorDTO authorDTO, @MappingTarget Author author) {
+        // Execute code after updating the author
     }
 
     @BeforeMapping
@@ -74,6 +80,7 @@ public abstract class AuthorMapper implements BaseMapper<AuthorDTO, Author> {
 
     @BeforeMapping
     protected void toEntityBeforeMapping(AuthorDTO authorDTO) {
+        authorDTO.setCreatedAt(LocalDateTime.now());
         // Execute code before creating Author object
     }
 
