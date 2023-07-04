@@ -36,9 +36,6 @@ public class Author {
     @Column(name = "date_updated")
     private LocalDateTime updatedAt;
 
-    @Column(name = "book_count")
-    private int bookCount;
-
     // author id reference is in book table
     @OneToMany(mappedBy = "author")
     private List<Book> bookList;

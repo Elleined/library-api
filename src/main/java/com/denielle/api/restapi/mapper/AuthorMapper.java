@@ -15,16 +15,17 @@ public abstract class AuthorMapper implements BaseMapper<AuthorDTO, Author> {
     protected GenreService genreService;
     // Use other beans here and annotate with autowired to use
 
+    @Mapping(target = "bookCount", source = "author")
     @Mapping(target = "books", source = "bookList")
     public abstract AuthorDTO toDTO(Author author);
 
+    @Mapping(target = "bookCount", source = "author")
     @Mapping(target = "books", source = "bookList")
     public abstract AuthorDTO toDTO(Author author,
                                     @Context String anyObjectToUse);
 
     @Mappings({
             @Mapping(target = "updatedAt", ignore = true),
-            @Mapping(target = "bookCount", ignore = true),
             @Mapping(target = "id", ignore = true),
             @Mapping(target = "bookList", ignore = true)
     })
@@ -32,7 +33,6 @@ public abstract class AuthorMapper implements BaseMapper<AuthorDTO, Author> {
 
     @Mappings({
             @Mapping(target = "updatedAt", ignore = true),
-            @Mapping(target = "bookCount", ignore = true),
             @Mapping(target = "id", ignore = true),
             @Mapping(target = "bookList", ignore = true)
     })
@@ -41,7 +41,6 @@ public abstract class AuthorMapper implements BaseMapper<AuthorDTO, Author> {
 
     @Mappings({
             @Mapping(target = "createdAt", ignore = true),
-            @Mapping(target = "bookCount", ignore = true),
             @Mapping(target = "id", ignore = true),
             @Mapping(target = "bookList", ignore = true)
     })

@@ -1,6 +1,7 @@
 package com.denielle.api.restapi.mapper;
 
 import com.denielle.api.restapi.dto.BookDTO;
+import com.denielle.api.restapi.model.Author;
 import com.denielle.api.restapi.model.Book;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
@@ -23,5 +24,9 @@ public interface BookMapper {
         return books.stream()
                 .map(Book::getTitle)
                 .toList();
+    }
+
+    default int getBookCount(Author author) {
+        return author.getBookList().size();
     }
 }
