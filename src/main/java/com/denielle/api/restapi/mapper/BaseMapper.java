@@ -1,8 +1,7 @@
 package com.denielle.api.restapi.mapper;
 
 import java.util.List;
-
-public interface BaseMapper<DTO, ENTITY> {
+ public interface BaseMapper<DTO, ENTITY> {
 
     DTO toDTO(ENTITY entity);
     ENTITY toEntity(DTO dto);
