@@ -2,7 +2,6 @@ package com.denielle.api.restapi.mapper;
 
 import com.denielle.api.restapi.dto.AuthorDTO;
 import com.denielle.api.restapi.model.Author;
-import com.denielle.api.restapi.service.AuthorService;
 import com.denielle.api.restapi.service.GenreService;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,8 @@ public abstract class AuthorMapper implements BaseMapper<AuthorDTO, Author> {
 
     @Autowired
     protected GenreService genreService;
-
+    // Use other beans here and annotate with autowired to use
+    
     @Mapping(target = "books", source = "bookList")
     public abstract AuthorDTO toDTO(Author author);
 
@@ -39,59 +39,56 @@ public abstract class AuthorMapper implements BaseMapper<AuthorDTO, Author> {
     public abstract Author toEntity(AuthorDTO authorDTO,
                                     @Context String anyObjectToUse);
 
+    @Mapping(target = "name", source = "name")
+    public abstract Author updateAuthorName(String name, @MappingTarget Author author);
+
+    @BeforeMapping
+    protected void beforeUpdateAuthor(String name, @MappingTarget Author author) {
+        // Execute code before updating the author name
+    }
+
+    @AfterMapping
+    protected void afterUpdateAuthor(String name, @MappingTarget Author author) {
+        // Execute code after updating the author name
+    }
+
     @BeforeMapping
     protected void toDTOBeforeMapping(Author author) {
-        System.out.println("\n ===toDTO before mapping===");
-
-        System.out.println("Author " + author);
-
-        System.out.println("===End of toDTO before mapping \n");
+        // Execute code before creating AuthorDTO object
     }
 
     @BeforeMapping
     protected void toDTOBeforeMapping(Author author, @Context String anyObjectToUse) {
-
+        // Execute code before creating AuthorDTO object with extra argument to use
     }
 
     @AfterMapping
     protected void toDTOAfterMapping(Author author) {
-        System.out.println("\n ===toDTO after mapping===");
-
-        System.out.println("Author " + author);
-
-        System.out.println("===End of toDTO after mapping \n");
+        // Execute code after creating AuthorDTO object
     }
 
     @AfterMapping
     protected void toDTOAfterMapping(Author author, @Context String anyObjectToUse) {
-
+        // Execute code after creating AuthorDTO object with extra argument to use
     }
 
     @BeforeMapping
     protected void toEntityBeforeMapping(AuthorDTO authorDTO) {
-        System.out.println("\n ===toEntity before mapping===");
-
-        System.out.println("AuthorDTO " + authorDTO);
-
-        System.out.println("===End of toEntity before mapping \n");
+        // Execute code before creating Author object
     }
 
     @BeforeMapping
     protected void toEntityBeforeMapping(AuthorDTO authorDTO, @Context String anyObjectToUse) {
+        // Execute code before creating Author object with extra argument to use
     }
 
     @AfterMapping
     protected void toEntityAfterMapping(AuthorDTO authorDTO) {
-        System.out.println(genreService.getById(1) + " Genre serivec ");
-        System.out.println("\n ===toEntity after mapping===");
-
-        System.out.println("AuthorDTO " + authorDTO);
-
-        System.out.println("===End of toEntity after mapping \n");
+        // Execute code after creating Author object
     }
 
     @AfterMapping
     protected void toEntityAfterMapping(AuthorDTO authorDTO, @Context String anyObjectToUse) {
-
+        // Execute code after creating Author object with extra argument to use
     }
 }
