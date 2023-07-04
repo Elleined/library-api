@@ -6,9 +6,8 @@ import com.denielle.api.restapi.service.GenreService;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@Mapper(componentModel = "spring",
-        uses = BookMapper.class)
-public abstract class AuthorMapper implements BaseMapper<AuthorDTO, Author> {
+@org.mapstruct.Mapper(componentModel = "spring", uses = BookMapper.class)
+public abstract class AuthorMapper implements Mapper<AuthorDTO, Author> {
 
     @Autowired
     protected GenreService genreService;
@@ -25,8 +24,9 @@ public abstract class AuthorMapper implements BaseMapper<AuthorDTO, Author> {
     })
     public abstract Author toEntity(AuthorDTO authorDTO);
 
+    @Override
     @BeforeMapping
-    protected void beforeMapping(AuthorDTO authorDTO) {
+    public void toEntityBeforeMapping(AuthorDTO authorDTO) {
         System.out.println("\n ===toEntity before mapping===");
 
         System.out.println("AuthorDTO " + authorDTO);
@@ -34,8 +34,19 @@ public abstract class AuthorMapper implements BaseMapper<AuthorDTO, Author> {
         System.out.println("===End of toEntity before mapping \n");
     }
 
+    @Override
+    @BeforeMapping
+    public void toDTOBeforeMapping(Author author) {
+        System.out.println("\n ===toDTO before mapping===");
+
+        System.out.println("Author " + author);
+
+        System.out.println("===End of toDTO before mapping \n");
+    }
+
+    @Override
     @AfterMapping
-    protected void afterMapping(AuthorDTO authorDTO) {
+    public void toEntityAfterMapping(AuthorDTO authorDTO) {
         System.out.println(genreService.getById(1) + " Genre serivec ");
         System.out.println("\n ===toEntity after mapping===");
 
@@ -44,17 +55,9 @@ public abstract class AuthorMapper implements BaseMapper<AuthorDTO, Author> {
         System.out.println("===End of toEntity after mapping \n");
     }
 
-    @BeforeMapping
-    protected void beforeMapping(Author author) {
-        System.out.println("\n ===toDTO before mapping===");
-
-        System.out.println("Author " + author);
-
-        System.out.println("===End of toDTO before mapping \n");
-    }
-
+    @Override
     @AfterMapping
-    protected void afterMapping(Author author) {
+    public void toDTOAfterMapping(Author author) {
         System.out.println("\n ===toDTO after mapping===");
 
         System.out.println("Author " + author);
