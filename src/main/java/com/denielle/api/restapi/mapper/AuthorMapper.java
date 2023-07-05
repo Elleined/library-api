@@ -1,21 +1,14 @@
 package com.denielle.api.restapi.mapper;
 
 import com.denielle.api.restapi.dto.AuthorDTO;
-import com.denielle.api.restapi.exception.NotFoundException;
 import com.denielle.api.restapi.model.Author;
-import com.denielle.api.restapi.repository.AuthorRepository;
 import org.mapstruct.*;
-import org.mapstruct.factory.Mappers;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 
 import java.time.LocalDateTime;
 
 @Mapper(componentModel = "spring", uses = BookMapper.class)
 public abstract class AuthorMapper implements BaseMapper<AuthorDTO, Author> {
 
-    @Autowired
-    protected AuthorRepository authorRepository;
     // Use other beans here and annotate with autowired to use
 
     @Mapping(target = "bookCount", source = "author")
@@ -48,10 +41,6 @@ public abstract class AuthorMapper implements BaseMapper<AuthorDTO, Author> {
             @Mapping(target = "bookList", ignore = true)
     })
     public abstract Author updateEntity(@MappingTarget Author author, AuthorDTO authorDTO);
-
-    protected Author getByName(String authorName) {
-        return authorRepository.fetchByName(authorName).orElseThrow(() -> new NotFoundException("Author with name of " + authorName + " does not exists"));
-    }
 
     @BeforeMapping
     protected void beforeUpdateAuthor(@MappingTarget Author author, AuthorDTO authorDTO) {
