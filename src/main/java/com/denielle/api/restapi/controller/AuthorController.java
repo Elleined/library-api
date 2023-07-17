@@ -113,7 +113,6 @@ public class AuthorController {
                     .toList();
             return ResponseEntity.badRequest().body(errors);
         }
-
         authorService.update(authorId, authorDTO);
 
         AuthorDTO fetchAuthorDTO = getById(authorId);
