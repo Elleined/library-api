@@ -9,12 +9,14 @@ import com.denielle.api.restapi.service.GenreService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
+@Component
 public class AfterStartUp {
     private final BookService bookService;
     private final AuthorService authorService;
