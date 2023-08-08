@@ -8,8 +8,8 @@
 		<version>3.1.0</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.denielle.api</groupId>
-	<artifactId>rest-api</artifactId>
+	<groupId>com.denielle</groupId>
+	<artifactId>author-book-genre-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>rest-api</name>
 	<description>Building a REST API</description>
