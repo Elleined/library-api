@@ -11,8 +11,8 @@
 	<groupId>com.denielle</groupId>
 	<artifactId>author-book-genre-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>rest-api</name>
-	<description>Building a REST API</description>
+	<name>author-book-genre-api</name>
+	<description>Creating REST API for Author, Book, and Genre with Mapstruct</description>
 	<properties>
 		<java.version>17</java.version>
 		<org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
