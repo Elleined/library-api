@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -69,30 +68,20 @@ public class GenreService {
                 .toList();
     }
 
-    public List<Integer> saveAll(List<GenreDTO> genres) {
+    public List<GenreDTO> saveAll(List<GenreDTO> genres) {
         return genres.stream()
                 .map(this::save)
                 .toList();
     }
 
-    public int save(GenreDTO genreDTO) throws FieldAlreadyExistsException, IllegalArgumentException {
+    public GenreDTO save(GenreDTO genreDTO) throws FieldAlreadyExistsException, IllegalArgumentException {
         if (StringValidator.validate(genreDTO.getName())) throw new IllegalArgumentException("Genre name cannot be null or empty");
         if (isNameAlreadyExists(genreDTO.getName())) throw new FieldAlreadyExistsException("Genre with name of " + genreDTO.getName() + " already exists");
 
         Genre genre = genreMapper.toEntity(genreDTO);
-        genreRepository.save(genre);
+        Genre savedGenre = genreRepository.save(genre);
         log.debug("Genre saved successfully {}", genreDTO.getName());
-        return genre.getId();
-    }
-
-    public void delete(int id) {
-        genreRepository.deleteById(id);
-        log.debug("Genre with id of {} deleted successfully", id);
-    }
-
-    public void deleteAllById(Set<Integer> ids) {
-        genreRepository.deleteAllById(ids);
-        log.debug("Genre with id of {} deleted successfully", ids);
+        return genreMapper.toDTO( savedGenre );
     }
 
     public void update(int id, String newGenreName) throws NotFoundException, FieldAlreadyExistsException, IllegalArgumentException {

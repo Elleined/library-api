@@ -5,8 +5,12 @@ import com.denielle.api.restapi.exception.FieldAlreadyExistsException;
 import com.denielle.api.restapi.exception.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindException;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import java.util.List;
 
 @ControllerAdvice
 public class ExceptionController {
@@ -23,4 +27,13 @@ public class ExceptionController {
         return new ResponseEntity<>(responseMessage, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(BindException.class)
+    public ResponseEntity<List<ResponseMessage>> handleBindException(BindException e) {
+        List<ResponseMessage> errors = e.getAllErrors()
+                .stream()
+                .map(ObjectError::getDefaultMessage)
+                .map(errorMessage -> new ResponseMessage(HttpStatus.BAD_REQUEST, errorMessage))
+                .toList();
+        return ResponseEntity.badRequest().body(errors);
+    }
 }

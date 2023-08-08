@@ -1,23 +1,16 @@
 package com.denielle.api.restapi.controller;
 
 import com.denielle.api.restapi.dto.BookDTO;
-import com.denielle.api.restapi.dto.ResponseMessage;
 import com.denielle.api.restapi.service.BookService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/books")
+@RequestMapping("/books")
 public class BookController {
 
     private final BookService bookService;
@@ -74,55 +67,20 @@ public class BookController {
     }
 
     @PostMapping
-    public ResponseEntity<?> save(@Valid @RequestBody BookDTO bookDTO,
-                                  BindingResult result) {
-
-        if (result.hasErrors()) {
-            List<ResponseMessage> errors = result.getAllErrors()
-                    .stream()
-                    .map(ObjectError::getDefaultMessage)
-                    .map(errorMessage -> new ResponseMessage(HttpStatus.BAD_REQUEST, errorMessage))
-                    .toList();
-            return ResponseEntity.badRequest().body(errors);
-        }
-
-        int bookId = bookService.save(bookDTO);
-        BookDTO fetchedBook = bookService.getById(bookId);
-
-        return new ResponseEntity<>(fetchedBook, HttpStatus.CREATED);
+    public BookDTO save(@Valid @RequestBody BookDTO bookDTO) {
+        return bookService.save(bookDTO);
     }
 
     @PostMapping("/save-all")
-    public ResponseEntity<List<BookDTO>> save(@RequestBody List<BookDTO> books) {
-        List<Integer> bookIds = bookService.saveAll(books);
-        List<BookDTO> fetchedBooks = bookService.getAllById(bookIds);
-
-        return new ResponseEntity<>(fetchedBooks, HttpStatus.CREATED);
+    public List<BookDTO> save(@RequestBody List<BookDTO> books) {
+        return bookService.saveAll(books);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable("id") int bookId,
-                                    @Valid @RequestBody BookDTO bookDTO,
-                                    BindingResult result) {
-
-        if (result.hasErrors()) {
-            List<ResponseMessage> errors = result.getAllErrors()
-                    .stream()
-                    .map(ObjectError::getDefaultMessage)
-                    .map(errorMessage -> new ResponseMessage(HttpStatus.BAD_REQUEST, errorMessage))
-                    .toList();
-            return ResponseEntity.badRequest().body(errors);
-        }
+    public BookDTO update(@PathVariable("id") int bookId,
+                                    @Valid @RequestBody BookDTO bookDTO) {
 
         bookService.update(bookId, bookDTO);
-
-        BookDTO fetchedBookDTO = bookService.getById(bookId);
-        return ResponseEntity.ok(fetchedBookDTO);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<BookDTO> delete(@PathVariable("id") int bookId) {
-        bookService.delete(bookId);
-        return ResponseEntity.noContent().build();
+        return bookService.getById(bookId);
     }
 }

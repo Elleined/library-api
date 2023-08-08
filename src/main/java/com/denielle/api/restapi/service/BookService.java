@@ -101,22 +101,22 @@ public class BookService {
                 .toList();
     }
 
-    public List<Integer> saveAll(List<BookDTO> books) {
+    public List<BookDTO> saveAll(List<BookDTO> books) {
         return books.stream()
                 .map(this::save)
                 .toList();
     }
 
-    public int save(BookDTO bookDTO) throws FieldAlreadyExistsException, NotFoundException {
+    public BookDTO save(BookDTO bookDTO) throws FieldAlreadyExistsException, NotFoundException {
         if (isbnAlreadyExists(bookDTO.getIsbn())) throw new FieldAlreadyExistsException("Book with isbn of " + bookDTO.getIsbn() + " already exists!");
         if (isGenreNotValid(bookDTO.getGenres())) throw new NullPointerException("Genre cannot be null or empty or blank");
 
         Book book = bookMapper.toEntity(bookDTO);
         book.setSaleCount(random.nextInt(999));
 
-        bookRepository.save(book);
+        Book savedBook = bookRepository.save(book);
         log.debug("Book saved successfully {}", book.getTitle());
-        return book.getId();
+        return bookMapper.toDTO( savedBook );
     }
 
     public void update(int id, BookDTO bookDTO) throws FieldAlreadyExistsException, IllegalArgumentException {
@@ -127,11 +127,6 @@ public class BookService {
         bookMapper.updateEntity(book, bookDTO);
         bookRepository.save(book);
         log.debug("Book updated successfully");
-    }
-
-    public void delete(int id) {
-        bookRepository.deleteById(id);
-        log.debug("Book with id of {} deleted successfully", id);
     }
 
     public boolean isbnAlreadyExists(String isbn) {

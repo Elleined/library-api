@@ -82,23 +82,18 @@ public class AuthorService {
                 .toList();
     }
 
-    public List<Integer> saveAll(List<AuthorDTO> authors) {
+    public List<AuthorDTO> saveAll(List<AuthorDTO> authors) {
         return authors.stream()
                 .map(this::save)
                 .toList();
     }
 
-    public int save(AuthorDTO authorDTO) throws FieldAlreadyExistsException {
+    public AuthorDTO save(AuthorDTO authorDTO) throws FieldAlreadyExistsException {
         if (isNameAlreadyExists(authorDTO.getName())) throw new FieldAlreadyExistsException("Author with name of " + authorDTO.getName() + " already exists");
         Author author = authorMapper.toEntity(authorDTO);
-        authorRepository.save(author);
-        log.debug("Author saved successfully {}", author.getName());
-        return author.getId();
-    }
-
-    public void delete(int id) {
-        authorRepository.deleteById(id);
-        log.debug("Author with id of {} deleted successfully", id);
+        Author savedAuthor = authorRepository.save(author);
+        log.debug("Author with id of {} saved successfully!", savedAuthor.getId());
+        return authorMapper.toDTO( savedAuthor );
     }
 
     public void update(int id, AuthorDTO authorDTO) throws NotFoundException, FieldAlreadyExistsException {

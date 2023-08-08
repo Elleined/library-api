@@ -1,23 +1,16 @@
 package com.denielle.api.restapi.controller;
 
 import com.denielle.api.restapi.dto.AuthorDTO;
-import com.denielle.api.restapi.dto.ResponseMessage;
 import com.denielle.api.restapi.service.AuthorService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/authors")
+@RequestMapping("/authors")
 public class AuthorController {
 
     private final AuthorService authorService;
@@ -74,55 +67,20 @@ public class AuthorController {
     }
 
     @PostMapping
-    public ResponseEntity<?> save(@Valid @RequestBody AuthorDTO authorDTO,
-                                  BindingResult result) {
-
-        if (result.hasErrors()) {
-            List<ResponseMessage> errors = result.getAllErrors()
-                    .stream()
-                    .map(ObjectError::getDefaultMessage)
-                    .map(errorMessage -> new ResponseMessage(HttpStatus.BAD_REQUEST, errorMessage))
-                    .toList();
-            return ResponseEntity.badRequest().body(errors);
-        }
-
-        int authorId = authorService.save(authorDTO);
-        AuthorDTO fetchedAuthor = authorService.getById(authorId);
-
-        return new ResponseEntity<>(fetchedAuthor, HttpStatus.CREATED);
+    public AuthorDTO save(@Valid @RequestBody AuthorDTO authorDTO) {
+        return authorService.save(authorDTO);
     }
 
     @PostMapping("/save-all")
-    public ResponseEntity<?> saveAll (@RequestBody List<AuthorDTO> authors) {
-        List<Integer> authorIds = authorService.saveAll(authors);
-        List<AuthorDTO> fetchedAuthors = authorService.getAllById(authorIds);
-
-        return new ResponseEntity<>(fetchedAuthors, HttpStatus.CREATED);
+    public List<AuthorDTO> saveAll (@RequestBody List<AuthorDTO> authors) {
+        return authorService.saveAll(authors);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable("id") int authorId,
-                                    @Valid @RequestBody AuthorDTO authorDTO,
-                                    BindingResult result) {
-
-        if (result.hasErrors()) {
-            List<ResponseMessage> errors = result.getAllErrors()
-                    .stream()
-                    .map(ObjectError::getDefaultMessage)
-                    .map(errorMessage -> new ResponseMessage(HttpStatus.BAD_REQUEST, errorMessage))
-                    .toList();
-            return ResponseEntity.badRequest().body(errors);
-        }
+    public AuthorDTO update(@PathVariable("id") int authorId,
+                            @Valid @RequestBody AuthorDTO authorDTO) {
 
         authorService.update(authorId, authorDTO);
-
-        AuthorDTO fetchAuthorDTO = getById(authorId);
-        return ResponseEntity.ok(fetchAuthorDTO);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<AuthorDTO> delete(@PathVariable("id") int authorId) {
-        authorService.delete(authorId);
-        return ResponseEntity.noContent().build();
+        return authorService.getById(authorId);
     }
 }
