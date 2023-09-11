@@ -1,5 +1,5 @@
 # book-author-genre-rest-api
-Creating a REST API using SPRING BOOT tested using POSTMAN
+REST API for books, authors, and genres
 
 # Features
 - Book API

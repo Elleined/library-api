@@ -8,11 +8,11 @@
 		<version>3.1.0</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.denielle</groupId>
-	<artifactId>author-book-genre-api</artifactId>
+	<groupId>com.elleined</groupId>
+	<artifactId>book-author-genre-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>author-book-genre-api</name>
-	<description>Creating REST API for Author, Book, and Genre with Mapstruct</description>
+	<name>book-author-genre-api</name>
+	<description>REST API for books, authors, and genres</description>
 	<properties>
 		<java.version>17</java.version>
 		<org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
