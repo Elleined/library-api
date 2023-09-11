@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
@@ -101,7 +102,7 @@ public class BookService {
                 .toList();
     }
 
-    public List<BookDTO> saveAll(List<BookDTO> books) {
+    public List<BookDTO> saveAll(Collection<BookDTO> books) {
         return books.stream()
                 .map(this::save)
                 .toList();

@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -68,7 +69,7 @@ public class GenreService {
                 .toList();
     }
 
-    public List<GenreDTO> saveAll(List<GenreDTO> genres) {
+    public List<GenreDTO> saveAll(Collection<GenreDTO> genres) {
         return genres.stream()
                 .map(this::save)
                 .toList();
