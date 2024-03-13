@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
@@ -43,10 +45,10 @@ public class GenreController {
     }
 
     @GetMapping("/get-all-by-id")
-    public List<GenreDTO> getAllById(@RequestParam("ids") List<Integer> genreIds) {
+    public Set<GenreDTO> getAllById(@RequestParam("ids") Set<Integer> genreIds) {
         return genreService.getAllById(genreIds).stream()
                 .map(genreMapper::toDTO)
-                .toList();
+                .collect(Collectors.toSet());
     }
 
     @GetMapping("/name")

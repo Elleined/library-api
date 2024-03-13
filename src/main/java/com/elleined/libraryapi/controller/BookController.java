@@ -5,7 +5,9 @@ import com.elleined.libraryapi.mapper.BookMapper;
 import com.elleined.libraryapi.model.Author;
 import com.elleined.libraryapi.model.Book;
 import com.elleined.libraryapi.model.Genre;
+import com.elleined.libraryapi.service.author.AuthorService;
 import com.elleined.libraryapi.service.book.BookService;
+import com.elleined.libraryapi.service.genre.GenreService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +22,10 @@ public class BookController {
 
     private final BookService bookService;
     private final BookMapper bookMapper;
+
+    private final GenreService genreService;
+
+    private final AuthorService authorService;
 
     @GetMapping
     public List<BookDTO> getAll() {
@@ -80,8 +86,11 @@ public class BookController {
                         @RequestParam("description") String description,
                         @RequestParam("publishedDate") LocalDate publishedDate,
                         @RequestParam("pages") int pages,
-                        @RequestParam("author") Author author,
-                        @RequestParam("genres") Set<Genre> genres) {
+                        @RequestParam("authorId") int authorId,
+                        @RequestParam("genres") Set<Integer> genreIds) {
+
+        Author author = authorService.getById(authorId);
+        Set<Genre> genres = genreService.getAllById(genreIds);
         Book book = bookService.save(title, isbn, description, publishedDate, pages, author, genres);
         return bookMapper.toDTO(book);
     }
@@ -93,9 +102,11 @@ public class BookController {
                           @RequestParam("description") String description,
                           @RequestParam("publishedDate") LocalDate publishedDate,
                           @RequestParam("pages") int pages,
-                          @RequestParam("author") Author author,
-                          @RequestParam("genres") Set<Genre> genres) {
+                          @RequestParam("authorId") int authorId,
+                          @RequestParam("genres") Set<Integer> genreIds) {
 
+        Author author = authorService.getById(authorId);
+        Set<Genre> genres = genreService.getAllById(genreIds);
         Book book = bookService.getById(bookId);
         bookService.update(book, title, isbn, description, publishedDate, pages, author, genres);
         return bookMapper.toDTO(book);

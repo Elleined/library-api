@@ -36,7 +36,7 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
-    public List<Genre> getAllById(List<Integer> ids) {
+    public Set<Genre> getAllById(Set<Integer> ids) {
         return genreRepository.findAllById(ids);
     }
 

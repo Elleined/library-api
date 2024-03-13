@@ -13,7 +13,7 @@ public interface GenreService {
 
     Genre getById(int id) throws NotFoundException;
 
-    List<Genre> getAllById(List<Integer> ids);
+    Set<Genre> getAllById(Set<Integer> ids);
 
     List<Genre> searchByFirstLetter(char firstLetter);
 
