@@ -3,7 +3,7 @@ package com.elleined.libraryapi.mapper;
 import com.elleined.libraryapi.dto.BookDTO;
 import com.elleined.libraryapi.model.Author;
 import com.elleined.libraryapi.model.Book;
-import com.elleined.libraryapi.model.Genre;
+import com.elleined.libraryapi.model.genre.Genre;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;

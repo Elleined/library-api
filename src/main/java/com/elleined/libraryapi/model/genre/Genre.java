@@ -1,5 +1,6 @@
-package com.elleined.libraryapi.model;
+package com.elleined.libraryapi.model.genre;
 
+import com.elleined.libraryapi.model.Book;
 import jakarta.persistence.*;
 import lombok.*;
 

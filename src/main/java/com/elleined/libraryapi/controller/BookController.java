@@ -68,7 +68,7 @@ public class BookController {
 
     @PostMapping
     public BookDTO save(@Valid @RequestBody BookDTO bookDTO) {
-        return bookService.save(bookDTO);
+        return bookService.save(, bookDTO, , , , , , );
     }
 
     @PostMapping("/save-all")
@@ -80,7 +80,7 @@ public class BookController {
     public BookDTO update(@PathVariable("id") int bookId,
                                     @Valid @RequestBody BookDTO bookDTO) {
 
-        bookService.update(bookId, bookDTO);
+        bookService.update(bookId, , bookDTO, , , , , , );
         return bookService.getById(bookId);
     }
 }

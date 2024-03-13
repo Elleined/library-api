@@ -2,12 +2,9 @@ package com.elleined.libraryapi.mapper;
 
 import com.elleined.libraryapi.dto.GenreDTO;
 import com.elleined.libraryapi.exception.NotFoundException;
-import com.elleined.libraryapi.model.Genre;
+import com.elleined.libraryapi.model.genre.Genre;
 import com.elleined.libraryapi.repository.GenreRepository;
-import org.mapstruct.BeforeMapping;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
+import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
@@ -16,40 +13,13 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
-public abstract class GenreMapper implements BaseMapper<GenreDTO, Genre> {
+public interface GenreMapper extends CustomMapper<Genre, GenreDTO> {
 
-    @Autowired
-    protected GenreRepository genreRepository;
+    @Override
+    @Mappings({
 
-    public abstract GenreDTO toDTO(Genre genre);
+    })
+    GenreDTO toDTO(Genre genre);
 
-    @Mapping(target = "bookGenres", ignore = true)
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
-    public abstract Genre toEntity(GenreDTO genreDTO);
-
-    @Mapping(target = "bookGenres", ignore = true)
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
-    public abstract Genre updateEntity(@MappingTarget Genre genre, GenreDTO genreDTO);
-
-    protected List<String> genreToName(Set<Genre> genres) {
-        return genres != null ? genres.stream()
-                .map(Genre::getName)
-                .toList() : null;
-    }
-
-    protected Set<Genre> nameToGenreEntity(List<String> genreNames) {
-        return genreNames != null ? genreNames.stream()
-                .map(name -> genreRepository.fetchByName(name).orElseThrow(() -> new NotFoundException("Genre with name of " + name + " does not exists")))
-                .collect(Collectors.toSet()) : null;
-    }
-    @BeforeMapping
-    protected void updateEntityBeforeMapping(@MappingTarget Genre genre, GenreDTO genreDTO) {
-        genreDTO.setUpdatedAt(LocalDateTime.now());
-    }
-    @BeforeMapping
-    protected void toEntityBeforeMapping(GenreDTO genreDTO) {
-        genreDTO.setCreatedAt(LocalDateTime.now());
-    }
+    Genre toEntity();
 }

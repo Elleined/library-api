@@ -1,44 +1,47 @@
 package com.elleined.libraryapi.service.book;
 
-import com.elleined.libraryapi.dto.BookDTO;
 import com.elleined.libraryapi.exception.FieldAlreadyExistsException;
 import com.elleined.libraryapi.exception.NotFoundException;
+import com.elleined.libraryapi.model.Author;
 import com.elleined.libraryapi.model.Book;
+import com.elleined.libraryapi.model.genre.Genre;
 
-import java.util.Collection;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 public interface BookService {
-    BookDTO getById(int id) throws NotFoundException;
+    Book getById(int id) throws NotFoundException;
 
-    BookDTO getByTitle(String title) throws NotFoundException;
+    Book getByIsbn(String isbn) throws NotFoundException;
 
-    BookDTO getByIsbn(String isbn) throws NotFoundException;
+    List<Book> getAllById(List<Integer> bookIds);
+    List<Book> getAllByTitleFirstLetter(char firstLetter);
 
-    List<BookDTO> getAllById(List<Integer> bookIds);
+    List<Book> getAll();
 
-    List<BookDTO> getAllByGenre(String genreName);
+    List<Book> getAll(int pageNumber, int pageSize);
 
-    List<BookDTO> getAllByTitleFirstLetter(char firstLetter);
+    List<Book> getAll(int pageNumber, int pageSize, String sortDirection, String sortProperty);
 
-    List<BookDTO> getAll();
+    List<Book> saveAll(List<Book> books);
 
-    List<BookDTO> getAll(int pageNumber, int pageSize);
+    Book save(String title,
+              String isbn,
+              String description,
+              LocalDate publishedDate,
+              int pages,
+              Author author,
+              Set<Genre> genres) throws FieldAlreadyExistsException, NotFoundException;
 
-    List<BookDTO> getAll(int pageNumber, int pageSize, String sortDirection, String sortProperty);
-
-    List<BookDTO> saveAll(Collection<BookDTO> books);
-
-    BookDTO save(BookDTO bookDTO) throws FieldAlreadyExistsException, NotFoundException;
-
-    void update(int id, BookDTO bookDTO) throws FieldAlreadyExistsException, IllegalArgumentException;
+    void update(Book book,
+                String title,
+                String isbn,
+                String description,
+                LocalDate publishedDate,
+                int pages,
+                Author author,
+                Set<Genre> genres) throws FieldAlreadyExistsException, IllegalArgumentException;
 
     boolean isbnAlreadyExists(String isbn);
-
-    boolean isGenreNotValid(List<String> genres);
-
-    default void addBookViewCount(Book book) {
-        book.setViews(book.getViews() + 1);
-        bookRepository.save(book);
-    }
 }
