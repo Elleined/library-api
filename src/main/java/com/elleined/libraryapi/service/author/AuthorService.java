@@ -1,6 +1,5 @@
 package com.elleined.libraryapi.service.author;
 
-import com.elleined.libraryapi.dto.AuthorDTO;
 import com.elleined.libraryapi.exception.FieldAlreadyExistsException;
 import com.elleined.libraryapi.exception.NotFoundException;
 import com.elleined.libraryapi.model.Author;
@@ -25,9 +24,9 @@ public interface AuthorService {
 
     List<Author> saveAll(List<Author> authors);
 
-    Author save(AuthorDTO authorDTO) throws FieldAlreadyExistsException;
+    Author save(String name, String biography) throws FieldAlreadyExistsException;
 
-    void update(int id, AuthorDTO authorDTO) throws NotFoundException, FieldAlreadyExistsException;
+    void update(Author author, String name, String biography) throws NotFoundException, FieldAlreadyExistsException;
 
     boolean isNameAlreadyExists(String authorName);
 }

@@ -55,5 +55,11 @@ public class Author {
 
     // author id reference is in book table
     @OneToMany(mappedBy = "author")
-    private List<Book> bookList;
+    private List<Book> books;
+
+    public List<Integer> getBookIds() {
+        return this.getBooks().stream()
+                .map(Book::getId)
+                .toList();
+    }
 }

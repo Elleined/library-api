@@ -1,6 +1,5 @@
 package com.elleined.libraryapi.service.author;
 
-import com.elleined.libraryapi.dto.AuthorDTO;
 import com.elleined.libraryapi.exception.FieldAlreadyExistsException;
 import com.elleined.libraryapi.exception.NotFoundException;
 import com.elleined.libraryapi.mapper.AuthorMapper;
@@ -32,7 +31,7 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public List<Book> getAllBooks(Author author) throws NotFoundException {
-        return author.getBookList();
+        return author.getBooks();
     }
 
     @Override
@@ -68,22 +67,19 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public Author save(AuthorDTO authorDTO) throws FieldAlreadyExistsException {
-        if (isNameAlreadyExists(authorDTO.getName())) throw new FieldAlreadyExistsException("Author with name of " + authorDTO.getName() + " already exists");
-        Author author = authorMapper.toEntity(authorDTO);
+    public Author save(String name, String biography) throws FieldAlreadyExistsException {
+        if (isNameAlreadyExists(name)) throw new FieldAlreadyExistsException("Author with name of " + name + " already exists");
+        Author author = authorMapper.toEntity(name, biography);
         authorRepository.save(author);
         log.debug("Author with id of {} saved successfully!", author.getId());
         return author;
     }
-
     @Override
-    public void update(int id, AuthorDTO authorDTO) throws NotFoundException, FieldAlreadyExistsException {
-        Author author = authorRepository.findById(id).orElseThrow(() -> new NotFoundException("Author with id of " + id + " does not exists"));
-
-        authorMapper.updateEntity(author, authorDTO);
+    public void update(Author author, String name, String biography) throws NotFoundException, FieldAlreadyExistsException {
+        author.setName(name);
+        author.setBiography(biography);
         authorRepository.save(author);
-
-        log.debug("Author with id of {} updated successfully", id);
+        log.debug("Author with id of {} updated successfully", author.getId());
     }
 
     @Override

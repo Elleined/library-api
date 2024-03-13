@@ -6,6 +6,7 @@ import lombok.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(
@@ -95,4 +96,10 @@ public class Book {
             )
     )
     private Set<Genre> genres;
+
+    public Set<Integer> getGenreIds() {
+        return this.getGenres().stream()
+                .map(Genre::getId)
+                .collect(Collectors.toSet());
+    }
 }

@@ -1,63 +1,52 @@
 package com.elleined.libraryapi.mapper;
 
 import com.elleined.libraryapi.dto.BookDTO;
-import com.elleined.libraryapi.exception.NotFoundException;
 import com.elleined.libraryapi.model.Author;
 import com.elleined.libraryapi.model.Book;
-import com.elleined.libraryapi.repository.AuthorRepository;
-import org.mapstruct.BeforeMapping;
+import com.elleined.libraryapi.model.Genre;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mapstruct.Mappings;
 
-import java.time.LocalDateTime;
-import java.util.List;
+import java.time.LocalDate;
+import java.util.Set;
 
 @Mapper(componentModel = "spring", uses = GenreMapper.class)
-public abstract class BookMapper implements BaseMapper<BookDTO, Book> {
+public interface BookMapper extends CustomMapper<Book, BookDTO> {
 
-    @Autowired
-    protected AuthorRepository authorRepository;
+    @Override
+    @Mappings({
+            @Mapping(target = "id", source = "id"),
+            @Mapping(target = "title", source = "title"),
+            @Mapping(target = "isbn", source = "isbn"),
+            @Mapping(target = "description", source = "description"),
+            @Mapping(target = "publishedDate", source = "publishedDate"),
+            @Mapping(target = "pages", source = "pages"),
+            @Mapping(target = "createdAt", source = "createdAt"),
+            @Mapping(target = "updatedAt", source = "updatedAt"),
+            @Mapping(target = "authorId", source = "author.id"),
+            @Mapping(target = "genreIds", expression = "java(book.getGenreIds())")
+    })
+    BookDTO toDTO(Book book);
 
-    @Mapping(target = "authorName", source = "author.name")
-    @Mapping(target = "genres", source = "genres")
-    public abstract BookDTO toDTO(Book book);
-
-    @Mapping(target = "author", expression = "java(this.getByName(bookDTO.getAuthorName()))")
-    @Mapping(target = "genres", source = "genres")
-    @Mapping(target = "updatedAt", ignore = true)
-    @Mapping(target = "id", ignore = true)
-    public abstract Book toEntity(BookDTO bookDTO);
-
-    @Mapping(target = "author", expression = "java(this.getByName(bookDTO.getAuthorName()))")
-    @Mapping(target = "genres", source = "genres")
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "views", ignore = true)
-    public abstract Book updateEntity(@MappingTarget Book book, BookDTO bookDTO);
-
-    protected List<String> mapBookTitle(List<Book> books) {
-        return books != null ? books.stream()
-                .map(Book::getTitle)
-                .toList() : null;
-    }
-
-    protected int getBookCount(Author author) {
-        return author.getBookList() != null ? author.getBookList().size() : 0;
-    }
-
-    protected Author getByName(String authorName) throws NotFoundException {
-        return authorRepository.fetchByName(authorName).orElseThrow(() -> new NotFoundException("Author with name of " + authorName + " does not exists!"));
-    }
-
-    @BeforeMapping
-    protected void toEntityBeforeMapping(BookDTO bookDTO) {
-        bookDTO.setCreatedAt(LocalDateTime.now());
-    }
-
-    @BeforeMapping
-    protected void updateEntityBeforeMapping(@MappingTarget Book book, BookDTO bookDTO) {
-        bookDTO.setUpdatedAt(LocalDateTime.now());
-    }
+    @Mappings({
+            @Mapping(target = "id", ignore = true),
+            @Mapping(target = "views", expression = "java(0)"),
+            @Mapping(target = "title", expression = "java(title)"),
+            @Mapping(target = "isbn", expression = "java(isbn)"),
+            @Mapping(target = "description", expression = "java(description)"),
+            @Mapping(target = "publishedDate", expression = "java(publishedDate)"),
+            @Mapping(target = "pages", expression = "java(pages)"),
+            @Mapping(target = "createdAt", expression = "java(java.time.LocalDateTime.now())"),
+            @Mapping(target = "updatedAt", expression = "java(java.time.LocalDateTime.now())"),
+            @Mapping(target = "author", expression = "java(author)"),
+            @Mapping(target = "genres", expression = "java(genres)")
+    })
+    Book toEntity(String title,
+                  String isbn,
+                  String description,
+                  LocalDate publishedDate,
+                  int pages,
+                  Author author,
+                  Set<Genre> genres);
 }

@@ -68,7 +68,7 @@ public class AuthorController {
 
     @PostMapping
     public AuthorDTO save(@Valid @RequestBody AuthorDTO authorDTO) {
-        return authorService.save(authorDTO);
+        return authorService.save(, authorDTO, );
     }
 
     @PostMapping("/save-all")
@@ -80,7 +80,7 @@ public class AuthorController {
     public AuthorDTO update(@PathVariable("id") int authorId,
                             @Valid @RequestBody AuthorDTO authorDTO) {
 
-        authorService.update(authorId, authorDTO);
+        authorService.update(authorId, , authorDTO, );
         return authorService.getById(authorId);
     }
 }
