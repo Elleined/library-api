@@ -2,7 +2,6 @@ package com.elleined.libraryapi.dto;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
@@ -10,7 +9,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Set;
+
 @Data
 @Builder
 public class BookDTO {
@@ -32,14 +32,12 @@ public class BookDTO {
     @Min(value = 10, message = "Book pages cannot be less than 10")
     private int pages;
 
-    @NotBlank(message = "Book author cannot be null or empty")
-    private String authorName;
+    private int views;
 
-    @NotEmpty(message = "Book genres cannot null or empty")
-    private List<String> genres;
+    private int authorId;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private int views;
-    private int saleCount;
+
+    private Set<Integer> genreIds;
 }

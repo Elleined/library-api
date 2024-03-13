@@ -3,7 +3,6 @@ package com.elleined.libraryapi.service.book;
 import com.elleined.libraryapi.dto.BookDTO;
 import com.elleined.libraryapi.exception.FieldAlreadyExistsException;
 import com.elleined.libraryapi.exception.NotFoundException;
-import com.elleined.libraryapi.mapper.BookMapper;
 import com.elleined.libraryapi.model.Book;
 import com.elleined.libraryapi.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
