@@ -1,9 +1,9 @@
-package com.elleined.bookauthorgenreapi.mapper;
+package com.elleined.libraryapi.mapper;
 
-import com.elleined.bookauthorgenreapi.dto.GenreDTO;
-import com.elleined.bookauthorgenreapi.exception.NotFoundException;
-import com.elleined.bookauthorgenreapi.model.Genre;
-import com.elleined.bookauthorgenreapi.repository.GenreRepository;
+import com.elleined.libraryapi.dto.GenreDTO;
+import com.elleined.libraryapi.exception.NotFoundException;
+import com.elleined.libraryapi.model.Genre;
+import com.elleined.libraryapi.repository.GenreRepository;
 import org.mapstruct.BeforeMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

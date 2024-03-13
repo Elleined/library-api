@@ -1,7 +1,7 @@
-package com.elleined.bookauthorgenreapi.controller;
+package com.elleined.libraryapi.controller;
 
-import com.elleined.bookauthorgenreapi.dto.BookDTO;
-import com.elleined.bookauthorgenreapi.service.BookService;
+import com.elleined.libraryapi.dto.BookDTO;
+import com.elleined.libraryapi.service.book.BookService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

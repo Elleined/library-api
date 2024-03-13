@@ -1,4 +1,4 @@
-package com.elleined.bookauthorgenreapi.mapper;
+package com.elleined.libraryapi.mapper;
 
 import java.util.List;
  public interface BaseMapper<DTO, ENTITY> {

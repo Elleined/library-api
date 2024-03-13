@@ -1,11 +1,11 @@
-package com.elleined.bookauthorgenreapi.service;
+package com.elleined.libraryapi.service.genre;
 
-import com.elleined.bookauthorgenreapi.dto.GenreDTO;
-import com.elleined.bookauthorgenreapi.exception.FieldAlreadyExistsException;
-import com.elleined.bookauthorgenreapi.exception.NotFoundException;
-import com.elleined.bookauthorgenreapi.mapper.GenreMapper;
-import com.elleined.bookauthorgenreapi.model.Genre;
-import com.elleined.bookauthorgenreapi.repository.GenreRepository;
+import com.elleined.libraryapi.dto.GenreDTO;
+import com.elleined.libraryapi.exception.FieldAlreadyExistsException;
+import com.elleined.libraryapi.exception.NotFoundException;
+import com.elleined.libraryapi.mapper.GenreMapper;
+import com.elleined.libraryapi.model.Genre;
+import com.elleined.libraryapi.repository.GenreRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;

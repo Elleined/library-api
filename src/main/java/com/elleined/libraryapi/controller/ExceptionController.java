@@ -1,8 +1,8 @@
-package com.elleined.bookauthorgenreapi.controller;
+package com.elleined.libraryapi.controller;
 
-import com.elleined.bookauthorgenreapi.dto.ResponseMessage;
-import com.elleined.bookauthorgenreapi.exception.FieldAlreadyExistsException;
-import com.elleined.bookauthorgenreapi.exception.NotFoundException;
+import com.elleined.libraryapi.dto.ResponseMessage;
+import com.elleined.libraryapi.exception.FieldAlreadyExistsException;
+import com.elleined.libraryapi.exception.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;

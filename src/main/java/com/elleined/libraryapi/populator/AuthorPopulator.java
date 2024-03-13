@@ -1,7 +1,7 @@
-package com.elleined.bookauthorgenreapi.populator;
+package com.elleined.libraryapi.populator;
 
-import com.elleined.bookauthorgenreapi.dto.AuthorDTO;
-import com.elleined.bookauthorgenreapi.service.AuthorService;
+import com.elleined.libraryapi.dto.AuthorDTO;
+import com.elleined.libraryapi.service.author.AuthorService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Qualifier;

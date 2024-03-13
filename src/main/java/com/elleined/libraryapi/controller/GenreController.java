@@ -1,7 +1,7 @@
-package com.elleined.bookauthorgenreapi.controller;
+package com.elleined.libraryapi.controller;
 
-import com.elleined.bookauthorgenreapi.dto.GenreDTO;
-import com.elleined.bookauthorgenreapi.service.GenreService;
+import com.elleined.libraryapi.dto.GenreDTO;
+import com.elleined.libraryapi.service.genre.GenreService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

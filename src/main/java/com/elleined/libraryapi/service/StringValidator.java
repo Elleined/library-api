@@ -1,4 +1,4 @@
-package com.elleined.bookauthorgenreapi.service;
+package com.elleined.libraryapi.service;
 
 public interface StringValidator {
 

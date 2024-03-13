@@ -1,4 +1,4 @@
-package com.elleined.bookauthorgenreapi.model;
+package com.elleined.libraryapi.model;
 
 import jakarta.persistence.*;
 import lombok.*;

@@ -1,4 +1,4 @@
-package com.elleined.bookauthorgenreapi.dto;
+package com.elleined.libraryapi.dto;
 
 import lombok.Builder;
 import lombok.Data;

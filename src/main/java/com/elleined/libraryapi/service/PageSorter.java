@@ -1,4 +1,4 @@
-package com.elleined.bookauthorgenreapi.service;
+package com.elleined.libraryapi.service;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

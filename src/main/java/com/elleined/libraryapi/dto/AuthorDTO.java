@@ -1,4 +1,4 @@
-package com.elleined.bookauthorgenreapi.dto;
+package com.elleined.libraryapi.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;

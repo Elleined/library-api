@@ -1,7 +1,7 @@
-package com.elleined.bookauthorgenreapi.mapper;
+package com.elleined.libraryapi.mapper;
 
-import com.elleined.bookauthorgenreapi.dto.AuthorDTO;
-import com.elleined.bookauthorgenreapi.model.Author;
+import com.elleined.libraryapi.dto.AuthorDTO;
+import com.elleined.libraryapi.model.Author;
 import org.mapstruct.*;
 
 import java.time.LocalDateTime;

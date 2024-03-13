@@ -1,10 +1,10 @@
-package com.elleined.bookauthorgenreapi.mapper;
+package com.elleined.libraryapi.mapper;
 
-import com.elleined.bookauthorgenreapi.dto.BookDTO;
-import com.elleined.bookauthorgenreapi.exception.NotFoundException;
-import com.elleined.bookauthorgenreapi.model.Author;
-import com.elleined.bookauthorgenreapi.model.Book;
-import com.elleined.bookauthorgenreapi.repository.AuthorRepository;
+import com.elleined.libraryapi.dto.BookDTO;
+import com.elleined.libraryapi.exception.NotFoundException;
+import com.elleined.libraryapi.model.Author;
+import com.elleined.libraryapi.model.Book;
+import com.elleined.libraryapi.repository.AuthorRepository;
 import org.mapstruct.BeforeMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
