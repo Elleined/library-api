@@ -1,5 +1,7 @@
 package com.elleined.libraryapi.service.book;
 
+import com.elleined.libraryapi.dto.AuthorDTO;
+import com.elleined.libraryapi.dto.BookDTO;
 import com.elleined.libraryapi.exception.FieldAlreadyExistsException;
 import com.elleined.libraryapi.exception.NotFoundException;
 import com.elleined.libraryapi.model.Author;
@@ -23,6 +25,8 @@ public interface BookService {
     List<Book> getAll(int pageNumber, int pageSize);
 
     List<Book> getAll(int pageNumber, int pageSize, String sortDirection, String sortProperty);
+
+    Set<Book> saveAll(Set<BookDTO> bookDTOS);
 
     Book save(String title,
               String isbn,

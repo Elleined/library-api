@@ -1,7 +1,10 @@
 package com.elleined.libraryapi.service.genre;
 
+import com.elleined.libraryapi.dto.AuthorDTO;
+import com.elleined.libraryapi.dto.GenreDTO;
 import com.elleined.libraryapi.exception.FieldAlreadyExistsException;
 import com.elleined.libraryapi.exception.NotFoundException;
+import com.elleined.libraryapi.model.Author;
 import com.elleined.libraryapi.model.Book;
 import com.elleined.libraryapi.model.Genre;
 
@@ -22,6 +25,8 @@ public interface GenreService {
     List<Genre> getAll(int pageNumber, int pageSize);
 
     List<Genre> getAll(int pageNumber, int pageSize, String sortDirection, String sortProperty);
+
+    Set<Genre> saveAll(Set<GenreDTO> genreDTOS);
 
     Genre save(String genreName) throws FieldAlreadyExistsException, IllegalArgumentException;
 

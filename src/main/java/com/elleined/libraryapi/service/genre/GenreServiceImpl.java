@@ -1,5 +1,6 @@
 package com.elleined.libraryapi.service.genre;
 
+import com.elleined.libraryapi.dto.GenreDTO;
 import com.elleined.libraryapi.exception.FieldAlreadyExistsException;
 import com.elleined.libraryapi.exception.NotFoundException;
 import com.elleined.libraryapi.mapper.GenreMapper;
@@ -13,8 +14,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,13 +34,13 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
-    public Genre getById(int id) throws NotFoundException {
+    public Genre getById(int id) {
         return genreRepository.findById(id).orElseThrow(() -> new NotFoundException("Genre does not exists"));
     }
 
     @Override
     public Set<Genre> getAllById(Set<Integer> ids) {
-        return genreRepository.findAllById(ids);
+        return new HashSet<>(genreRepository.findAllById(ids));
     }
 
     @Override
@@ -63,6 +66,11 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
+    public Set<Genre> saveAll(Set<GenreDTO> genreDTOS) {
+        return null;
+    }
+
+    @Override
     public Genre save(String name) {
         if (isNameAlreadyExists(name)) throw new FieldAlreadyExistsException("Genre with name of " + name + " already exists");
         Genre genre = genreMapper.toEntity(name);
@@ -72,7 +80,7 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
-    public void update(Genre genre, String newGenreName) throws NotFoundException, FieldAlreadyExistsException, IllegalArgumentException {
+    public void update(Genre genre, String newGenreName) {
         if (isNameAlreadyExists(newGenreName)) throw new FieldAlreadyExistsException("Genre with name of " + newGenreName + " already exists");
         genre.setName(newGenreName);
         genreRepository.save(genre);

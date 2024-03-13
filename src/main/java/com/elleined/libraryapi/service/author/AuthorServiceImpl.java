@@ -1,5 +1,6 @@
 package com.elleined.libraryapi.service.author;
 
+import com.elleined.libraryapi.dto.AuthorDTO;
 import com.elleined.libraryapi.exception.FieldAlreadyExistsException;
 import com.elleined.libraryapi.exception.NotFoundException;
 import com.elleined.libraryapi.mapper.AuthorMapper;
@@ -14,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -25,12 +28,12 @@ public class AuthorServiceImpl implements AuthorService {
     private final AuthorMapper authorMapper;
 
     @Override
-    public Author getById(int id) throws NotFoundException {
+    public Author getById(int id) {
         return authorRepository.findById(id).orElseThrow(() -> new NotFoundException("Author with id of " + id + " does not exists"));
     }
 
     @Override
-    public List<Book> getAllBooks(Author author) throws NotFoundException {
+    public List<Book> getAllBooks(Author author) {
         return author.getBooks();
     }
 
@@ -62,15 +65,26 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public Author save(String name, String biography) throws FieldAlreadyExistsException {
+    public Author save(String name, String biography) {
         if (isNameAlreadyExists(name)) throw new FieldAlreadyExistsException("Author with name of " + name + " already exists");
         Author author = authorMapper.toEntity(name, biography);
         authorRepository.save(author);
         log.debug("Author with id of {} saved successfully!", author.getId());
         return author;
     }
+
     @Override
-    public void update(Author author, String name, String biography) throws NotFoundException, FieldAlreadyExistsException {
+    public Set<Author> saveAll(Set<AuthorDTO> authorDTOS) {
+        Set<Author> authors = authorDTOS.stream()
+                .map(authorDTO -> authorMapper.toEntity(authorDTO.getName(), authorDTO.getBiography()))
+                .collect(Collectors.toSet());
+
+        authorRepository.saveAll(authors);
+        log.debug("Saving pre-defined authors success...");
+    }
+
+    @Override
+    public void update(Author author, String name, String biography) {
         author.setName(name);
         author.setBiography(biography);
         authorRepository.save(author);

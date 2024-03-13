@@ -1,5 +1,6 @@
 package com.elleined.libraryapi.service.book;
 
+import com.elleined.libraryapi.dto.BookDTO;
 import com.elleined.libraryapi.exception.FieldAlreadyExistsException;
 import com.elleined.libraryapi.exception.NotFoundException;
 import com.elleined.libraryapi.mapper.BookMapper;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -28,12 +30,12 @@ public class BookServiceImpl implements BookService {
     private final BookMapper bookMapper;
 
     @Override
-    public Book getById(int id) throws NotFoundException {
+    public Book getById(int id) {
         return bookRepository.findById(id).orElseThrow(() -> new NotFoundException("Book with id of " + id + " does not exists"));
     }
 
     @Override
-    public Book getByIsbn(String isbn) throws NotFoundException {
+    public Book getByIsbn(String isbn) {
         return bookRepository.findAll().stream()
                 .filter(book -> book.getIsbn().equals(isbn))
                 .findFirst()
@@ -68,7 +70,20 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Book save(String title, String isbn, String description, LocalDate publishedDate, int pages, Author author, Set<Genre> genres) throws FieldAlreadyExistsException, NotFoundException {
+    public Set<Book> saveAll(Set<BookDTO> bookDTOS) {
+        Set<Book> books = bookDTOS.stream()
+                .map(bookDTO -> {
+                    Author author = auth
+                    return bookMapper.toEntity(bookDTO.getTitle(), bookDTO.getIsbn(), bookDTO.getDescription(), bookDTO.getPublishedDate(), bookDTO.getPages(), );
+                })
+                .collect(Collectors.toSet());
+
+        bookRepository.saveAll(books);
+        log.debug("Saving pre-defined books success...");
+    }
+
+    @Override
+    public Book save(String title, String isbn, String description, LocalDate publishedDate, int pages, Author author, Set<Genre> genres) {
         if (isbnAlreadyExists(isbn)) throw new FieldAlreadyExistsException("Book with isbn of " + isbn + " already exists!");
 
         Book book = bookMapper.toEntity(title, isbn, description, publishedDate, pages, author, genres);
@@ -85,7 +100,7 @@ public class BookServiceImpl implements BookService {
                        LocalDate publishedDate,
                        int pages,
                        Author author,
-                       Set<Genre> genres) throws FieldAlreadyExistsException, IllegalArgumentException {
+                       Set<Genre> genres) {
 
         if (isbnAlreadyExists(isbn)) throw new FieldAlreadyExistsException("Book with isbn of " + isbn + " already exists!");
 
