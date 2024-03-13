@@ -8,7 +8,7 @@ import java.util.List;
 
 @Entity
 @Table(
-        name = "author",
+        name = "tbl_author",
         indexes = @Index(name = "author_name_idx", columnList = "name")
 )
 @Builder

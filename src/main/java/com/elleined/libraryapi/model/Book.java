@@ -1,6 +1,5 @@
 package com.elleined.libraryapi.model;
 
-import com.elleined.libraryapi.model.genre.Genre;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,7 +10,7 @@ import java.util.stream.Collectors;
 
 @Entity
 @Table(
-        name = "book",
+        name = "tbl_book",
         indexes = @Index(name = "book_title_idx", columnList = "title")
 )
 @Builder
@@ -84,7 +83,7 @@ public class Book {
 
     @ManyToMany
     @JoinTable(
-            name = "book_genre",
+            name = "tbl_book_genres",
             joinColumns = @JoinColumn(
                     name = "book_id",
                     referencedColumnName = "id",

@@ -3,9 +3,8 @@ package com.elleined.libraryapi.service.genre;
 import com.elleined.libraryapi.exception.FieldAlreadyExistsException;
 import com.elleined.libraryapi.exception.NotFoundException;
 import com.elleined.libraryapi.model.Book;
-import com.elleined.libraryapi.model.genre.Genre;
+import com.elleined.libraryapi.model.Genre;
 
-import java.util.Collection;
 import java.util.List;
 
 public interface GenreService {

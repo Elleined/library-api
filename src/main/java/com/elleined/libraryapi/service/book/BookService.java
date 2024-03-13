@@ -4,7 +4,7 @@ import com.elleined.libraryapi.exception.FieldAlreadyExistsException;
 import com.elleined.libraryapi.exception.NotFoundException;
 import com.elleined.libraryapi.model.Author;
 import com.elleined.libraryapi.model.Book;
-import com.elleined.libraryapi.model.genre.Genre;
+import com.elleined.libraryapi.model.Genre;
 
 import java.time.LocalDate;
 import java.util.List;

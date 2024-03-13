@@ -5,7 +5,7 @@ import com.elleined.libraryapi.exception.NotFoundException;
 import com.elleined.libraryapi.mapper.BookMapper;
 import com.elleined.libraryapi.model.Author;
 import com.elleined.libraryapi.model.Book;
-import com.elleined.libraryapi.model.genre.Genre;
+import com.elleined.libraryapi.model.Genre;
 import com.elleined.libraryapi.repository.BookRepository;
 import com.elleined.libraryapi.service.PageSorter;
 import lombok.RequiredArgsConstructor;

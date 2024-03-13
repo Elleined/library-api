@@ -1,4 +1,4 @@
-package com.elleined.libraryapi.model.genre;
+package com.elleined.libraryapi.model;
 
 import com.elleined.libraryapi.model.Book;
 import jakarta.persistence.*;
@@ -6,10 +6,11 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(
-        name = "genre",
+        name = "tbl_genre",
         indexes = @Index(name = "genre_name_idx", columnList = "name")
 )
 @Builder
@@ -49,5 +50,11 @@ public class Genre {
     private LocalDateTime updatedAt;
 
     @ManyToMany(mappedBy = "genres")
-    private Set<Book> bookGenres;
+    private Set<Book> books;
+
+    public Set<Integer> getBookIds() {
+        return this.getBooks().stream()
+                .map(Book::getId)
+                .collect(Collectors.toSet());
+    }
 }
