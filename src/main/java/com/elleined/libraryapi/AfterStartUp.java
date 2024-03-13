@@ -3,12 +3,10 @@ package com.elleined.libraryapi;
 import com.elleined.libraryapi.populator.AuthorPopulator;
 import com.elleined.libraryapi.populator.BookPopulator;
 import com.elleined.libraryapi.populator.GenrePopulator;
-import com.elleined.libraryapi.populator.Populator;
 import com.elleined.libraryapi.repository.GenreRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;

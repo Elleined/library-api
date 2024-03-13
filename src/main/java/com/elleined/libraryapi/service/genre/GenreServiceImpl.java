@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -67,7 +68,13 @@ public class GenreServiceImpl implements GenreService {
 
     @Override
     public Set<Genre> saveAll(Set<GenreDTO> genreDTOS) {
-        return null;
+        Set<Genre> genres = genreDTOS.stream()
+                .map(genreDTO -> genreMapper.toEntity(genreDTO.getName()))
+                .collect(Collectors.toSet());
+
+        genreRepository.saveAll(genres);
+        log.debug("Saving pre-defined genres success...");
+        return genres;
     }
 
     @Override
@@ -83,6 +90,7 @@ public class GenreServiceImpl implements GenreService {
     public void update(Genre genre, String newGenreName) {
         if (isNameAlreadyExists(newGenreName)) throw new FieldAlreadyExistsException("Genre with name of " + newGenreName + " already exists");
         genre.setName(newGenreName);
+        genre.setUpdatedAt(LocalDateTime.now());
         genreRepository.save(genre);
         log.debug("Genre with id of {} updated successfully", genre.getId());
     }

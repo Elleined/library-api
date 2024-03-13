@@ -1,10 +1,8 @@
 package com.elleined.libraryapi.service.genre;
 
-import com.elleined.libraryapi.dto.AuthorDTO;
 import com.elleined.libraryapi.dto.GenreDTO;
 import com.elleined.libraryapi.exception.FieldAlreadyExistsException;
 import com.elleined.libraryapi.exception.NotFoundException;
-import com.elleined.libraryapi.model.Author;
 import com.elleined.libraryapi.model.Book;
 import com.elleined.libraryapi.model.Genre;
 

@@ -6,7 +6,7 @@
     "pages": 192,
     "publishedDate": "2010-06-01",
     "authorId": 1,
-    "genres": [
+    "genreIds": [
       11
     ]
   },
@@ -17,7 +17,7 @@
     "pages": 608,
     "publishedDate": "2023-01-01",
     "authorId": 1,
-    "genres": [
+    "genreIds": [
       1, 12, 7, 11
     ]
   },
@@ -28,7 +28,7 @@
     "pages": 240,
     "publishedDate": "2007-01-01",
     "authorId": 2,
-    "genres": [
+    "genreIds": [
       8, 14, 15
     ]
   },
@@ -39,7 +39,7 @@
     "pages": 136,
     "publishedDate": "2011-02-01",
     "authorId": 2,
-    "genres": [
+    "genreIds": [
       6, 14, 15
     ]
   },
@@ -50,7 +50,7 @@
     "pages": 418,
     "publishedDate": "2002-09-01",
     "authorId": 3,
-    "genres": [
+    "genreIds": [
       1, 16
     ]
   },
@@ -61,7 +61,7 @@
     "pages": 384,
     "publishedDate": "2000-07-01",
     "authorId": 3,
-    "genres": [
+    "genreIds": [
       1, 12
     ]
   },
@@ -72,7 +72,7 @@
     "pages": 480,
     "publishedDate": "1981-01-01",
     "authorId": 4,
-    "genres": [
+    "genreIds": [
       7, 12
     ]
   },
@@ -83,7 +83,7 @@
     "pages": 464,
     "publishedDate": "2019-05-01",
     "authorId": 4,
-    "genres": [
+    "genreIds": [
       12, 10, 7, 5, 9
     ]
   },
@@ -94,7 +94,7 @@
     "pages": 32,
     "publishedDate": "2013-01-01",
     "authorId": 5,
-    "genres": [
+    "genreIds": [
       1
     ]
   },
@@ -105,7 +105,7 @@
     "pages": 288,
     "publishedDate": "2015-07-01",
     "authorId": 5,
-    "genres": [
+    "genreIds": [
       8, 11, 15, 1
     ]
   },
@@ -116,7 +116,7 @@
     "pages": 320,
     "publishedDate": "1937-01-15",
     "authorId": 6,
-    "genres": [
+    "genreIds": [
       15, 4, 8
     ]
   },
@@ -127,7 +127,7 @@
     "pages": 464,
     "publishedDate": "2021-09-01",
     "authorId": 6,
-    "genres": [
+    "genreIds": [
       1, 15, 3, 4, 8
     ]
   },
@@ -138,7 +138,7 @@
     "pages": 64,
     "publishedDate": "2001-06-01",
     "authorId": 7,
-    "genres": [
+    "genreIds": [
       15, 8
     ]
   },
@@ -149,7 +149,7 @@
     "pages": 304,
     "publishedDate": "2018-01-01",
     "authorId": 7,
-    "genres": [
+    "genreIds": [
       15, 8, 2
     ]
   },
@@ -160,7 +160,7 @@
     "pages": 92,
     "publishedDate": "2014-05-01",
     "authorId": 8,
-    "genres": [
+    "genreIds": [
       15, 8
     ]
   },
@@ -171,7 +171,7 @@
     "pages": 356,
     "publishedDate": "2017-01-01",
     "authorId": 8,
-    "genres": [
+    "genreIds": [
       15, 8
     ]
   },
@@ -182,7 +182,7 @@
     "pages": 240,
     "publishedDate": "2010-08-01",
     "authorId": 9,
-    "genres": [
+    "genreIds": [
       1
     ]
   },
@@ -193,7 +193,7 @@
     "pages": 128,
     "publishedDate": "1996-05-01",
     "authorId": 9,
-    "genres": [
+    "genreIds": [
       1
     ]
   },
@@ -204,7 +204,7 @@
     "pages": 224,
     "publishedDate": "2001-01-01",
     "authorId": 10,
-    "genres": [
+    "genreIds": [
       12
     ]
   },
@@ -215,7 +215,7 @@
     "pages": 243,
     "publishedDate": "2009-01-01",
     "authorId": 10,
-    "genres": [
+    "genreIds": [
       12, 13
     ]
   }

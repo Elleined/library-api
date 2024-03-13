@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -81,12 +82,14 @@ public class AuthorServiceImpl implements AuthorService {
 
         authorRepository.saveAll(authors);
         log.debug("Saving pre-defined authors success...");
+        return authors;
     }
 
     @Override
     public void update(Author author, String name, String biography) {
         author.setName(name);
         author.setBiography(biography);
+        author.setUpdatedAt(LocalDateTime.now());
         authorRepository.save(author);
         log.debug("Author with id of {} updated successfully", author.getId());
     }

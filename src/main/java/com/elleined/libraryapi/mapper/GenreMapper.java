@@ -24,7 +24,7 @@ public interface GenreMapper extends CustomMapper<Genre, GenreDTO> {
             @Mapping(target = "name", expression = "java(name)"),
             @Mapping(target = "createdAt", expression = "java(java.time.LocalDateTime.now())"),
             @Mapping(target = "updatedAt", expression = "java(java.time.LocalDateTime.now())"),
-            @Mapping(target = "books", expression = "java(new java.util.ArrayList<>())"),
+            @Mapping(target = "books", expression = "java(new java.util.HashSet<>())"),
     })
     Genre toEntity(String name);
 }

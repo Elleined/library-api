@@ -1,6 +1,5 @@
 package com.elleined.libraryapi.service.book;
 
-import com.elleined.libraryapi.dto.AuthorDTO;
 import com.elleined.libraryapi.dto.BookDTO;
 import com.elleined.libraryapi.exception.FieldAlreadyExistsException;
 import com.elleined.libraryapi.exception.NotFoundException;

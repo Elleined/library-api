@@ -9,6 +9,8 @@ import com.elleined.libraryapi.model.Book;
 import com.elleined.libraryapi.model.Genre;
 import com.elleined.libraryapi.repository.BookRepository;
 import com.elleined.libraryapi.service.PageSorter;
+import com.elleined.libraryapi.service.author.AuthorService;
+import com.elleined.libraryapi.service.genre.GenreService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -28,6 +31,9 @@ public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
     private final BookMapper bookMapper;
+
+    private final AuthorService authorService;
+    private final GenreService genreService;
 
     @Override
     public Book getById(int id) {
@@ -73,13 +79,15 @@ public class BookServiceImpl implements BookService {
     public Set<Book> saveAll(Set<BookDTO> bookDTOS) {
         Set<Book> books = bookDTOS.stream()
                 .map(bookDTO -> {
-                    Author author = auth
-                    return bookMapper.toEntity(bookDTO.getTitle(), bookDTO.getIsbn(), bookDTO.getDescription(), bookDTO.getPublishedDate(), bookDTO.getPages(), );
+                    Author author = authorService.getById(bookDTO.getAuthorId());
+                    Set<Genre> genres = genreService.getAllById(bookDTO.getGenreIds());
+                    return bookMapper.toEntity(bookDTO.getTitle(), bookDTO.getIsbn(), bookDTO.getDescription(), bookDTO.getPublishedDate(), bookDTO.getPages(), author, genres);
                 })
                 .collect(Collectors.toSet());
 
         bookRepository.saveAll(books);
         log.debug("Saving pre-defined books success...");
+        return books;
     }
 
     @Override
@@ -111,6 +119,7 @@ public class BookServiceImpl implements BookService {
         book.setPages(pages);
         book.setAuthor(author);
         book.setGenres(genres);
+        book.setUpdatedAt(LocalDateTime.now());
 
         bookRepository.save(book);
         log.debug("Book updated successfully");
