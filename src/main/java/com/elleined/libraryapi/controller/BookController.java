@@ -1,12 +1,17 @@
 package com.elleined.libraryapi.controller;
 
 import com.elleined.libraryapi.dto.BookDTO;
+import com.elleined.libraryapi.mapper.BookMapper;
+import com.elleined.libraryapi.model.Author;
+import com.elleined.libraryapi.model.Book;
+import com.elleined.libraryapi.model.Genre;
 import com.elleined.libraryapi.service.book.BookService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 @RequiredArgsConstructor
 @RestController
@@ -14,47 +19,48 @@ import java.util.List;
 public class BookController {
 
     private final BookService bookService;
+    private final BookMapper bookMapper;
 
     @GetMapping
     public List<BookDTO> getAll() {
-        return bookService.getAll();
+        return bookService.getAll().stream()
+                .map(bookMapper::toDTO)
+                .toList();
     }
 
     @GetMapping("/{id}")
     public BookDTO getById(@PathVariable("id") int bookId) {
-        return bookService.getById(bookId);
+        Book book = bookService.getById(bookId);
+        return bookMapper.toDTO(book);
     }
 
     @GetMapping("/get-all-by-id")
     public List<BookDTO> getAllById(@RequestParam("ids") List<Integer> bookIds) {
-        return bookService.getAllById(bookIds);
-    }
-
-    @GetMapping("/title/{title}")
-    public BookDTO getByTitle(@PathVariable("title") String bookTitle) {
-        return bookService.getByTitle(bookTitle);
+        return bookService.getAllById(bookIds).stream()
+                .map(bookMapper::toDTO)
+                .toList();
     }
 
     @GetMapping("/title")
     public List<BookDTO> getAllByTitleFirstLetter(@RequestParam("firstLetter") char firstLetter) {
-        return bookService.getAllByTitleFirstLetter(firstLetter);
-    }
-
-    @GetMapping("/genre/{genreName}")
-    public List<BookDTO> getAllByGenre(@PathVariable("genreName") String genreName) {
-        return bookService.getAllByGenre(genreName);
+        return bookService.getAllByTitleFirstLetter(firstLetter).stream()
+                .map(bookMapper::toDTO)
+                .toList();
     }
 
     @GetMapping("/isbn/{isbn}")
     public BookDTO getByIsbn(@PathVariable("isbn") String isbn) {
-        return bookService.getByIsbn(isbn);
+        Book book = bookService.getByIsbn(isbn);
+        return bookMapper.toDTO(book);
     }
 
     @GetMapping("/{pageNumber}/{pageSize}")
     public List<BookDTO> getAll(@PathVariable int pageNumber,
                                 @PathVariable int pageSize) {
 
-        return bookService.getAll(pageNumber, pageSize);
+        return bookService.getAll(pageNumber, pageSize).stream()
+                .map(bookMapper::toDTO)
+                .toList();
     }
 
     @GetMapping("/{pageNumber}/{pageSize}/{sortDirection}/{sortProperty}")
@@ -63,24 +69,35 @@ public class BookController {
                                 @PathVariable String sortDirection,
                                 @PathVariable String sortProperty) {
 
-        return bookService.getAll(pageNumber, pageSize, sortDirection, sortProperty);
+        return bookService.getAll(pageNumber, pageSize, sortDirection, sortProperty).stream()
+                .map(bookMapper::toDTO)
+                .toList();
     }
 
     @PostMapping
-    public BookDTO save(@Valid @RequestBody BookDTO bookDTO) {
-        return bookService.save(, bookDTO, , , , , , );
-    }
-
-    @PostMapping("/save-all")
-    public List<BookDTO> save(@RequestBody List<BookDTO> books) {
-        return bookService.saveAll(books);
+    public BookDTO save(@RequestParam("title") String title,
+                        @RequestParam("isbn") String isbn,
+                        @RequestParam("description") String description,
+                        @RequestParam("publishedDate") LocalDate publishedDate,
+                        @RequestParam("pages") int pages,
+                        @RequestParam("author") Author author,
+                        @RequestParam("genres") Set<Genre> genres) {
+        Book book = bookService.save(title, isbn, description, publishedDate, pages, author, genres);
+        return bookMapper.toDTO(book);
     }
 
     @PutMapping("/{id}")
     public BookDTO update(@PathVariable("id") int bookId,
-                                    @Valid @RequestBody BookDTO bookDTO) {
+                          @RequestParam("title") String title,
+                          @RequestParam("isbn") String isbn,
+                          @RequestParam("description") String description,
+                          @RequestParam("publishedDate") LocalDate publishedDate,
+                          @RequestParam("pages") int pages,
+                          @RequestParam("author") Author author,
+                          @RequestParam("genres") Set<Genre> genres) {
 
-        bookService.update(bookId, , bookDTO, , , , , , );
-        return bookService.getById(bookId);
+        Book book = bookService.getById(bookId);
+        bookService.update(book, title, isbn, description, publishedDate, pages, author, genres);
+        return bookMapper.toDTO(book);
     }
 }

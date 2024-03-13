@@ -22,8 +22,6 @@ public interface AuthorService {
 
     List<Author> getAll(int pageNumber, int pageSize, String sortDirection, String sortProperty);
 
-    List<Author> saveAll(List<Author> authors);
-
     Author save(String name, String biography) throws FieldAlreadyExistsException;
 
     void update(Author author, String name, String biography) throws NotFoundException, FieldAlreadyExistsException;

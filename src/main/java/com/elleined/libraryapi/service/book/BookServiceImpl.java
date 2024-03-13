@@ -68,11 +68,6 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<Book> saveAll(List<Book> books) {
-        return bookRepository.saveAll(books);
-    }
-
-    @Override
     public Book save(String title, String isbn, String description, LocalDate publishedDate, int pages, Author author, Set<Genre> genres) throws FieldAlreadyExistsException, NotFoundException {
         if (isbnAlreadyExists(isbn)) throw new FieldAlreadyExistsException("Book with isbn of " + isbn + " already exists!");
 

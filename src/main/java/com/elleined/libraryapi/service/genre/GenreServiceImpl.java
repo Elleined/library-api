@@ -63,11 +63,6 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
-    public List<Genre> saveAll(List<Genre> genres) {
-        return genreRepository.saveAll(genres);
-    }
-
-    @Override
     public Genre save(String name) {
         if (isNameAlreadyExists(name)) throw new FieldAlreadyExistsException("Genre with name of " + name + " already exists");
         Genre genre = genreMapper.toEntity(name);

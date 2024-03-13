@@ -62,11 +62,6 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public List<Author> saveAll(List<Author> authors) {
-        return authorRepository.saveAll(authors);
-    }
-
-    @Override
     public Author save(String name, String biography) throws FieldAlreadyExistsException {
         if (isNameAlreadyExists(name)) throw new FieldAlreadyExistsException("Author with name of " + name + " already exists");
         Author author = authorMapper.toEntity(name, biography);

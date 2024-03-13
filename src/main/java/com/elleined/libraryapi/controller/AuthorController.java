@@ -1,8 +1,11 @@
 package com.elleined.libraryapi.controller;
 
 import com.elleined.libraryapi.dto.AuthorDTO;
+import com.elleined.libraryapi.dto.BookDTO;
+import com.elleined.libraryapi.mapper.AuthorMapper;
+import com.elleined.libraryapi.mapper.BookMapper;
+import com.elleined.libraryapi.model.Author;
 import com.elleined.libraryapi.service.author.AuthorService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,46 +18,51 @@ public class AuthorController {
 
     private final AuthorService authorService;
 
+    private final AuthorMapper authorMapper;
+    private final BookMapper bookMapper;
+
     @GetMapping
     public List<AuthorDTO> getAll() {
-        return authorService.getAll();
+        return authorService.getAll().stream()
+                .map(authorMapper::toDTO)
+                .toList();
     }
 
     @GetMapping("/get-all-by-id")
     public List<AuthorDTO> getAllById(@RequestParam("ids") List<Integer> authorIds) {
-        return authorService.getAllById(authorIds);
+        return authorService.getAllById(authorIds).stream()
+                .map(authorMapper::toDTO)
+                .toList();
     }
 
     @GetMapping("/{id}")
     public AuthorDTO getById(@PathVariable("id") int authorId) {
-        return authorService.getById(authorId);
+        Author author = authorService.getById(authorId);
+        return authorMapper.toDTO(author);
     }
 
     @GetMapping("/{id}/books")
-    public List<String> getAllBooks(@PathVariable("id") int authorId) {
-        return authorService.getAllBooks(authorId);
-    }
-
-    @GetMapping("/{id}/books/count")
-    public int getBookCount(@PathVariable("id") int authorId) {
-        return authorService.getBookCount(authorId);
+    public List<BookDTO> getAllBooks(@PathVariable("id") int authorId) {
+        Author author = authorService.getById(authorId);
+        return authorService.getAllBooks(author).stream()
+                .map(bookMapper::toDTO)
+                .toList();
     }
 
     @GetMapping("/name")
-    public List<String> searchByFirstLetter(@RequestParam("firstLetter") char firstLetter) {
-        return authorService.searchByFirstLetter(firstLetter);
-    }
-
-    @GetMapping("/name/{name}")
-    public AuthorDTO getByName(@PathVariable("name") String authorName) {
-        return authorService.getByName(authorName);
+    public List<AuthorDTO> searchByFirstLetter(@RequestParam("firstLetter") char firstLetter) {
+        return authorService.searchByFirstLetter(firstLetter).stream()
+                .map(authorMapper::toDTO)
+                .toList();
     }
 
     @GetMapping("/{pageNumber}/{pageSize}")
     public List<AuthorDTO> getAll(@PathVariable int pageNumber,
                                   @PathVariable int pageSize) {
 
-        return authorService.getAll(pageNumber, pageSize);
+        return authorService.getAll(pageNumber, pageSize).stream()
+                .map(authorMapper::toDTO)
+                .toList();
     }
 
     @GetMapping("/{pageNumber}/{pageSize}/{sortDirection}/{sortProperty}")
@@ -63,24 +71,26 @@ public class AuthorController {
                                 @PathVariable String sortDirection,
                                 @PathVariable String sortProperty) {
 
-        return authorService.getAll(pageNumber, pageSize, sortDirection, sortProperty);
+        return authorService.getAll(pageNumber, pageSize, sortDirection, sortProperty).stream()
+                .map(authorMapper::toDTO)
+                .toList();
     }
 
     @PostMapping
-    public AuthorDTO save(@Valid @RequestBody AuthorDTO authorDTO) {
-        return authorService.save(, authorDTO, );
-    }
+    public AuthorDTO save(@RequestParam("name") String name,
+                          @RequestParam("biography") String biography) {
 
-    @PostMapping("/save-all")
-    public List<AuthorDTO> saveAll (@RequestBody List<AuthorDTO> authors) {
-        return authorService.saveAll(authors);
+        Author author = authorService.save(name, biography);
+        return authorMapper.toDTO(author);
     }
 
     @PutMapping("/{id}")
     public AuthorDTO update(@PathVariable("id") int authorId,
-                            @Valid @RequestBody AuthorDTO authorDTO) {
+                            @RequestParam("name") String name,
+                            @RequestParam("biography") String biography) {
 
-        authorService.update(authorId, , authorDTO, );
-        return authorService.getById(authorId);
+        Author author = authorService.getById(authorId);
+        authorService.update(author, name, biography);
+        return authorMapper.toDTO(author);
     }
 }

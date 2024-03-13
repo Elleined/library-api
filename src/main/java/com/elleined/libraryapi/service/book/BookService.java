@@ -24,8 +24,6 @@ public interface BookService {
 
     List<Book> getAll(int pageNumber, int pageSize, String sortDirection, String sortProperty);
 
-    List<Book> saveAll(List<Book> books);
-
     Book save(String title,
               String isbn,
               String description,

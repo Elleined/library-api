@@ -23,8 +23,6 @@ public interface GenreService {
 
     List<Genre> getAll(int pageNumber, int pageSize, String sortDirection, String sortProperty);
 
-    List<Genre> saveAll(List<Genre> genres);
-
     Genre save(String genreName) throws FieldAlreadyExistsException, IllegalArgumentException;
 
     void update(Genre genre, String newGenreName) throws NotFoundException, FieldAlreadyExistsException, IllegalArgumentException;
