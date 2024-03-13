@@ -7,8 +7,11 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.FileCopyUtils;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Set;
 
 @Component
@@ -25,9 +28,10 @@ public class AuthorPopulator extends Populator {
     @Override
     public void populate(String jsonFile) throws IOException {
         var resource = new ClassPathResource(jsonFile);
+        byte[] dataBytes = FileCopyUtils.copyToByteArray(resource.getInputStream());
         var type = objectMapper.getTypeFactory().constructCollectionType(Set.class, AuthorDTO.class);
 
-        Set<AuthorDTO> authors = objectMapper.readValue(resource.getFile(), type);
+        Set<AuthorDTO> authors = objectMapper.readValue(new String(dataBytes, StandardCharsets.UTF_8), type);
         authorService.saveAll(authors);
     }
 }

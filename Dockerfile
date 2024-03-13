@@ -9,5 +9,5 @@ ENV MYSQL_PORT=3306
 ENV MYSQL_DATABASE=la_db
 
 ADD ./target/*.jar library-api.jar
-EXPOSE 8081
+EXPOSE 8090
 CMD ["java", "-jar", "library-api.jar"]
