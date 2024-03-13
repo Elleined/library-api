@@ -1,0 +1,35 @@
+version: "3"
+services:
+  la_app:
+    build: .
+    image: elleined/la
+    container_name: la_app
+    restart: always
+    ports:
+      - "8090:8090"
+    environment:
+      - MYSQL_HOST=la_mysql_server
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=root
+      - MYSQL_PORT=3306
+      - MYSQL_DATABASE=la_db
+    networks:
+      - la_network
+    depends_on:
+      - la_mysql_server
+  la_mysql_server:
+    image: mysql:8.0.32
+    container_name: la_mysql_server
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=la_db
+    ports:
+      - "3307:3306"
+    networks:
+      - la_network
+networks:
+  la_network:
+    name: la_network
+    external: false
+    ipam:
+      driver: default
