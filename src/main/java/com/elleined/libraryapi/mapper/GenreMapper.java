@@ -21,10 +21,10 @@ public interface GenreMapper extends CustomMapper<Genre, GenreDTO> {
 
     @Mappings({
             @Mapping(target = "id", ignore = true),
-            @Mapping(target = "name", source = "name"),
+            @Mapping(target = "name", expression = "java(name)"),
             @Mapping(target = "createdAt", expression = "java(java.time.LocalDateTime.now())"),
             @Mapping(target = "updatedAt", expression = "java(java.time.LocalDateTime.now())"),
             @Mapping(target = "books", expression = "java(new java.util.ArrayList<>())"),
     })
-    Genre toEntity();
+    Genre toEntity(String name);
 }

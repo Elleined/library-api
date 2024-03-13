@@ -6,9 +6,10 @@ import com.elleined.libraryapi.model.Book;
 import com.elleined.libraryapi.model.Genre;
 
 import java.util.List;
+import java.util.Set;
 
 public interface GenreService {
-    List<Book> getAllByGenre(Genre genre);
+    Set<Book> getAllByGenre(Genre genre);
 
     Genre getById(int id) throws NotFoundException;
 
@@ -24,9 +25,9 @@ public interface GenreService {
 
     List<Genre> saveAll(List<Genre> genres);
 
-    Genre save(Genre genreDTO) throws FieldAlreadyExistsException, IllegalArgumentException;
+    Genre save(String genreName) throws FieldAlreadyExistsException, IllegalArgumentException;
 
-    void update(int id, String newGenreName) throws NotFoundException, FieldAlreadyExistsException, IllegalArgumentException;
+    void update(Genre genre, String newGenreName) throws NotFoundException, FieldAlreadyExistsException, IllegalArgumentException;
 
     boolean isNameAlreadyExists(String genreName);
 }

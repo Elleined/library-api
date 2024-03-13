@@ -72,7 +72,7 @@ public class GenreController {
     public GenreDTO update(@PathVariable("id") int genreId,
                            @RequestParam("name") String newGenreName) {
 
-        genreService.update(genreId, newGenreName);
+        genreService.update(, genreId, newGenreName);
         return genreService.getById(genreId);
     }
 }

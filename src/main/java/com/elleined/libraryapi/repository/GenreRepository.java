@@ -8,6 +8,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface GenreRepository extends JpaRepository<Genre, Integer> {
-    @Query("SELECT g.name FROM Genre g WHERE g.name LIKE CONCAT(:firstLetter, '%') ORDER BY name")
-    List<String> searchByFirstLetter(@Param("firstLetter") char firstLetter);
+    @Query("SELECT g FROM Genre g WHERE g.name LIKE CONCAT(:firstLetter, '%') ORDER BY name")
+    List<Genre> searchByFirstLetter(@Param("firstLetter") char firstLetter);
 }
