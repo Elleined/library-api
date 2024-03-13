@@ -1,7 +1,7 @@
-package com.elleined.bookauthorgenreapi;
+package com.elleined.libraryapi;
 
-import com.elleined.bookauthorgenreapi.populator.Populator;
-import com.elleined.bookauthorgenreapi.repository.GenreRepository;
+import com.elleined.libraryapi.populator.Populator;
+import com.elleined.libraryapi.repository.GenreRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
