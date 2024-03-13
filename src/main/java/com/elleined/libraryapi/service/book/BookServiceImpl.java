@@ -1,14 +1,16 @@
 package com.elleined.libraryapi.service.book;
 
 import com.elleined.libraryapi.dto.BookDTO;
-import com.elleined.libraryapi.exception.FieldAlreadyExistsException;
-import com.elleined.libraryapi.exception.NotFoundException;
+import com.elleined.libraryapi.exception.field.FieldAlreadyExistsException;
+import com.elleined.libraryapi.exception.field.RequiredFieldException;
+import com.elleined.libraryapi.exception.resource.ResourceNotFoundException;
 import com.elleined.libraryapi.mapper.BookMapper;
 import com.elleined.libraryapi.model.Author;
 import com.elleined.libraryapi.model.Book;
 import com.elleined.libraryapi.model.Genre;
 import com.elleined.libraryapi.repository.BookRepository;
 import com.elleined.libraryapi.service.PageSorter;
+import com.elleined.libraryapi.service.StringValidator;
 import com.elleined.libraryapi.service.author.AuthorService;
 import com.elleined.libraryapi.service.genre.GenreService;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +39,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book getById(int id) {
-        return bookRepository.findById(id).orElseThrow(() -> new NotFoundException("Book with id of " + id + " does not exists"));
+        return bookRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Book with id of " + id + " does not exists"));
     }
 
     @Override
@@ -45,7 +47,7 @@ public class BookServiceImpl implements BookService {
         return bookRepository.findAll().stream()
                 .filter(book -> book.getIsbn().equals(isbn))
                 .findFirst()
-                .orElseThrow(() -> new NotFoundException("Book with ISBN of " + isbn + " does not exists!"));
+                .orElseThrow(() -> new ResourceNotFoundException("Book with ISBN of " + isbn + " does not exists!"));
     }
 
     @Override
@@ -92,6 +94,13 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book save(String title, String isbn, String description, LocalDate publishedDate, int pages, Author author, Set<Genre> genres) {
+        if (StringValidator.validate(title)) throw new RequiredFieldException("Title is required");
+        if (StringValidator.validate(isbn)) throw new RequiredFieldException("ISBN is required");
+        if (StringValidator.validate(description)) throw new RequiredFieldException("Description is required");
+        if (publishedDate == null) throw new RequiredFieldException("Published Date is required");
+        if (pages <= 0) throw new RequiredFieldException("Pages must be 11 pages and up");
+        if (author == null) throw new RequiredFieldException("Author is required");
+        if (genres.isEmpty()) throw new RequiredFieldException("Atleast 1 Genre is required!");
         if (isbnAlreadyExists(isbn)) throw new FieldAlreadyExistsException("Book with isbn of " + isbn + " already exists!");
 
         Book book = bookMapper.toEntity(title, isbn, description, publishedDate, pages, author, genres);

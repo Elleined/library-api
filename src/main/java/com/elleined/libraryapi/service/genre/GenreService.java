@@ -1,8 +1,8 @@
 package com.elleined.libraryapi.service.genre;
 
 import com.elleined.libraryapi.dto.GenreDTO;
-import com.elleined.libraryapi.exception.FieldAlreadyExistsException;
-import com.elleined.libraryapi.exception.NotFoundException;
+import com.elleined.libraryapi.exception.field.FieldAlreadyExistsException;
+import com.elleined.libraryapi.exception.resource.ResourceNotFoundException;
 import com.elleined.libraryapi.model.Book;
 import com.elleined.libraryapi.model.Genre;
 
@@ -12,7 +12,7 @@ import java.util.Set;
 public interface GenreService {
     Set<Book> getAllByGenre(Genre genre);
 
-    Genre getById(int id) throws NotFoundException;
+    Genre getById(int id) throws ResourceNotFoundException;
 
     Set<Genre> getAllById(Set<Integer> ids);
 
@@ -28,7 +28,7 @@ public interface GenreService {
 
     Genre save(String genreName) throws FieldAlreadyExistsException, IllegalArgumentException;
 
-    void update(Genre genre, String newGenreName) throws NotFoundException, FieldAlreadyExistsException, IllegalArgumentException;
+    void update(Genre genre, String newGenreName) throws ResourceNotFoundException, FieldAlreadyExistsException, IllegalArgumentException;
 
     boolean isNameAlreadyExists(String genreName);
 }

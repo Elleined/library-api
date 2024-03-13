@@ -1,13 +1,15 @@
 package com.elleined.libraryapi.service.genre;
 
 import com.elleined.libraryapi.dto.GenreDTO;
-import com.elleined.libraryapi.exception.FieldAlreadyExistsException;
-import com.elleined.libraryapi.exception.NotFoundException;
+import com.elleined.libraryapi.exception.field.FieldAlreadyExistsException;
+import com.elleined.libraryapi.exception.field.RequiredFieldException;
+import com.elleined.libraryapi.exception.resource.ResourceNotFoundException;
 import com.elleined.libraryapi.mapper.GenreMapper;
 import com.elleined.libraryapi.model.Book;
 import com.elleined.libraryapi.model.Genre;
 import com.elleined.libraryapi.repository.GenreRepository;
 import com.elleined.libraryapi.service.PageSorter;
+import com.elleined.libraryapi.service.StringValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -36,7 +38,7 @@ public class GenreServiceImpl implements GenreService {
 
     @Override
     public Genre getById(int id) {
-        return genreRepository.findById(id).orElseThrow(() -> new NotFoundException("Genre does not exists"));
+        return genreRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Genre does not exists"));
     }
 
     @Override
@@ -80,6 +82,8 @@ public class GenreServiceImpl implements GenreService {
     @Override
     public Genre save(String name) {
         if (isNameAlreadyExists(name)) throw new FieldAlreadyExistsException("Genre with name of " + name + " already exists");
+        if (StringValidator.validate(name)) throw new RequiredFieldException("Name is required!");
+
         Genre genre = genreMapper.toEntity(name);
         genreRepository.save(genre);
         log.debug("Genre saved successfully with id of {}", genre.getId());

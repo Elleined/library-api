@@ -1,8 +1,8 @@
 package com.elleined.libraryapi.service.book;
 
 import com.elleined.libraryapi.dto.BookDTO;
-import com.elleined.libraryapi.exception.FieldAlreadyExistsException;
-import com.elleined.libraryapi.exception.NotFoundException;
+import com.elleined.libraryapi.exception.field.FieldAlreadyExistsException;
+import com.elleined.libraryapi.exception.resource.ResourceNotFoundException;
 import com.elleined.libraryapi.model.Author;
 import com.elleined.libraryapi.model.Book;
 import com.elleined.libraryapi.model.Genre;
@@ -12,9 +12,9 @@ import java.util.List;
 import java.util.Set;
 
 public interface BookService {
-    Book getById(int id) throws NotFoundException;
+    Book getById(int id) throws ResourceNotFoundException;
 
-    Book getByIsbn(String isbn) throws NotFoundException;
+    Book getByIsbn(String isbn) throws ResourceNotFoundException;
 
     List<Book> getAllById(List<Integer> bookIds);
     List<Book> getAllByTitleFirstLetter(char firstLetter);
@@ -33,7 +33,7 @@ public interface BookService {
               LocalDate publishedDate,
               int pages,
               Author author,
-              Set<Genre> genres) throws FieldAlreadyExistsException, NotFoundException;
+              Set<Genre> genres) throws FieldAlreadyExistsException, ResourceNotFoundException;
 
     void update(Book book,
                 String title,

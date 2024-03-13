@@ -1,8 +1,8 @@
 package com.elleined.libraryapi.service.author;
 
 import com.elleined.libraryapi.dto.AuthorDTO;
-import com.elleined.libraryapi.exception.FieldAlreadyExistsException;
-import com.elleined.libraryapi.exception.NotFoundException;
+import com.elleined.libraryapi.exception.field.FieldAlreadyExistsException;
+import com.elleined.libraryapi.exception.resource.ResourceNotFoundException;
 import com.elleined.libraryapi.model.Author;
 import com.elleined.libraryapi.model.Book;
 
@@ -10,9 +10,9 @@ import java.util.List;
 import java.util.Set;
 
 public interface AuthorService {
-    Author getById(int id) throws NotFoundException;
+    Author getById(int id) throws ResourceNotFoundException;
 
-    List<Book> getAllBooks(Author author) throws NotFoundException;
+    List<Book> getAllBooks(Author author) throws ResourceNotFoundException;
 
     List<Author> searchByFirstLetter(char firstLetter);
 
@@ -28,7 +28,7 @@ public interface AuthorService {
 
     Set<Author> saveAll(Set<AuthorDTO> authorDTOS);
 
-    void update(Author author, String name, String biography) throws NotFoundException, FieldAlreadyExistsException;
+    void update(Author author, String name, String biography) throws ResourceNotFoundException, FieldAlreadyExistsException;
 
     boolean isNameAlreadyExists(String authorName);
 }

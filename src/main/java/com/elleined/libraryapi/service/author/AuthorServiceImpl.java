@@ -1,13 +1,15 @@
 package com.elleined.libraryapi.service.author;
 
 import com.elleined.libraryapi.dto.AuthorDTO;
-import com.elleined.libraryapi.exception.FieldAlreadyExistsException;
-import com.elleined.libraryapi.exception.NotFoundException;
+import com.elleined.libraryapi.exception.field.FieldAlreadyExistsException;
+import com.elleined.libraryapi.exception.field.RequiredFieldException;
+import com.elleined.libraryapi.exception.resource.ResourceNotFoundException;
 import com.elleined.libraryapi.mapper.AuthorMapper;
 import com.elleined.libraryapi.model.Author;
 import com.elleined.libraryapi.model.Book;
 import com.elleined.libraryapi.repository.AuthorRepository;
 import com.elleined.libraryapi.service.PageSorter;
+import com.elleined.libraryapi.service.StringValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -30,7 +32,7 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public Author getById(int id) {
-        return authorRepository.findById(id).orElseThrow(() -> new NotFoundException("Author with id of " + id + " does not exists"));
+        return authorRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Author with id of " + id + " does not exists"));
     }
 
     @Override
@@ -68,6 +70,9 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public Author save(String name, String biography) {
         if (isNameAlreadyExists(name)) throw new FieldAlreadyExistsException("Author with name of " + name + " already exists");
+        if (StringValidator.validate(name)) throw new RequiredFieldException("Name is required!");
+        if (StringValidator.validate(biography)) throw new RequiredFieldException("Biography is required!");
+
         Author author = authorMapper.toEntity(name, biography);
         authorRepository.save(author);
         log.debug("Author with id of {} saved successfully!", author.getId());
@@ -76,6 +81,8 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public Set<Author> saveAll(Set<AuthorDTO> authorDTOS) {
+        if (authorDTOS.stream().map(AuthorDTO::getName).anyMatch(this::isNameAlreadyExists)) throw new FieldAlreadyExistsException("Cannot save pre-defined authors! Because one of the author has duplicate name!");
+
         Set<Author> authors = authorDTOS.stream()
                 .map(authorDTO -> authorMapper.toEntity(authorDTO.getName(), authorDTO.getBiography()))
                 .collect(Collectors.toSet());
