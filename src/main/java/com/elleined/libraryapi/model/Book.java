@@ -21,30 +21,49 @@ public class Book {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(
+            name = "id",
+            nullable = false,
+            unique = true,
+            updatable = false
+    )
     private int id;
 
-    @Column(name = "title")
+    @Column(
+            name = "title",
+            nullable = false
+    )
     private String title;
 
-    @Column(name = "isbn", unique = true)
+    @Column(
+            name = "isbn",
+            unique = true,
+            nullable = false
+    )
     private String isbn;
 
-    @Column(name = "description", columnDefinition = "MEDIUMTEXT")
+    @Column(
+            name = "description",
+            columnDefinition = "MEDIUMTEXT",
+            nullable = false
+    )
     private String description;
 
-    @Column(name = "published_date")
+    @Column(
+            name = "published_date",
+            nullable = false
+    )
     private LocalDate publishedDate;
 
-    @Column(name = "pages")
+    @Column(
+            name = "pages",
+            nullable = false
+    )
     private int pages;
 
     // For sorting mechanism
     @Column(name = "views")
     private int views;
-
-    @Column(name = "sale_count")
-    private int saleCount;
 
     @Column(name = "date_created")
     private LocalDateTime createdAt;
@@ -52,11 +71,12 @@ public class Book {
     @Column(name = "date_updated")
     private LocalDateTime updatedAt;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(
             name = "author_id",
             referencedColumnName = "id",
-            foreignKey = @ForeignKey(name = "FK_author_id")
+            foreignKey = @ForeignKey(name = "FK_author_id"),
+            nullable = false
     )
     private Author author;
 

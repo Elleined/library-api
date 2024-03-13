@@ -20,19 +20,33 @@ public class Genre {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(
+            name = "id",
+            nullable = false,
+            unique = true,
+            updatable = false
+    )
     private int id;
 
-    @Column(name = "name", unique = true)
+    @Column(
+            name = "name",
+            unique = true,
+            nullable = false
+    )
     private String name;
 
-    @Column(name = "date_created")
+    @Column(
+            name = "date_created",
+            nullable = false
+    )
     private LocalDateTime createdAt;
 
-    @Column(name = "date_updated")
+    @Column(
+            name = "date_updated",
+            nullable = false
+    )
     private LocalDateTime updatedAt;
 
     @ManyToMany(mappedBy = "genres")
-    @Setter(AccessLevel.NONE)
     private Set<Book> bookGenres;
 }
