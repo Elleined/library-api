@@ -1,4 +1,4 @@
-version: "3"
+version: "3.8"
 services:
   la_app:
     build: .
@@ -16,13 +16,20 @@ services:
     networks:
       - la_network
     depends_on:
-      - la_mysql_server
+      la_mysql_server:
+        condition: service_healthy
   la_mysql_server:
     image: mysql:8.0.32
     container_name: la_mysql_server
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=la_db
+    healthcheck:
+      test: mysqladmin ping -h localhost -u root --password=$$MYSQL_ROOT_PASSWORD
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
     ports:
       - "3307:3306"
     networks:

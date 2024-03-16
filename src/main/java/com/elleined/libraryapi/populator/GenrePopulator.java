@@ -1,7 +1,6 @@
 package com.elleined.libraryapi.populator;
 
 
-import com.elleined.libraryapi.dto.BookDTO;
 import com.elleined.libraryapi.dto.GenreDTO;
 import com.elleined.libraryapi.service.genre.GenreService;
 import com.fasterxml.jackson.databind.ObjectMapper;

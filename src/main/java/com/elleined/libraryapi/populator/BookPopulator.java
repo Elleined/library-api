@@ -1,8 +1,6 @@
 package com.elleined.libraryapi.populator;
 
-import com.elleined.libraryapi.dto.AuthorDTO;
 import com.elleined.libraryapi.dto.BookDTO;
-import com.elleined.libraryapi.model.Book;
 import com.elleined.libraryapi.service.book.BookService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
