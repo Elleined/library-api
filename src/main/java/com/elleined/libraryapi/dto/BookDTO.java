@@ -8,6 +8,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -19,26 +20,17 @@ public class BookDTO extends DTO {
     private int pages;
     private int views;
 
-    private int authorId;
+    private AuthorDTO authorDTO;
 
     @Builder
-    public BookDTO(int id,
-                   LocalDateTime createdAt,
-                   LocalDateTime updatedAt,
-                   String title,
-                   String isbn,
-                   String description,
-                   LocalDate publishedDate,
-                   int pages,
-                   int views,
-                   int authorId) {
+    public BookDTO(int id, LocalDateTime createdAt, LocalDateTime updatedAt, String isbn, String title, String description, LocalDate publishedDate, int pages, int views, AuthorDTO authorDTO) {
         super(id, createdAt, updatedAt);
-        this.title = title;
         this.isbn = isbn;
+        this.title = title;
         this.description = description;
         this.publishedDate = publishedDate;
         this.pages = pages;
         this.views = views;
-        this.authorId = authorId;
+        this.authorDTO = authorDTO;
     }
 }

@@ -11,7 +11,13 @@ import org.mapstruct.Mappings;
 import java.time.LocalDate;
 import java.util.Set;
 
-@Mapper(componentModel = "spring", uses = GenreMapper.class)
+@Mapper(
+        componentModel = "spring",
+        uses = {
+                AuthorMapper.class,
+                GenreMapper.class
+        }
+)
 public interface BookMapper extends CustomMapper<Book, BookDTO> {
 
     @Override
@@ -27,7 +33,7 @@ public interface BookMapper extends CustomMapper<Book, BookDTO> {
             @Mapping(target = "pages", source = "pages"),
             @Mapping(target = "views", source = "views"),
 
-            @Mapping(target = "authorId", source = "author.id"),
+            @Mapping(target = "authorDTO", source = "author")
     })
     BookDTO toDTO(Book book);
 

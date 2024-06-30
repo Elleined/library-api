@@ -47,7 +47,7 @@ public class BookHateoasAssembler extends HateoasAssembler<BookDTO> {
                         .withType(HttpMethod.GET.name()),
 
                 linkTo(methodOn(BookController.class)
-                        .save(faker.book().title(), faker.code().isbn10(), faker.lorem().sentence(), faker.date().birthday().toLocalDateTime().toLocalDate(), faker.number().randomDigit(), dto.getAuthorId(), new HashSet<>(), doInclude))
+                        .save(faker.book().title(), faker.code().isbn10(), faker.lorem().sentence(), faker.date().birthday().toLocalDateTime().toLocalDate(), faker.number().randomDigit(), dto.getAuthorDTO().getId(), new HashSet<>(), doInclude))
                         .withSelfRel()
                         .withTitle("Save")
                         .withType(HttpMethod.POST.name()),
