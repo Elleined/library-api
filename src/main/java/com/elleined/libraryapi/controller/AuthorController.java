@@ -1,7 +1,7 @@
 package com.elleined.libraryapi.controller;
 
 import com.elleined.libraryapi.dto.AuthorDTO;
-import com.elleined.libraryapi.hateoas.AuthorHateaosAssembler;
+import com.elleined.libraryapi.hateoas.AuthorHateoasAssembler;
 import com.elleined.libraryapi.mapper.AuthorMapper;
 import com.elleined.libraryapi.model.Author;
 import com.elleined.libraryapi.service.author.AuthorService;
@@ -19,7 +19,7 @@ public class AuthorController {
     private final AuthorService authorService;
     private final AuthorMapper authorMapper;
 
-    private final AuthorHateaosAssembler authorHateaosAssembler;
+    private final AuthorHateoasAssembler authorHateoasAssembler;
 
     @GetMapping("/{id}")
     public AuthorDTO getById(@PathVariable("id") int id,
@@ -27,7 +27,7 @@ public class AuthorController {
 
         Author author = authorService.getById(id);
         AuthorDTO authorDTO = authorMapper.toDTO(author);
-        authorHateaosAssembler.addLinks(authorDTO, includeRelatedLinks);
+        authorHateoasAssembler.addLinks(authorDTO, includeRelatedLinks);
         return authorDTO;
     }
 
@@ -38,7 +38,7 @@ public class AuthorController {
 
         Author author = authorService.save(name, biography);
         AuthorDTO authorDTO = authorMapper.toDTO(author).addLinks();
-        authorHateaosAssembler.addLinks(authorDTO, includeRelatedLinks);
+        authorHateoasAssembler.addLinks(authorDTO, includeRelatedLinks);
         return authorDTO;
     }
 
@@ -52,7 +52,7 @@ public class AuthorController {
         authorService.update(author, name, biography);
 
         AuthorDTO authorDTO = authorMapper.toDTO(author);
-        authorHateaosAssembler.addLinks(authorDTO, includeRelatedLinks);
+        authorHateoasAssembler.addLinks(authorDTO, includeRelatedLinks);
         return authorDTO;
     }
 
@@ -65,7 +65,7 @@ public class AuthorController {
 
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
         Page<AuthorDTO> authorDTOS = authorService.getAll(pageable).map(authorMapper::toDTO);
-        authorHateaosAssembler.addLinks(authorDTOS, includeRelatedLinks);
+        authorHateoasAssembler.addLinks(authorDTOS, includeRelatedLinks);
         return authorDTOS;
     }
 
@@ -79,7 +79,7 @@ public class AuthorController {
 
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
         Page<AuthorDTO> authorDTOS = authorService.getAllByNameFirstLetter(firstLetter, pageable).map(authorMapper::toDTO);
-        authorHateaosAssembler.addLinks(authorDTOS, includeRelatedLinks);
+        authorHateoasAssembler.addLinks(authorDTOS, includeRelatedLinks);
         return authorDTOS;
     }
 }
