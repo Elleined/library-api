@@ -13,5 +13,5 @@ public interface GenreService {
     Genre update(Genre genre, String newGenreName);
     boolean isNameAlreadyExists(String genreName);
 
-    Page<Genre> searchByFirstLetter(char firstLetter, Pageable pageable);
+    Page<Genre> getAllByFirstLetter(char firstLetter, Pageable pageable);
 }

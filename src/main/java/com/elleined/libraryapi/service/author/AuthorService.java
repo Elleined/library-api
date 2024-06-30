@@ -11,5 +11,5 @@ public interface AuthorService {
     Author update(Author author, String name, String biography);
 
     Page<Author> getAll(Pageable pageable);
-    Page<Author> searchByFirstLetter(char firstLetter, Pageable pageable);
+    Page<Author> getAllByFirstLetter(char firstLetter, Pageable pageable);
 }

@@ -10,5 +10,5 @@ import org.springframework.data.repository.query.Param;
 public interface AuthorRepository extends JpaRepository<Author, Integer> {
 
     @Query("SELECT a FROM Author a WHERE a.name LIKE CONCAT(:firstLetter, '%') ORDER BY name")
-    Page<Author> searchByFirstLetter(@Param("firstLetter") char firstLetter, Pageable pageable);
+    Page<Author> findAllByFirstLetter(@Param("firstLetter") char firstLetter, Pageable pageable);
 }

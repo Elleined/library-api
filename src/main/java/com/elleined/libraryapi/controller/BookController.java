@@ -49,7 +49,7 @@ public class BookController {
 
     @GetMapping("/title")
     public List<BookDTO> getAllByTitleFirstLetter(@RequestParam("firstLetter") char firstLetter) {
-        return bookService.getAllByTitleFirstLetter(firstLetter).stream()
+        return bookService.getAllByTitleFirstLetter(firstLetter, ).stream()
                 .map(bookMapper::toDTO)
                 .toList();
     }

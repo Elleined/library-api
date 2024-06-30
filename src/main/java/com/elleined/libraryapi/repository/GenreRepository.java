@@ -9,5 +9,5 @@ import org.springframework.data.repository.query.Param;
 
 public interface GenreRepository extends JpaRepository<Genre, Integer> {
     @Query("SELECT g FROM Genre g WHERE g.name LIKE CONCAT(:firstLetter, '%') ORDER BY name")
-    Page<Genre> searchByFirstLetter(@Param("firstLetter") char firstLetter, Pageable pageable);
+    Page<Genre> findAllByFirstLetter(@Param("firstLetter") char firstLetter, Pageable pageable);
 }

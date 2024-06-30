@@ -24,14 +24,12 @@ public interface BookService {
     Book update(Book book,
                 String title,
                 String description,
-                LocalDate publishedDate,
                 int pages,
-                Author author,
                 Set<Genre> genres);
 
     boolean isbnAlreadyExists(String isbn);
 
-    Page<Book> getAllBooks(Author author, Pageable pageable);
+    Page<Book> getAll(Author author, Pageable pageable);
     Page<Book> getAllByGenre(Genre genre, Pageable pageable);
-    Page<Book> getAllByTitleFirstLetter(char firstLetter);
+    Page<Book> getAllByTitleFirstLetter(char firstLetter, Pageable pageable);
 }

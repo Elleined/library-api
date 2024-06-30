@@ -45,7 +45,8 @@ public class Book extends PrimaryKeyIdentity {
 
     @Column(
             name = "published_date",
-            nullable = false
+            nullable = false,
+            updatable = false
     )
     private LocalDate publishedDate;
 
