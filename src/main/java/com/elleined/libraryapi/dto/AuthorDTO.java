@@ -1,21 +1,24 @@
 package com.elleined.libraryapi.dto;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@SuperBuilder
-@NoArgsConstructor
 public class AuthorDTO extends DTO {
     private String name;
     private String biography;
 
-    @Override
-    public AuthorDTO addLinks() {
-
-        return this;
+    @Builder
+    public AuthorDTO(int id,
+                     LocalDateTime createdAt,
+                     LocalDateTime updatedAt,
+                     String name,
+                     String biography) {
+        super(id, createdAt, updatedAt);
+        this.name = name;
+        this.biography = biography;
     }
 }

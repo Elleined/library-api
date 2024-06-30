@@ -1,14 +1,19 @@
 package com.elleined.libraryapi.dto;
 
+import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.SuperBuilder;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@SuperBuilder
-@NoArgsConstructor
 public class GenreDTO extends DTO {
     private String name;
+
+    @Builder
+    public GenreDTO(int id, LocalDateTime createdAt, LocalDateTime updatedAt, String name) {
+        super(id, createdAt, updatedAt);
+        this.name = name;
+    }
 }

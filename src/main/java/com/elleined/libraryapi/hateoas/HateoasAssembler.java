@@ -3,7 +3,6 @@ package com.elleined.libraryapi.hateoas;
 import com.elleined.libraryapi.dto.DTO;
 import org.springframework.data.domain.Page;
 import org.springframework.hateoas.Link;
-import org.springframework.hateoas.server.RepresentationModelAssembler;
 
 import java.util.Collection;
 import java.util.List;

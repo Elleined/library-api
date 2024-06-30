@@ -37,7 +37,7 @@ public class AuthorController {
                           @RequestParam(defaultValue = "false", name = "includeRelatedLinks") boolean includeRelatedLinks) {
 
         Author author = authorService.save(name, biography);
-        AuthorDTO authorDTO = authorMapper.toDTO(author).addLinks();
+        AuthorDTO authorDTO = authorMapper.toDTO(author);
         authorHateoasAssembler.addLinks(authorDTO, includeRelatedLinks);
         return authorDTO;
     }

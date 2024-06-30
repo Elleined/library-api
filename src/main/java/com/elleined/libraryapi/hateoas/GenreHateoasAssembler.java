@@ -1,6 +1,5 @@
 package com.elleined.libraryapi.hateoas;
 
-import com.elleined.libraryapi.controller.AuthorController;
 import com.elleined.libraryapi.controller.GenreController;
 import com.elleined.libraryapi.dto.GenreDTO;
 import lombok.RequiredArgsConstructor;
