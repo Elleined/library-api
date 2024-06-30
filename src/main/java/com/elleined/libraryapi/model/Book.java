@@ -32,7 +32,8 @@ public class Book extends PrimaryKeyIdentity {
     @Column(
             name = "isbn",
             unique = true,
-            nullable = false
+            nullable = false,
+            updatable = false
     )
     private String isbn;
 

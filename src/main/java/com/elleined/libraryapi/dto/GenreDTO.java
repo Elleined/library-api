@@ -1,18 +1,15 @@
 package com.elleined.libraryapi.dto;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 import java.util.Set;
 
-@Data
-@Builder
-public class GenreDTO {
-    private int id;
+@Getter
+@Setter
+@SuperBuilder
+@NoArgsConstructor
+public class GenreDTO extends DTO {
     private String name;
-    private LocalDateTime updatedAt;
-    private LocalDateTime createdAt;
-
-    private Set<Integer> bookIds;
 }

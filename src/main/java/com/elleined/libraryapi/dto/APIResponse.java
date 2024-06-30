@@ -8,12 +8,12 @@ import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
-public class ResponseMessage {
+public class APIResponse {
     private final HttpStatus status;
     private final String message;
     private LocalDateTime timestamp;
 
-    public ResponseMessage(HttpStatus status, String message) {
+    public APIResponse(HttpStatus status, String message) {
         this.status = status;
         this.message = message;
         this.timestamp = LocalDateTime.now();
