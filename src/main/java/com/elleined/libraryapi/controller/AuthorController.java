@@ -1,6 +1,7 @@
 package com.elleined.libraryapi.controller;
 
 import com.elleined.libraryapi.dto.AuthorDTO;
+import com.elleined.libraryapi.hateoas.AuthorHateaosAssembler;
 import com.elleined.libraryapi.mapper.AuthorMapper;
 import com.elleined.libraryapi.model.Author;
 import com.elleined.libraryapi.service.author.AuthorService;
@@ -18,38 +19,54 @@ public class AuthorController {
     private final AuthorService authorService;
     private final AuthorMapper authorMapper;
 
+    private final AuthorHateaosAssembler authorHateaosAssembler;
+
     @GetMapping("/{id}")
-    public AuthorDTO getById(@PathVariable("id") int id) {
+    public AuthorDTO getById(@PathVariable("id") int id,
+                             @RequestParam(defaultValue = "false", name = "includeRelatedLinks") boolean includeRelatedLinks) {
+
         Author author = authorService.getById(id);
-        return authorMapper.toDTO(author);
+        AuthorDTO authorDTO = authorMapper.toDTO(author);
+        authorHateaosAssembler.addLinks(authorDTO, includeRelatedLinks);
+        return authorDTO;
     }
 
     @PostMapping
     public AuthorDTO save(@RequestParam("name") String name,
-                          @RequestParam("biography") String biography) {
+                          @RequestParam("biography") String biography,
+                          @RequestParam(defaultValue = "false", name = "includeRelatedLinks") boolean includeRelatedLinks) {
 
         Author author = authorService.save(name, biography);
-        return authorMapper.toDTO(author);
+        AuthorDTO authorDTO = authorMapper.toDTO(author).addLinks();
+        authorHateaosAssembler.addLinks(authorDTO, includeRelatedLinks);
+        return authorDTO;
     }
 
     @PutMapping("/{id}")
     public AuthorDTO update(@PathVariable("id") int id,
                             @RequestParam("name") String name,
-                            @RequestParam("biography") String biography) {
+                            @RequestParam("biography") String biography,
+                            @RequestParam(defaultValue = "false", name = "includeRelatedLinks") boolean includeRelatedLinks) {
 
         Author author = authorService.getById(id);
         authorService.update(author, name, biography);
-        return authorMapper.toDTO(author);
+
+        AuthorDTO authorDTO = authorMapper.toDTO(author);
+        authorHateaosAssembler.addLinks(authorDTO, includeRelatedLinks);
+        return authorDTO;
     }
 
     @GetMapping
     public Page<AuthorDTO> getAll(@RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
                                   @RequestParam(required = false, defaultValue = "5", value = "pageSize") int pageSize,
                                   @RequestParam(required = false, defaultValue = "ASC", value = "sortDirection") Sort.Direction direction,
-                                  @RequestParam(required = false, defaultValue = "id", value = "sortBy") String sortBy) {
+                                  @RequestParam(required = false, defaultValue = "id", value = "sortBy") String sortBy,
+                                  @RequestParam(defaultValue = "false", name = "includeRelatedLinks") boolean includeRelatedLinks) {
 
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
-        return authorService.getAll(pageable).map(authorMapper::toDTO);
+        Page<AuthorDTO> authorDTOS = authorService.getAll(pageable).map(authorMapper::toDTO);
+        authorHateaosAssembler.addLinks(authorDTOS, includeRelatedLinks);
+        return authorDTOS;
     }
 
     @GetMapping("/search")
@@ -57,9 +74,12 @@ public class AuthorController {
                                                @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
                                                @RequestParam(required = false, defaultValue = "5", value = "pageSize") int pageSize,
                                                @RequestParam(required = false, defaultValue = "ASC", value = "sortDirection") Sort.Direction direction,
-                                               @RequestParam(required = false, defaultValue = "id", value = "sortBy") String sortBy) {
+                                               @RequestParam(required = false, defaultValue = "id", value = "sortBy") String sortBy,
+                                               @RequestParam(defaultValue = "false", name = "includeRelatedLinks") boolean includeRelatedLinks) {
 
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
-        return authorService.getAllByNameFirstLetter(firstLetter, pageable).map(authorMapper::toDTO);
+        Page<AuthorDTO> authorDTOS = authorService.getAllByNameFirstLetter(firstLetter, pageable).map(authorMapper::toDTO);
+        authorHateaosAssembler.addLinks(authorDTOS, includeRelatedLinks);
+        return authorDTOS;
     }
 }

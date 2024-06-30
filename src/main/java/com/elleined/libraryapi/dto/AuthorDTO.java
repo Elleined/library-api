@@ -12,4 +12,10 @@ import lombok.experimental.SuperBuilder;
 public class AuthorDTO extends DTO {
     private String name;
     private String biography;
+
+    @Override
+    public AuthorDTO addLinks() {
+
+        return this;
+    }
 }
