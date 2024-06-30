@@ -1,33 +1,26 @@
 package com.elleined.libraryapi.model;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
-import java.time.LocalDateTime;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Entity
 @Table(
         name = "tbl_genre",
-        indexes = @Index(name = "genre_name_idx", columnList = "name")
+        indexes = {
+                @Index(name = "created_at_idx", columnList = "created_at"),
+                @Index(name = "name_idx", columnList = "name"),
+        }
 )
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-@Setter
 @Getter
-public class Genre {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(
-            name = "id",
-            nullable = false,
-            unique = true,
-            updatable = false
-    )
-    private int id;
+@Setter
+@NoArgsConstructor
+@SuperBuilder
+public class Genre extends PrimaryKeyIdentity {
 
     @Column(
             name = "name",
@@ -36,24 +29,6 @@ public class Genre {
     )
     private String name;
 
-    @Column(
-            name = "date_created",
-            nullable = false
-    )
-    private LocalDateTime createdAt;
-
-    @Column(
-            name = "date_updated",
-            nullable = false
-    )
-    private LocalDateTime updatedAt;
-
     @ManyToMany(mappedBy = "genres")
     private Set<Book> books;
-
-    public Set<Integer> getBookIds() {
-        return this.getBooks().stream()
-                .map(Book::getId)
-                .collect(Collectors.toSet());
-    }
 }
