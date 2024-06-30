@@ -8,7 +8,6 @@ import com.elleined.libraryapi.mapper.GenreMapper;
 import com.elleined.libraryapi.model.Book;
 import com.elleined.libraryapi.model.Genre;
 import com.elleined.libraryapi.repository.GenreRepository;
-import com.elleined.libraryapi.service.PageSorter;
 import com.elleined.libraryapi.service.StringValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

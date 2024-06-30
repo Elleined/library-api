@@ -9,7 +9,6 @@ import com.elleined.libraryapi.model.Author;
 import com.elleined.libraryapi.model.Book;
 import com.elleined.libraryapi.model.Genre;
 import com.elleined.libraryapi.repository.BookRepository;
-import com.elleined.libraryapi.service.PageSorter;
 import com.elleined.libraryapi.service.StringValidator;
 import com.elleined.libraryapi.service.author.AuthorService;
 import com.elleined.libraryapi.service.genre.GenreService;
