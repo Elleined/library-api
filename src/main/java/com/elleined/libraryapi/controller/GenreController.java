@@ -1,7 +1,6 @@
 package com.elleined.libraryapi.controller;
 
 import com.elleined.libraryapi.dto.GenreDTO;
-import com.elleined.libraryapi.mapper.BookMapper;
 import com.elleined.libraryapi.mapper.GenreMapper;
 import com.elleined.libraryapi.model.Genre;
 import com.elleined.libraryapi.service.genre.GenreService;
@@ -18,12 +17,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/genres")
 public class GenreController {
-
     private final GenreService genreService;
-
     private final GenreMapper genreMapper;
-    private final BookMapper bookMapper;
-
 
     @GetMapping("/{id}")
     public GenreDTO getById(@PathVariable("id") int id) {
@@ -64,7 +59,7 @@ public class GenreController {
                                               @RequestParam(required = false, defaultValue = "id", value = "sortBy") String sortBy) {
 
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
-        return genreService.getAllByFirstLetter(firstLetter, pageable).stream()
+        return genreService.getAllByNameFirstLetter(firstLetter, pageable).stream()
                 .map(genreMapper::toDTO)
                 .toList();
     }

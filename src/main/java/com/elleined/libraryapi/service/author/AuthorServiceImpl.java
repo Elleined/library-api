@@ -49,7 +49,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public Page<Author> getAllByFirstLetter(char firstLetter, Pageable pageable) {
-        return authorRepository.findAllByFirstLetter(firstLetter, pageable);
+    public Page<Author> getAllByNameFirstLetter(char firstLetter, Pageable pageable) {
+        return authorRepository.findAllByNameFirstLetter(String.valueOf(firstLetter), pageable);
     }
 }

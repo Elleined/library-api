@@ -2,7 +2,6 @@ package com.elleined.libraryapi.controller;
 
 import com.elleined.libraryapi.dto.AuthorDTO;
 import com.elleined.libraryapi.mapper.AuthorMapper;
-import com.elleined.libraryapi.mapper.BookMapper;
 import com.elleined.libraryapi.model.Author;
 import com.elleined.libraryapi.service.author.AuthorService;
 import lombok.RequiredArgsConstructor;
@@ -16,11 +15,8 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/authors")
 public class AuthorController {
-
     private final AuthorService authorService;
-
     private final AuthorMapper authorMapper;
-    private final BookMapper bookMapper;
 
     @GetMapping("/{id}")
     public AuthorDTO getById(@PathVariable("id") int id) {
@@ -64,6 +60,6 @@ public class AuthorController {
                                                @RequestParam(required = false, defaultValue = "id", value = "sortBy") String sortBy) {
 
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
-        return authorService.getAllByFirstLetter(firstLetter, pageable).map(authorMapper::toDTO);
+        return authorService.getAllByNameFirstLetter(firstLetter, pageable).map(authorMapper::toDTO);
     }
 }

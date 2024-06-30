@@ -1,7 +1,6 @@
 package com.elleined.libraryapi.populator;
 
 import com.elleined.libraryapi.mapper.GenreMapper;
-import com.elleined.libraryapi.model.Genre;
 import com.elleined.libraryapi.repository.GenreRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

@@ -66,8 +66,8 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
-    public Page<Genre> getAllByFirstLetter(char firstLetter, Pageable pageable) {
-        return genreRepository.findAllByFirstLetter(firstLetter, pageable);
+    public Page<Genre> getAllByNameFirstLetter(char firstLetter, Pageable pageable) {
+        return genreRepository.findAllByNameFirstLetter(String.valueOf(firstLetter), pageable);
     }
 
     @Override

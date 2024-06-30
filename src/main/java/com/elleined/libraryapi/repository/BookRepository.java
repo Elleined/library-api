@@ -13,7 +13,7 @@ import java.util.Optional;
 
 public interface BookRepository extends JpaRepository<Book, Integer> {
     @Query("SELECT b FROM Book b WHERE b.title LIKE CONCAT(:firstLetter, '%') ORDER BY title")
-    Page<Book> findAllByTitleFirstLetter(@Param("firstLetter") char firstLetter, Pageable pageable);
+    Page<Book> findAllByTitleFirstLetter(@Param("firstLetter") String firstLetter, Pageable pageable);
 
     @Query("SELECT b FROM Book b WHERE b.author = :author")
     Page<Book> findAll(@Param("author") Author author, Pageable pageable);

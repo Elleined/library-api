@@ -78,6 +78,6 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Page<Book> getAllByTitleFirstLetter(char firstLetter, Pageable pageable) {
-        return bookRepository.findAllByTitleFirstLetter(firstLetter, pageable);
+        return bookRepository.findAllByTitleFirstLetter(String.valueOf(firstLetter), pageable);
     }
 }
