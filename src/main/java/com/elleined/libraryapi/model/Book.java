@@ -11,7 +11,7 @@ import java.util.Set;
 
 @Entity
 @Table(
-        name = "tbl_author",
+        name = "tbl_book",
         indexes = {
                 @Index(name = "created_at_idx", columnList = "created_at"),
                 @Index(name = "title_idx", columnList = "title"),

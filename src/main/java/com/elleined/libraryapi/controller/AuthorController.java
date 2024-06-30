@@ -56,7 +56,7 @@ public class AuthorController {
         return authorService.getAll(pageable).map(authorMapper::toDTO);
     }
 
-    @GetMapping("/name")
+    @GetMapping("/search")
     public Page<AuthorDTO> getAllByFirstLetter(@RequestParam("firstLetter") char firstLetter,
                                                @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
                                                @RequestParam(required = false, defaultValue = "5", value = "pageSize") int pageSize,

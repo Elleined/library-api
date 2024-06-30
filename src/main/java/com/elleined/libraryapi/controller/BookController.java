@@ -84,7 +84,7 @@ public class BookController {
         return bookService.getAll(author, pageable).map(bookMapper::toDTO);
     }
 
-    @GetMapping
+    @GetMapping("/get all by genre")
     public Page<BookDTO> getAllByGenre(@RequestParam("genreId") int genreId,
                                        @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
                                        @RequestParam(required = false, defaultValue = "5", value = "pageSize") int pageSize,
@@ -97,7 +97,7 @@ public class BookController {
     }
 
 
-    @GetMapping("/title")
+    @GetMapping("/search")
     public Page<BookDTO> getAllByTitleFirstLetter(@RequestParam("firstLetter") char firstLetter,
                                                   @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
                                                   @RequestParam(required = false, defaultValue = "5", value = "pageSize") int pageSize,

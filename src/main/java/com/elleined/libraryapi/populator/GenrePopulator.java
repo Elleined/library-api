@@ -9,6 +9,7 @@ import net.datafaker.Faker;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -22,14 +23,23 @@ public class GenrePopulator implements Populator {
 
     @Override
     public void populate() throws IOException {
-        List<Genre> genres = List.of(
-                genreMapper.toEntity(faker.book().genre()),
-                genreMapper.toEntity(faker.book().genre()),
-                genreMapper.toEntity(faker.book().genre()),
-                genreMapper.toEntity(faker.book().genre()),
-                genreMapper.toEntity(faker.book().genre())
+        genreRepository.saveAll(
+                this.getUniqueGenres().stream()
+                .map(genreMapper::toEntity)
+                .toList()
         );
+    }
 
-        genreRepository.saveAll(genres);
+    private List<String> getUniqueGenres() {
+        List<String> genres = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            String genre = faker.book().genre();
+            if (genres.contains(genre)) {
+                return getUniqueGenres();
+            }
+            genres.add(genre);
+        }
+
+        return genres;
     }
 }
