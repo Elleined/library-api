@@ -1,6 +1,6 @@
 package com.elleined.libraryapi.service.genre;
 
-import com.elleined.libraryapi.exception.field.FieldAlreadyExistsException;
+import com.elleined.libraryapi.exception.resource.ResourceAlreadyExistsException;
 import com.elleined.libraryapi.exception.resource.ResourceNotFoundException;
 import com.elleined.libraryapi.mapper.GenreMapper;
 import com.elleined.libraryapi.model.Genre;
@@ -11,6 +11,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Slf4j
@@ -34,7 +37,7 @@ public class GenreServiceImpl implements GenreService {
     @Override
     public Genre save(String genreName) {
         if (isNameAlreadyExists(genreName))
-            throw new FieldAlreadyExistsException("Cannot save genre! because genre with name of " + genreName + " already exists");
+            throw new ResourceAlreadyExistsException("Cannot save genre! because genre with name of " + genreName + " already exists");
 
         Genre genre = genreMapper.toEntity(genreName);
 
@@ -46,7 +49,7 @@ public class GenreServiceImpl implements GenreService {
     @Override
     public Genre update(Genre genre, String newGenreName) {
         if (isNameAlreadyExists(newGenreName))
-            throw new FieldAlreadyExistsException("Cannot update genre! because genre with name of " + newGenreName + " already exists");
+            throw new ResourceAlreadyExistsException("Cannot update genre! because genre with name of " + newGenreName + " already exists");
 
         genre.setName(newGenreName);
 
@@ -65,5 +68,10 @@ public class GenreServiceImpl implements GenreService {
     @Override
     public Page<Genre> getAllByFirstLetter(char firstLetter, Pageable pageable) {
         return genreRepository.findAllByFirstLetter(firstLetter, pageable);
+    }
+
+    @Override
+    public Set<Genre> getAllById(Set<Integer> ids) {
+        return new HashSet<>(genreRepository.findAllById(ids));
     }
 }

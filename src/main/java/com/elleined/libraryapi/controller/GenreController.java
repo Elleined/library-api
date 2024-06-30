@@ -1,17 +1,18 @@
 package com.elleined.libraryapi.controller;
 
-import com.elleined.libraryapi.dto.BookDTO;
 import com.elleined.libraryapi.dto.GenreDTO;
 import com.elleined.libraryapi.mapper.BookMapper;
 import com.elleined.libraryapi.mapper.GenreMapper;
 import com.elleined.libraryapi.model.Genre;
 import com.elleined.libraryapi.service.genre.GenreService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
@@ -23,73 +24,48 @@ public class GenreController {
     private final GenreMapper genreMapper;
     private final BookMapper bookMapper;
 
-    @GetMapping
-    public List<GenreDTO> getAll() {
-        return genreService.getAll().stream()
-                .map(genreMapper::toDTO)
-                .toList();
-    }
 
     @GetMapping("/{id}")
-    public GenreDTO getById(@PathVariable("id") int genreId) {
-        Genre genre = genreService.getById(genreId);
+    public GenreDTO getById(@PathVariable("id") int id) {
+        Genre genre = genreService.getById(id);
         return genreMapper.toDTO(genre);
     }
 
-    @GetMapping("/get-all-books-by-genre/{genreId}")
-    public List<BookDTO> getAllByGenre(@PathVariable("genreId") int genreId) {
-        Genre genre = genreService.getById(genreId);
-        return genreService.getAllByGenre(genre).stream()
-                .map(bookMapper::toDTO)
-                .toList();
-    }
+    @GetMapping
+    public Page<GenreDTO> getAll(@RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
+                                 @RequestParam(required = false, defaultValue = "5", value = "pageSize") int pageSize,
+                                 @RequestParam(required = false, defaultValue = "ASC", value = "sortDirection") Sort.Direction direction,
+                                 @RequestParam(required = false, defaultValue = "id", value = "sortBy") String sortBy) {
 
-    @GetMapping("/get-all-by-id")
-    public Set<GenreDTO> getAllById(@RequestParam("ids") Set<Integer> genreIds) {
-        return genreService.getAllById(genreIds).stream()
-                .map(genreMapper::toDTO)
-                .collect(Collectors.toSet());
-    }
-
-    @GetMapping("/name")
-    public List<GenreDTO> searchByFirstLetter(@RequestParam("firstLetter") char firstLetter) {
-        return genreService.searchByFirstLetter(firstLetter).stream()
-                .map(genreMapper::toDTO)
-                .toList();
-    }
-
-    @GetMapping("/{pageNumber}/{pageSize}")
-    public List<GenreDTO> getAll(@PathVariable int pageNumber,
-                                 @PathVariable int pageSize) {
-
-        return genreService.getAll(pageNumber, pageSize).stream()
-                .map(genreMapper::toDTO)
-                .toList();
-    }
-
-    @GetMapping("/{pageNumber}/{pageSize}/{sortDirection}/{sortProperty}")
-    public List<GenreDTO> getAll(@PathVariable int pageNumber,
-                                  @PathVariable int pageSize,
-                                  @PathVariable String sortDirection,
-                                  @PathVariable String sortProperty) {
-
-        return genreService.getAll(pageNumber, pageSize, sortDirection, sortProperty).stream()
-                .map(genreMapper::toDTO)
-                .toList();
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
+        return genreService.getAll(pageable).map(genreMapper::toDTO);
     }
 
     @PostMapping
-    public GenreDTO save(@RequestParam("genreName") String genreName) {
-        Genre genre = genreService.save(genreName);
+    public GenreDTO save(@RequestParam("name") String name) {
+        Genre genre = genreService.save(name);
         return genreMapper.toDTO(genre);
     }
 
     @PatchMapping("/{id}")
     public GenreDTO update(@PathVariable("id") int genreId,
-                           @RequestParam("name") String newGenreName) {
+                           @RequestParam("name") String name) {
 
         Genre genre = genreService.getById(genreId);
-        genreService.update(genre, newGenreName);
+        genreService.update(genre, name);
         return genreMapper.toDTO(genre);
+    }
+
+    @GetMapping("/search")
+    public List<GenreDTO> getAllByFirstLetter(@RequestParam("firstLetter") char firstLetter,
+                                              @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
+                                              @RequestParam(required = false, defaultValue = "5", value = "pageSize") int pageSize,
+                                              @RequestParam(required = false, defaultValue = "ASC", value = "sortDirection") Sort.Direction direction,
+                                              @RequestParam(required = false, defaultValue = "id", value = "sortBy") String sortBy) {
+
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
+        return genreService.getAllByFirstLetter(firstLetter, pageable).stream()
+                .map(genreMapper::toDTO)
+                .toList();
     }
 }

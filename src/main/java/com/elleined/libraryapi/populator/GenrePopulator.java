@@ -1,38 +1,35 @@
 package com.elleined.libraryapi.populator;
 
-
-import com.elleined.libraryapi.dto.GenreDTO;
-import com.elleined.libraryapi.service.genre.GenreService;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.elleined.libraryapi.mapper.GenreMapper;
+import com.elleined.libraryapi.model.Genre;
+import com.elleined.libraryapi.repository.GenreRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.core.io.ClassPathResource;
+import lombok.RequiredArgsConstructor;
+import net.datafaker.Faker;
 import org.springframework.stereotype.Component;
-import org.springframework.util.FileCopyUtils;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Set;
+import java.util.List;
 
 @Component
-@Qualifier("genrePopulator")
 @Transactional
-public class GenrePopulator extends Populator {
+@RequiredArgsConstructor
+public class GenrePopulator implements Populator {
+    private final GenreRepository genreRepository;
+    private final GenreMapper genreMapper;
 
-    private final GenreService genreService;
-
-    public GenrePopulator(ObjectMapper objectMapper, GenreService genreService) {
-        super(objectMapper);
-        this.genreService = genreService;
-    }
+    private final Faker faker;
 
     @Override
-    public void populate(String jsonFile) throws IOException {
-        var resource = new ClassPathResource(jsonFile);
-        byte[] dataBytes = FileCopyUtils.copyToByteArray(resource.getInputStream());
-        var type = objectMapper.getTypeFactory().constructCollectionType(Set.class, GenreDTO.class);
+    public void populate() throws IOException {
+        List<Genre> genres = List.of(
+                genreMapper.toEntity(faker.book().genre()),
+                genreMapper.toEntity(faker.book().genre()),
+                genreMapper.toEntity(faker.book().genre()),
+                genreMapper.toEntity(faker.book().genre()),
+                genreMapper.toEntity(faker.book().genre())
+        );
 
-        Set<GenreDTO> genreDTOS = objectMapper.readValue(new String(dataBytes, StandardCharsets.UTF_8), type);
-        genreService.saveAll(genreDTOS);
+        genreRepository.saveAll(genres);
     }
 }

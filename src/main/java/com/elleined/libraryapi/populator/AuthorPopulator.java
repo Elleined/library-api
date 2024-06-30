@@ -1,36 +1,35 @@
 package com.elleined.libraryapi.populator;
 
-import com.elleined.libraryapi.dto.AuthorDTO;
-import com.elleined.libraryapi.service.author.AuthorService;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.elleined.libraryapi.mapper.AuthorMapper;
+import com.elleined.libraryapi.model.Author;
+import com.elleined.libraryapi.repository.AuthorRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.core.io.ClassPathResource;
+import lombok.RequiredArgsConstructor;
+import net.datafaker.Faker;
 import org.springframework.stereotype.Component;
-import org.springframework.util.FileCopyUtils;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Set;
+import java.util.List;
 
 @Component
-@Qualifier("authorPopulator")
 @Transactional
-public class AuthorPopulator extends Populator {
-    private final AuthorService authorService;
+@RequiredArgsConstructor
+public class AuthorPopulator implements Populator {
+    private final AuthorRepository authorRepository;
+    private final AuthorMapper authorMapper;
 
-    public AuthorPopulator(ObjectMapper objectMapper, AuthorService authorService) {
-        super(objectMapper);
-        this.authorService = authorService;
-    }
+    private final Faker faker;
 
     @Override
-    public void populate(String jsonFile) throws IOException {
-        var resource = new ClassPathResource(jsonFile);
-        byte[] dataBytes = FileCopyUtils.copyToByteArray(resource.getInputStream());
-        var type = objectMapper.getTypeFactory().constructCollectionType(Set.class, AuthorDTO.class);
+    public void populate() throws IOException {
+        List<Author> authors = List.of(
+                authorMapper.toEntity(faker.book().author(), faker.lorem().sentence()),
+                authorMapper.toEntity(faker.book().author(), faker.lorem().sentence()),
+                authorMapper.toEntity(faker.book().author(), faker.lorem().sentence()),
+                authorMapper.toEntity(faker.book().author(), faker.lorem().sentence()),
+                authorMapper.toEntity(faker.book().author(), faker.lorem().sentence())
+        );
 
-        Set<AuthorDTO> authors = objectMapper.readValue(new String(dataBytes, StandardCharsets.UTF_8), type);
-        authorService.saveAll(authors);
+        authorRepository.saveAll(authors);
     }
 }

@@ -5,6 +5,8 @@ import com.elleined.libraryapi.model.Genre;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.Set;
+
 public interface GenreService {
 
     Genre getById(int id) throws ResourceNotFoundException;
@@ -14,4 +16,7 @@ public interface GenreService {
     boolean isNameAlreadyExists(String genreName);
 
     Page<Genre> getAllByFirstLetter(char firstLetter, Pageable pageable);
+
+    // Application only methods
+    Set<Genre> getAllById(Set<Integer> ids);
 }
