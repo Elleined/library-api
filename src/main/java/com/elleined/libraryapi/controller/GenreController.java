@@ -1,7 +1,6 @@
 package com.elleined.libraryapi.controller;
 
 import com.elleined.libraryapi.dto.GenreDTO;
-import com.elleined.libraryapi.hateoas.GenreHateoasAssembler;
 import com.elleined.libraryapi.mapper.GenreMapper;
 import com.elleined.libraryapi.model.Genre;
 import com.elleined.libraryapi.service.genre.GenreService;
@@ -19,17 +18,13 @@ public class GenreController {
     private final GenreService genreService;
     private final GenreMapper genreMapper;
 
-    private final GenreHateoasAssembler genreHateoasAssembler;
-
     @GetMapping("/{id}")
     public GenreDTO getById(@PathVariable("id") int id,
                             @RequestParam(defaultValue = "false", name = "includeRelatedLinks") boolean includeRelatedLinks) {
 
         Genre genre = genreService.getById(id);
 
-        GenreDTO genreDTO = genreMapper.toDTO(genre);
-        genreHateoasAssembler.addLinks(genreDTO, includeRelatedLinks);
-        return genreDTO;
+        return genreMapper.toDTO(genre).addLinks(includeRelatedLinks);
     }
 
     @GetMapping
@@ -41,9 +36,9 @@ public class GenreController {
 
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
 
-        Page<GenreDTO> genreDTOS = genreService.getAll(pageable).map(genreMapper::toDTO);
-        genreHateoasAssembler.addLinks(genreDTOS, includeRelatedLinks);
-        return genreDTOS;
+        return genreService.getAll(pageable)
+                .map(genreMapper::toDTO)
+                .map(dto -> dto.addLinks(includeRelatedLinks));
     }
 
     @PostMapping
@@ -52,9 +47,7 @@ public class GenreController {
 
         Genre genre = genreService.save(name);
 
-        GenreDTO genreDTO = genreMapper.toDTO(genre);
-        genreHateoasAssembler.addLinks(genreDTO, includeRelatedLinks);
-        return genreDTO;
+        return genreMapper.toDTO(genre).addLinks(includeRelatedLinks);
     }
 
     @PatchMapping("/{id}")
@@ -65,9 +58,7 @@ public class GenreController {
         Genre genre = genreService.getById(genreId);
         genreService.update(genre, name);
 
-        GenreDTO genreDTO = genreMapper.toDTO(genre);
-        genreHateoasAssembler.addLinks(genreDTO, includeRelatedLinks);
-        return genreDTO;
+        return genreMapper.toDTO(genre).addLinks(includeRelatedLinks);
     }
 
     @GetMapping("/search")
@@ -80,8 +71,8 @@ public class GenreController {
 
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
 
-        Page<GenreDTO> genreDTOS = genreService.getAllByNameFirstLetter(firstLetter, pageable).map(genreMapper::toDTO);
-        genreHateoasAssembler.addLinks(genreDTOS, includeRelatedLinks);
-        return genreDTOS;
+        return genreService.getAllByNameFirstLetter(firstLetter, pageable)
+                .map(genreMapper::toDTO)
+                .map(dto -> dto.addLinks(includeRelatedLinks));
     }
 }

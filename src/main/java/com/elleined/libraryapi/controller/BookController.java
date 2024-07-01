@@ -1,7 +1,6 @@
 package com.elleined.libraryapi.controller;
 
 import com.elleined.libraryapi.dto.BookDTO;
-import com.elleined.libraryapi.hateoas.BookHateoasAssembler;
 import com.elleined.libraryapi.mapper.BookMapper;
 import com.elleined.libraryapi.model.Author;
 import com.elleined.libraryapi.model.Book;
@@ -31,17 +30,13 @@ public class BookController {
 
     private final AuthorService authorService;
 
-    private final BookHateoasAssembler bookHateoasAssembler;
-
     @GetMapping("/{id}")
     public BookDTO getById(@PathVariable("id") int id,
                            @RequestParam(defaultValue = "false", name = "includeRelatedLinks") boolean includeRelatedLinks) {
 
         Book book = bookService.getById(id);
 
-        BookDTO bookDTO = bookMapper.toDTO(book);
-        bookHateoasAssembler.addLinks(bookDTO, includeRelatedLinks);
-        return bookDTO;
+        return bookMapper.toDTO(book).addLinks(includeRelatedLinks);
     }
 
     @GetMapping("/isbn/{isbn}")
@@ -50,9 +45,7 @@ public class BookController {
 
         Book book = bookService.getByIsbn(isbn);
 
-        BookDTO bookDTO = bookMapper.toDTO(book);
-        bookHateoasAssembler.addLinks(bookDTO, includeRelatedLinks);
-        return bookDTO;
+        return bookMapper.toDTO(book).addLinks(includeRelatedLinks);
     }
 
     @PostMapping
@@ -69,9 +62,7 @@ public class BookController {
         Set<Genre> genres = genreService.getAllById(genreIds);
         Book book = bookService.save(title, isbn, description, publishedDate, pages, author, genres);
 
-        BookDTO bookDTO = bookMapper.toDTO(book);
-        bookHateoasAssembler.addLinks(bookDTO, includeRelatedLinks);
-        return bookDTO;
+        return bookMapper.toDTO(book).addLinks(includeRelatedLinks);
     }
 
 
@@ -88,9 +79,7 @@ public class BookController {
         Set<Genre> genres = genreService.getAllById(genreIds);
         bookService.update(book, title, description, pages, genres);
 
-        BookDTO bookDTO = bookMapper.toDTO(book);
-        bookHateoasAssembler.addLinks(bookDTO, includeRelatedLinks);
-        return bookDTO;
+        return bookMapper.toDTO(book).addLinks(includeRelatedLinks);
     }
 
     @GetMapping
@@ -104,9 +93,9 @@ public class BookController {
         Author author = authorService.getById(authorId);
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
 
-        Page<BookDTO> bookDTOS = bookService.getAll(author, pageable).map(bookMapper::toDTO);
-        bookHateoasAssembler.addLinks(bookDTOS, includeRelatedLinks);
-        return bookDTOS;
+        return bookService.getAll(author, pageable)
+                .map(bookMapper::toDTO)
+                .map(dto -> dto.addLinks(includeRelatedLinks));
     }
 
     @GetMapping("/get-all-by-genre/{genreId}")
@@ -120,9 +109,9 @@ public class BookController {
         Genre genre = genreService.getById(genreId);
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
 
-        Page<BookDTO> bookDTOS = bookService.getAllByGenre(genre, pageable).map(bookMapper::toDTO);
-        bookHateoasAssembler.addLinks(bookDTOS, includeRelatedLinks);
-        return bookDTOS;
+        return bookService.getAllByGenre(genre, pageable)
+                .map(bookMapper::toDTO)
+                .map(dto -> dto.addLinks(includeRelatedLinks));
     }
 
 
@@ -136,8 +125,8 @@ public class BookController {
 
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
 
-        Page<BookDTO> bookDTOS = bookService.getAllByTitleFirstLetter(firstLetter, pageable).map(bookMapper::toDTO);
-        bookHateoasAssembler.addLinks(bookDTOS, includeRelatedLinks);
-        return bookDTOS;
+        return bookService.getAllByTitleFirstLetter(firstLetter, pageable)
+                .map(bookMapper::toDTO)
+                .map(dto -> dto.addLinks(includeRelatedLinks));
     }
 }

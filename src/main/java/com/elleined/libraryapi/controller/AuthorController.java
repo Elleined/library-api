@@ -1,7 +1,6 @@
 package com.elleined.libraryapi.controller;
 
 import com.elleined.libraryapi.dto.AuthorDTO;
-import com.elleined.libraryapi.hateoas.AuthorHateoasAssembler;
 import com.elleined.libraryapi.mapper.AuthorMapper;
 import com.elleined.libraryapi.model.Author;
 import com.elleined.libraryapi.service.author.AuthorService;
@@ -19,16 +18,12 @@ public class AuthorController {
     private final AuthorService authorService;
     private final AuthorMapper authorMapper;
 
-    private final AuthorHateoasAssembler authorHateoasAssembler;
-
     @GetMapping("/{id}")
     public AuthorDTO getById(@PathVariable("id") int id,
                              @RequestParam(defaultValue = "false", name = "includeRelatedLinks") boolean includeRelatedLinks) {
 
         Author author = authorService.getById(id);
-        AuthorDTO authorDTO = authorMapper.toDTO(author);
-        authorHateoasAssembler.addLinks(authorDTO, includeRelatedLinks);
-        return authorDTO;
+        return authorMapper.toDTO(author).addLinks(includeRelatedLinks);
     }
 
     @PostMapping
@@ -37,9 +32,7 @@ public class AuthorController {
                           @RequestParam(defaultValue = "false", name = "includeRelatedLinks") boolean includeRelatedLinks) {
 
         Author author = authorService.save(name, biography);
-        AuthorDTO authorDTO = authorMapper.toDTO(author);
-        authorHateoasAssembler.addLinks(authorDTO, includeRelatedLinks);
-        return authorDTO;
+        return authorMapper.toDTO(author).addLinks(includeRelatedLinks);
     }
 
     @PutMapping("/{id}")
@@ -51,9 +44,7 @@ public class AuthorController {
         Author author = authorService.getById(id);
         authorService.update(author, name, biography);
 
-        AuthorDTO authorDTO = authorMapper.toDTO(author);
-        authorHateoasAssembler.addLinks(authorDTO, includeRelatedLinks);
-        return authorDTO;
+        return authorMapper.toDTO(author).addLinks(includeRelatedLinks);
     }
 
     @GetMapping
@@ -64,9 +55,9 @@ public class AuthorController {
                                   @RequestParam(defaultValue = "false", name = "includeRelatedLinks") boolean includeRelatedLinks) {
 
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
-        Page<AuthorDTO> authorDTOS = authorService.getAll(pageable).map(authorMapper::toDTO);
-        authorHateoasAssembler.addLinks(authorDTOS, includeRelatedLinks);
-        return authorDTOS;
+        return authorService.getAll(pageable)
+                .map(authorMapper::toDTO)
+                .map(dto -> dto.addLinks(includeRelatedLinks));
     }
 
     @GetMapping("/search")
@@ -78,8 +69,8 @@ public class AuthorController {
                                                @RequestParam(defaultValue = "false", name = "includeRelatedLinks") boolean includeRelatedLinks) {
 
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
-        Page<AuthorDTO> authorDTOS = authorService.getAllByNameFirstLetter(firstLetter, pageable).map(authorMapper::toDTO);
-        authorHateoasAssembler.addLinks(authorDTOS, includeRelatedLinks);
-        return authorDTOS;
+        return authorService.getAll(pageable)
+                .map(authorMapper::toDTO)
+                .map(dto -> dto.addLinks(includeRelatedLinks));
     }
 }
