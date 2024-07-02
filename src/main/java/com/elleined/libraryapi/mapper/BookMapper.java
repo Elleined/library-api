@@ -11,35 +11,46 @@ import org.mapstruct.Mappings;
 import java.time.LocalDate;
 import java.util.Set;
 
-@Mapper(componentModel = "spring", uses = GenreMapper.class)
+@Mapper(
+        componentModel = "spring",
+        uses = {
+                AuthorMapper.class,
+                GenreMapper.class
+        }
+)
 public interface BookMapper extends CustomMapper<Book, BookDTO> {
 
     @Override
     @Mappings({
             @Mapping(target = "id", source = "id"),
+            @Mapping(target = "createdAt", source = "createdAt"),
+            @Mapping(target = "updatedAt", source = "updatedAt"),
+
             @Mapping(target = "title", source = "title"),
             @Mapping(target = "isbn", source = "isbn"),
             @Mapping(target = "description", source = "description"),
             @Mapping(target = "publishedDate", source = "publishedDate"),
             @Mapping(target = "pages", source = "pages"),
-            @Mapping(target = "createdAt", source = "createdAt"),
-            @Mapping(target = "updatedAt", source = "updatedAt"),
-            @Mapping(target = "authorId", source = "author.id"),
-            @Mapping(target = "genreIds", expression = "java(book.getGenreIds())")
+            @Mapping(target = "views", source = "views"),
+
+            @Mapping(target = "authorDTO", source = "author")
     })
     BookDTO toDTO(Book book);
 
     @Mappings({
             @Mapping(target = "id", ignore = true),
-            @Mapping(target = "views", expression = "java(0)"),
+            @Mapping(target = "createdAt", expression = "java(java.time.LocalDateTime.now())"),
+            @Mapping(target = "updatedAt", expression = "java(java.time.LocalDateTime.now())"),
+
             @Mapping(target = "title", expression = "java(title)"),
             @Mapping(target = "isbn", expression = "java(isbn)"),
             @Mapping(target = "description", expression = "java(description)"),
             @Mapping(target = "publishedDate", expression = "java(publishedDate)"),
             @Mapping(target = "pages", expression = "java(pages)"),
-            @Mapping(target = "createdAt", expression = "java(java.time.LocalDateTime.now())"),
-            @Mapping(target = "updatedAt", expression = "java(java.time.LocalDateTime.now())"),
+            @Mapping(target = "views", expression = "java(0)"),
+
             @Mapping(target = "author", expression = "java(author)"),
+
             @Mapping(target = "genres", expression = "java(genres)")
     })
     Book toEntity(String title,

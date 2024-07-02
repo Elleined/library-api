@@ -1,8 +1,8 @@
 package com.elleined.libraryapi.controller;
 
-import com.elleined.libraryapi.dto.ResponseMessage;
-import com.elleined.libraryapi.exception.field.FieldAlreadyExistsException;
-import com.elleined.libraryapi.exception.resource.ResourceNotFoundException;
+import com.elleined.libraryapi.dto.APIResponse;
+import com.elleined.libraryapi.exception.LibraryAPIException;
+import com.elleined.libraryapi.exception.resource.ResourceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
@@ -15,24 +15,27 @@ import java.util.List;
 @ControllerAdvice
 public class ExceptionController {
 
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ResponseMessage> handleNotFoundException(ResourceNotFoundException ex) {
-        var responseMessage = new ResponseMessage(HttpStatus.NOT_FOUND, ex.getMessage());
+    @ExceptionHandler(ResourceException.class)
+    public ResponseEntity<APIResponse> handleResourceException(ResourceException ex) {
+        var responseMessage = new APIResponse(HttpStatus.NOT_FOUND, ex.getMessage());
         return new ResponseEntity<>(responseMessage, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler({FieldAlreadyExistsException.class, IllegalArgumentException.class})
-    public ResponseEntity<ResponseMessage> handleGenreNameAlreadyExistsException(RuntimeException ex) {
-        var responseMessage = new ResponseMessage(HttpStatus.BAD_REQUEST, ex.getMessage());
+
+    @ExceptionHandler({
+            LibraryAPIException.class,
+    })
+    public ResponseEntity<APIResponse> handleSystemException(RuntimeException ex) {
+        var responseMessage = new APIResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
         return new ResponseEntity<>(responseMessage, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(BindException.class)
-    public ResponseEntity<List<ResponseMessage>> handleBindException(BindException e) {
-        List<ResponseMessage> errors = e.getAllErrors()
+    public ResponseEntity<List<APIResponse>> handleBindException(BindException e) {
+        List<APIResponse> errors = e.getAllErrors()
                 .stream()
                 .map(ObjectError::getDefaultMessage)
-                .map(errorMessage -> new ResponseMessage(HttpStatus.BAD_REQUEST, errorMessage))
+                .map(errorMessage -> new APIResponse(HttpStatus.BAD_REQUEST, errorMessage))
                 .toList();
         return ResponseEntity.badRequest().body(errors);
     }

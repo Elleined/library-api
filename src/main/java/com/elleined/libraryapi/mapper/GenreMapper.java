@@ -12,18 +12,20 @@ public interface GenreMapper extends CustomMapper<Genre, GenreDTO> {
     @Override
     @Mappings({
             @Mapping(target = "id", source = "id"),
-            @Mapping(target = "name", source = "name"),
             @Mapping(target = "createdAt", source = "createdAt"),
             @Mapping(target = "updatedAt", source = "updatedAt"),
-            @Mapping(target = "bookIds", expression = "java(genre.getBookIds())"),
+
+            @Mapping(target = "name", source = "name"),
     })
     GenreDTO toDTO(Genre genre);
 
     @Mappings({
             @Mapping(target = "id", ignore = true),
-            @Mapping(target = "name", expression = "java(name)"),
             @Mapping(target = "createdAt", expression = "java(java.time.LocalDateTime.now())"),
             @Mapping(target = "updatedAt", expression = "java(java.time.LocalDateTime.now())"),
+
+            @Mapping(target = "name", expression = "java(name)"),
+
             @Mapping(target = "books", expression = "java(new java.util.HashSet<>())"),
     })
     Genre toEntity(String name);

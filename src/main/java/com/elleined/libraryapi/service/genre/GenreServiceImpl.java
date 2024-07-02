@@ -1,102 +1,61 @@
 package com.elleined.libraryapi.service.genre;
 
-import com.elleined.libraryapi.dto.GenreDTO;
-import com.elleined.libraryapi.exception.field.FieldAlreadyExistsException;
-import com.elleined.libraryapi.exception.field.RequiredFieldException;
+import com.elleined.libraryapi.exception.resource.ResourceAlreadyExistsException;
 import com.elleined.libraryapi.exception.resource.ResourceNotFoundException;
 import com.elleined.libraryapi.mapper.GenreMapper;
-import com.elleined.libraryapi.model.Book;
 import com.elleined.libraryapi.model.Genre;
 import com.elleined.libraryapi.repository.GenreRepository;
-import com.elleined.libraryapi.service.PageSorter;
-import com.elleined.libraryapi.service.StringValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
-@Service
-@RequiredArgsConstructor
-@Transactional
+
 @Slf4j
+@Service
+@Transactional
+@RequiredArgsConstructor
 public class GenreServiceImpl implements GenreService {
-
     private final GenreRepository genreRepository;
     private final GenreMapper genreMapper;
 
     @Override
-    public Set<Book> getAllByGenre(Genre genre) {
-        return genre.getBooks();
-    }
-
-    @Override
-    public Genre getById(int id) {
+    public Genre getById(int id) throws ResourceNotFoundException {
         return genreRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Genre does not exists"));
     }
 
     @Override
-    public Set<Genre> getAllById(Set<Integer> ids) {
-        return new HashSet<>(genreRepository.findAllById(ids));
+    public Page<Genre> getAll(Pageable pageable) {
+        return genreRepository.findAll(pageable);
     }
 
     @Override
-    public List<Genre> searchByFirstLetter(char firstLetter) {
-        return genreRepository.searchByFirstLetter(firstLetter);
-    }
+    public Genre save(String genreName) {
+        if (isNameAlreadyExists(genreName))
+            throw new ResourceAlreadyExistsException("Cannot save genre! because genre with name of " + genreName + " already exists");
 
-    @Override
-    public List<Genre> getAll() {
-        return genreRepository.findAll();
-    }
+        Genre genre = genreMapper.toEntity(genreName);
 
-    @Override
-    public List<Genre> getAll(int pageNumber, int pageSize) {
-        Pageable pageable = PageSorter.getPage(pageNumber, pageSize);
-        return genreRepository.findAll(pageable).toList();
-    }
-
-    @Override
-    public List<Genre> getAll(int pageNumber, int pageSize, String sortDirection, String sortProperty) {
-        Pageable pageable = PageSorter.getPage(pageNumber, pageSize, sortDirection, sortProperty);
-        return genreRepository.findAll(pageable).toList();
-    }
-
-    @Override
-    public Set<Genre> saveAll(Set<GenreDTO> genreDTOS) {
-        Set<Genre> genres = genreDTOS.stream()
-                .map(genreDTO -> genreMapper.toEntity(genreDTO.getName()))
-                .collect(Collectors.toSet());
-
-        genreRepository.saveAll(genres);
-        log.debug("Saving pre-defined genres success...");
-        return genres;
-    }
-
-    @Override
-    public Genre save(String name) {
-        if (isNameAlreadyExists(name)) throw new FieldAlreadyExistsException("Genre with name of " + name + " already exists");
-        if (StringValidator.validate(name)) throw new RequiredFieldException("Name is required!");
-
-        Genre genre = genreMapper.toEntity(name);
         genreRepository.save(genre);
-        log.debug("Genre saved successfully with id of {}", genre.getId());
+        log.debug("Saving genre success");
         return genre;
     }
 
     @Override
-    public void update(Genre genre, String newGenreName) {
-        if (isNameAlreadyExists(newGenreName)) throw new FieldAlreadyExistsException("Genre with name of " + newGenreName + " already exists");
+    public Genre update(Genre genre, String newGenreName) {
+        if (isNameAlreadyExists(newGenreName))
+            throw new ResourceAlreadyExistsException("Cannot update genre! because genre with name of " + newGenreName + " already exists");
+
         genre.setName(newGenreName);
-        genre.setUpdatedAt(LocalDateTime.now());
+
         genreRepository.save(genre);
-        log.debug("Genre with id of {} updated successfully", genre.getId());
+        log.debug("Updating genre success");
+        return genre;
     }
 
     @Override
@@ -104,5 +63,15 @@ public class GenreServiceImpl implements GenreService {
         return genreRepository.findAll().stream()
                 .map(Genre::getName)
                 .anyMatch(genreName::equalsIgnoreCase);
+    }
+
+    @Override
+    public Page<Genre> getAllByNameFirstLetter(char firstLetter, Pageable pageable) {
+        return genreRepository.findAllByNameFirstLetter(String.valueOf(firstLetter), pageable);
+    }
+
+    @Override
+    public Set<Genre> getAllById(Set<Integer> ids) {
+        return new HashSet<>(genreRepository.findAllById(ids));
     }
 }

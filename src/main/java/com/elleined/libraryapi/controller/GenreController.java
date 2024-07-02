@@ -1,95 +1,78 @@
 package com.elleined.libraryapi.controller;
 
-import com.elleined.libraryapi.dto.BookDTO;
 import com.elleined.libraryapi.dto.GenreDTO;
-import com.elleined.libraryapi.mapper.BookMapper;
 import com.elleined.libraryapi.mapper.GenreMapper;
 import com.elleined.libraryapi.model.Genre;
 import com.elleined.libraryapi.service.genre.GenreService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/genres")
 public class GenreController {
-
     private final GenreService genreService;
-
     private final GenreMapper genreMapper;
-    private final BookMapper bookMapper;
-
-    @GetMapping
-    public List<GenreDTO> getAll() {
-        return genreService.getAll().stream()
-                .map(genreMapper::toDTO)
-                .toList();
-    }
 
     @GetMapping("/{id}")
-    public GenreDTO getById(@PathVariable("id") int genreId) {
-        Genre genre = genreService.getById(genreId);
-        return genreMapper.toDTO(genre);
+    public GenreDTO getById(@PathVariable("id") int id,
+                            @RequestParam(defaultValue = "false", name = "includeRelatedLinks") boolean includeRelatedLinks) {
+
+        Genre genre = genreService.getById(id);
+
+        return genreMapper.toDTO(genre).addLinks(includeRelatedLinks);
     }
 
-    @GetMapping("/get-all-books-by-genre/{genreId}")
-    public List<BookDTO> getAllByGenre(@PathVariable("genreId") int genreId) {
-        Genre genre = genreService.getById(genreId);
-        return genreService.getAllByGenre(genre).stream()
-                .map(bookMapper::toDTO)
-                .toList();
-    }
+    @GetMapping
+    public Page<GenreDTO> getAll(@RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
+                                 @RequestParam(required = false, defaultValue = "5", value = "pageSize") int pageSize,
+                                 @RequestParam(required = false, defaultValue = "ASC", value = "sortDirection") Sort.Direction direction,
+                                 @RequestParam(required = false, defaultValue = "id", value = "sortBy") String sortBy,
+                                 @RequestParam(defaultValue = "false", name = "includeRelatedLinks") boolean includeRelatedLinks) {
 
-    @GetMapping("/get-all-by-id")
-    public Set<GenreDTO> getAllById(@RequestParam("ids") Set<Integer> genreIds) {
-        return genreService.getAllById(genreIds).stream()
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
+
+        return genreService.getAll(pageable)
                 .map(genreMapper::toDTO)
-                .collect(Collectors.toSet());
-    }
-
-    @GetMapping("/name")
-    public List<GenreDTO> searchByFirstLetter(@RequestParam("firstLetter") char firstLetter) {
-        return genreService.searchByFirstLetter(firstLetter).stream()
-                .map(genreMapper::toDTO)
-                .toList();
-    }
-
-    @GetMapping("/{pageNumber}/{pageSize}")
-    public List<GenreDTO> getAll(@PathVariable int pageNumber,
-                                 @PathVariable int pageSize) {
-
-        return genreService.getAll(pageNumber, pageSize).stream()
-                .map(genreMapper::toDTO)
-                .toList();
-    }
-
-    @GetMapping("/{pageNumber}/{pageSize}/{sortDirection}/{sortProperty}")
-    public List<GenreDTO> getAll(@PathVariable int pageNumber,
-                                  @PathVariable int pageSize,
-                                  @PathVariable String sortDirection,
-                                  @PathVariable String sortProperty) {
-
-        return genreService.getAll(pageNumber, pageSize, sortDirection, sortProperty).stream()
-                .map(genreMapper::toDTO)
-                .toList();
+                .map(dto -> dto.addLinks(includeRelatedLinks));
     }
 
     @PostMapping
-    public GenreDTO save(@RequestParam("genreName") String genreName) {
-        Genre genre = genreService.save(genreName);
-        return genreMapper.toDTO(genre);
+    public GenreDTO save(@RequestParam("name") String name,
+                         @RequestParam(defaultValue = "false", name = "includeRelatedLinks") boolean includeRelatedLinks) {
+
+        Genre genre = genreService.save(name);
+
+        return genreMapper.toDTO(genre).addLinks(includeRelatedLinks);
     }
 
     @PatchMapping("/{id}")
     public GenreDTO update(@PathVariable("id") int genreId,
-                           @RequestParam("name") String newGenreName) {
+                           @RequestParam("name") String name,
+                           @RequestParam(defaultValue = "false", name = "includeRelatedLinks") boolean includeRelatedLinks) {
 
         Genre genre = genreService.getById(genreId);
-        genreService.update(genre, newGenreName);
-        return genreMapper.toDTO(genre);
+        genreService.update(genre, name);
+
+        return genreMapper.toDTO(genre).addLinks(includeRelatedLinks);
+    }
+
+    @GetMapping("/search")
+    public Page<GenreDTO> getAllByFirstLetter(@RequestParam("firstLetter") char firstLetter,
+                                              @RequestParam(required = false, defaultValue = "1", value = "pageNumber") int pageNumber,
+                                              @RequestParam(required = false, defaultValue = "5", value = "pageSize") int pageSize,
+                                              @RequestParam(required = false, defaultValue = "ASC", value = "sortDirection") Sort.Direction direction,
+                                              @RequestParam(required = false, defaultValue = "id", value = "sortBy") String sortBy,
+                                              @RequestParam(defaultValue = "false", name = "includeRelatedLinks") boolean includeRelatedLinks) {
+
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, direction, sortBy);
+
+        return genreService.getAllByNameFirstLetter(firstLetter, pageable)
+                .map(genreMapper::toDTO)
+                .map(dto -> dto.addLinks(includeRelatedLinks));
     }
 }

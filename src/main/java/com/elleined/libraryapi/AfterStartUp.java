@@ -21,11 +21,6 @@ public class AfterStartUp {
     private final BookPopulator bookPopulator;
     private final GenreRepository genreRepository;
 
-    private final static String GENRES_JSON = "/json/genres.json";
-    private final static String AUTHORS_JSON = "json/authors.json";
-    private final static String BOOKS_JSON = "/json/books.json";
-
-
     @PostConstruct
     public void init() throws IOException {
         if (genreRepository.existsById(1)) {
@@ -34,9 +29,9 @@ public class AfterStartUp {
         }
 
         log.debug("Saving initial values for genres, authors, and books! Please wait...");
-        genrePopulator.populate(GENRES_JSON);
-        authorPopulator.populate(AUTHORS_JSON);
-        bookPopulator.populate(BOOKS_JSON);
+        genrePopulator.populate();
+        authorPopulator.populate();
+        bookPopulator.populate();
         log.debug("Saving initial values for genres, authors, and books success! Thanksss... :) ");
     }
 }

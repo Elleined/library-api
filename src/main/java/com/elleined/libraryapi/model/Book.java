@@ -1,34 +1,27 @@
 package com.elleined.libraryapi.model;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Entity
 @Table(
         name = "tbl_book",
-        indexes = @Index(name = "book_title_idx", columnList = "title")
+        indexes = {
+                @Index(name = "created_at_idx", columnList = "created_at"),
+                @Index(name = "title_idx", columnList = "title"),
+        }
 )
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-@Setter
 @Getter
-public class Book {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(
-            name = "id",
-            nullable = false,
-            unique = true,
-            updatable = false
-    )
-    private int id;
+@Setter
+@NoArgsConstructor
+@SuperBuilder
+public class Book extends PrimaryKeyIdentity {
 
     @Column(
             name = "title",
@@ -39,20 +32,21 @@ public class Book {
     @Column(
             name = "isbn",
             unique = true,
-            nullable = false
+            nullable = false,
+            updatable = false
     )
     private String isbn;
 
     @Column(
             name = "description",
-            columnDefinition = "MEDIUMTEXT",
             nullable = false
     )
     private String description;
 
     @Column(
             name = "published_date",
-            nullable = false
+            nullable = false,
+            updatable = false
     )
     private LocalDate publishedDate;
 
@@ -62,22 +56,15 @@ public class Book {
     )
     private int pages;
 
-    // For sorting mechanism
     @Column(name = "views")
     private int views;
-
-    @Column(name = "date_created")
-    private LocalDateTime createdAt;
-
-    @Column(name = "date_updated")
-    private LocalDateTime updatedAt;
 
     @ManyToOne(optional = false)
     @JoinColumn(
             name = "author_id",
             referencedColumnName = "id",
-            foreignKey = @ForeignKey(name = "FK_author_id"),
-            nullable = false
+            nullable = false,
+            updatable = false
     )
     private Author author;
 
@@ -87,19 +74,13 @@ public class Book {
             joinColumns = @JoinColumn(
                     name = "book_id",
                     referencedColumnName = "id",
-                    foreignKey = @ForeignKey(name = "FK_book_id")
+                    nullable = false
             ),
             inverseJoinColumns = @JoinColumn(
                     name = "genre_id",
                     referencedColumnName = "id",
-                    foreignKey = @ForeignKey(name = "FK_genre_id")
+                    nullable = false
             )
     )
     private Set<Genre> genres;
-
-    public Set<Integer> getGenreIds() {
-        return this.getGenres().stream()
-                .map(Genre::getId)
-                .collect(Collectors.toSet());
-    }
 }

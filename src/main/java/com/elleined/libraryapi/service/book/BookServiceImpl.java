@@ -1,137 +1,62 @@
 package com.elleined.libraryapi.service.book;
 
-import com.elleined.libraryapi.dto.BookDTO;
-import com.elleined.libraryapi.exception.field.FieldAlreadyExistsException;
-import com.elleined.libraryapi.exception.field.RequiredFieldException;
+import com.elleined.libraryapi.exception.resource.ResourceAlreadyExistsException;
 import com.elleined.libraryapi.exception.resource.ResourceNotFoundException;
 import com.elleined.libraryapi.mapper.BookMapper;
 import com.elleined.libraryapi.model.Author;
 import com.elleined.libraryapi.model.Book;
 import com.elleined.libraryapi.model.Genre;
 import com.elleined.libraryapi.repository.BookRepository;
-import com.elleined.libraryapi.service.PageSorter;
-import com.elleined.libraryapi.service.StringValidator;
-import com.elleined.libraryapi.service.author.AuthorService;
-import com.elleined.libraryapi.service.genre.GenreService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
-@Service
 @Slf4j
-@RequiredArgsConstructor
+@Service
 @Transactional
+@RequiredArgsConstructor
 public class BookServiceImpl implements BookService {
-
     private final BookRepository bookRepository;
     private final BookMapper bookMapper;
 
-    private final AuthorService authorService;
-    private final GenreService genreService;
-
     @Override
-    public Book getById(int id) {
+    public Book getById(int id) throws ResourceNotFoundException {
         return bookRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Book with id of " + id + " does not exists"));
     }
 
     @Override
-    public Book getByIsbn(String isbn) {
-        return bookRepository.findAll().stream()
-                .filter(book -> book.getIsbn().equals(isbn))
-                .findFirst()
-                .orElseThrow(() -> new ResourceNotFoundException("Book with ISBN of " + isbn + " does not exists!"));
-    }
-
-    @Override
-    public List<Book> getAllById(List<Integer> bookIds) {
-        return bookRepository.findAllById(bookIds);
-    }
-
-    @Override
-    public List<Book> getAllByTitleFirstLetter(char firstLetter) {
-        return bookRepository.getAllByTitleFirstLetter(firstLetter);
-    }
-
-    @Override
-    public List<Book> getAll() {
-        return bookRepository.findAll();
-    }
-
-    @Override
-    public List<Book> getAll(int pageNumber, int pageSize) {
-        Pageable pageable = PageSorter.getPage(pageNumber, pageSize);
-        return bookRepository.findAll(pageable).toList();
-    }
-
-    @Override
-    public List<Book> getAll(int pageNumber, int pageSize, String sortDirection, String sortProperty) {
-        Pageable pageable = PageSorter.getPage(pageNumber, pageSize, sortDirection, sortProperty);
-        return bookRepository.findAll(pageable).toList();
-    }
-
-    @Override
-    public Set<Book> saveAll(Set<BookDTO> bookDTOS) {
-        Set<Book> books = bookDTOS.stream()
-                .map(bookDTO -> {
-                    Author author = authorService.getById(bookDTO.getAuthorId());
-                    Set<Genre> genres = genreService.getAllById(bookDTO.getGenreIds());
-                    return bookMapper.toEntity(bookDTO.getTitle(), bookDTO.getIsbn(), bookDTO.getDescription(), bookDTO.getPublishedDate(), bookDTO.getPages(), author, genres);
-                })
-                .collect(Collectors.toSet());
-
-        bookRepository.saveAll(books);
-        log.debug("Saving pre-defined books success...");
-        return books;
+    public Book getByIsbn(String isbn) throws ResourceNotFoundException {
+        return bookRepository.findByISBN(isbn).orElseThrow(() -> new ResourceNotFoundException("Book with isbn of " + isbn + " does not exists"));
     }
 
     @Override
     public Book save(String title, String isbn, String description, LocalDate publishedDate, int pages, Author author, Set<Genre> genres) {
-        if (StringValidator.validate(title)) throw new RequiredFieldException("Title is required");
-        if (StringValidator.validate(isbn)) throw new RequiredFieldException("ISBN is required");
-        if (StringValidator.validate(description)) throw new RequiredFieldException("Description is required");
-        if (publishedDate == null) throw new RequiredFieldException("Published Date is required");
-        if (pages <= 0) throw new RequiredFieldException("Pages must be 11 pages and up");
-        if (author == null) throw new RequiredFieldException("Author is required");
-        if (genres.isEmpty()) throw new RequiredFieldException("Atleast 1 Genre is required!");
-        if (isbnAlreadyExists(isbn)) throw new FieldAlreadyExistsException("Book with isbn of " + isbn + " already exists!");
+        if (isbnAlreadyExists(isbn))
+            throw new ResourceAlreadyExistsException("Cannot save book! because isbn of " + isbn + " already exists!");
 
         Book book = bookMapper.toEntity(title, isbn, description, publishedDate, pages, author, genres);
+
         bookRepository.save(book);
-        log.debug("Book saved successfully with id of {}", book.getId());
+        log.debug("Saving book success");
         return book;
     }
 
     @Override
-    public void update(Book book,
-                       String title,
-                       String isbn,
-                       String description,
-                       LocalDate publishedDate,
-                       int pages,
-                       Author author,
-                       Set<Genre> genres) {
-
-        if (isbnAlreadyExists(isbn)) throw new FieldAlreadyExistsException("Book with isbn of " + isbn + " already exists!");
-
+    public Book update(Book book, String title, String description, int pages, Set<Genre> genres) {
         book.setTitle(title);
-        book.setIsbn(isbn);
         book.setDescription(description);
-        book.setPublishedDate(publishedDate);
         book.setPages(pages);
-        book.setAuthor(author);
         book.setGenres(genres);
-        book.setUpdatedAt(LocalDateTime.now());
 
         bookRepository.save(book);
-        log.debug("Book updated successfully");
+        log.debug("Updating book success");
+        return book;
     }
 
     @Override
@@ -139,5 +64,20 @@ public class BookServiceImpl implements BookService {
         return bookRepository.findAll().stream()
                 .map(Book::getIsbn)
                 .anyMatch(isbn::equalsIgnoreCase);
+    }
+
+    @Override
+    public Page<Book> getAll(Author author, Pageable pageable) {
+        return bookRepository.findAll(author, pageable);
+    }
+
+    @Override
+    public Page<Book> getAllByGenre(Genre genre, Pageable pageable) {
+        return bookRepository.findAllByGenre(genre, pageable);
+    }
+
+    @Override
+    public Page<Book> getAllByTitleFirstLetter(char firstLetter, Pageable pageable) {
+        return bookRepository.findAllByTitleFirstLetter(String.valueOf(firstLetter), pageable);
     }
 }
